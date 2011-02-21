@@ -1,0 +1,80 @@
+\documentclass[a4]{report}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc} % Use this if the file is encoded with utf-8
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb} % Part of AMS-LaTeX
+% One of the good things of the amsmath package is the math enviroments matrix, pmatrix, bmatrix, Bmatrix, vmatrix and Vmatrix
+\usepackage{graphicx}
+\usepackage{tikz} % Create graphics in Latex
+\usepackage{cancel} % teste $\cancel{x}$ e voce vera o que ele faz. Outro melhor ainda e $\cancelto{x}{0}$.
+
+\newcommand{\vetor}[1]{\mathbb{#1}}
+\newcommand{\mat}[1]{\mathbb{#1}}
+
+\input{declaramimo2node}
+
+\begin{document}
+
+\usetikzlibrary{positioning}
+
+\begin{tikzpicture}
+  \draw[help lines] (0,0) grid (5,5);
+
+  \path (0,0) coordinate (origem);
+  \path (3,1) coordinate (pos1);
+  \def\tamanhoDoNode{2cm}
+
+  \draw[gray!40!white] (origem) node[rotate=45] {origem};
+  \draw[red!40!white] (pos1) node[rotate=45] {pos1};
+
+  \draw[fill=red] (origem) circle (2pt);
+  \draw (pos1) node[fill=blue!30,draw,mimodoisesquerda,antenna offset=0.5cm,minimum size=\tamanhoDoNode] (mynode) {\pgftypesetversion};
+
+  \node[fill=blue!30,draw,mimodoisdireita,antenna offset=0.5cm,minimum size=\tamanhoDoNode,above=1cm of mynode] (mynode2) {\pgftypesetversion};
+
+  % Test all anchors
+  \foreach \ancora in {
+    center,
+    north,
+    east,
+    south,
+    west,
+    north east,
+    north west,
+    south east,
+    south west,
+    text,
+    %base,
+    A,
+    B,
+    first antenna base start,
+    second antenna base start,
+    first antenna base end,
+    second antenna base end,
+    first antenna,
+    second antenna} % text is the same as the center anchor
+  {
+    \draw[fill=green] (mynode.\ancora) circle (1pt) node[scale=0.8,blue,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mynode2.\ancora) circle (1pt) node[scale=0.8,blue,rotate=45] {\tiny{\ancora}};
+  }
+
+
+  \foreach \ancora in {north,east,west,south,north east,north west,south east,south west} 
+  {
+    \draw[overlay,fill=red!50!black] (current bounding box.\ancora) circle (1pt) node[blue,rotate=45] {\tiny{\ancora}};
+  }
+
+  \draw[help lines] (current bounding box.south west) rectangle (current bounding box.north east);
+  
+\end{tikzpicture}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-PDF-mode: t
+%%% TeX-master: t
+%%% End:
+
