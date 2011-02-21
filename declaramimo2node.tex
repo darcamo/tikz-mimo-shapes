@@ -1,0 +1,256 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Modified from the example in
+% http://www.texample.net/tikz/examples/d-flip-flops-and-shift-register/
+\makeatletter
+
+
+\pgfset{%/pgf/.cd,%
+  antenna offset/.initial=0.3,%
+% antennaoffset/.default=0.3,%
+%  antennaoffset/.code=#1,
+  espelho/.initial=1
+  espelho/.code={\pgfkeyssetvalue{/pgf/espelho}{-\pgfkeysvalueof{/pgf/espelho}}}
+  %espelho/.code={\pgfkeyssetvalue{/pgf/antennaoffset}{-0.3cm}}
+}
+
+
+% Macro com código comum para o desenho das antenas. Antes de chamar esse
+% macro, sete os valores de pgf@x e pgf@y apropriadamente. O argumento é o
+% tamanho da reta que vai do ponto inicial até o ponto em que a antenna
+% sobe.
+\def\desenhaantenna{
+  % Guardo as posições atuais, que devem ser o ponto onde a antena começa a
+  % ser desenhada
+  \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+  \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
+
+  % #1 deve ser positivo para antena na direita e negativo caso contrário
+  \advance\pgf@xa by \antennaoffset cm
+  \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+  \pgfpathclose
+  \pgfmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+
+  \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+  \advance\pgf@yb by 0.2cm
+  \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+  
+  \pgf@xc=\pgf@xb \pgf@yc=\pgf@yb
+  \advance\pgf@xc by 0.2cm
+  \advance\pgf@yc by 0.3cm
+  \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+
+  \pgf@xa=\pgf@xc \pgf@ya=\pgf@yc
+  \advance\pgf@xa by -0.4cm
+  \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+  
+  \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+  \advance\pgf@xb by 0.2cm
+  \advance\pgf@yb by -0.3cm
+  \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+}
+
+
+\pgfdeclareshape{mimodoisdireita}{
+  \savedmacro\antennaoffset{\def\antennaoffset{\pgfkeysvalueof{/pgf/antenna offset}}}
+
+  % The 'minimum width' and 'minimum height' keys, not the content, determine
+  % the size
+
+  % Inherit saved anchor from rectangle (\northeast and \southwest)
+  \inheritsavedanchors[from=rectangle]
+
+  % Inherit anchor border from rectangle
+  \inheritanchorborder[from=rectangle]
+
+  % Inherit normal anchors from rectangle
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{north west}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{south east}
+  \inheritanchor[from=rectangle]{text}
+  \inheritanchor[from=rectangle]{base}
+  \inheritanchor[from=rectangle]{mid}
+  % Posso herdar outras como "mid west", "base west", etc. Veja no código do rectangle
+
+  % Define anchors for the start of the antennas
+  \anchor{A}{
+    \pgf@process{\northeast}%
+    % \pgf@x=0\pgf@x%
+    \pgf@y=0.4\pgf@y%
+  }
+
+  \anchor{B}{
+    \pgf@process{\northeast}%
+    \pgf@xa=\pgf@x
+    \pgf@process{\southwest}%
+    \pgf@x=\pgf@xa%
+    \pgf@y=0.6\pgf@y%
+  }
+
+  % Define some more useful anchors
+  \anchor{first antenna base start}{\pgf@anchor@mimodoisdireita@A}
+  \anchor{second antenna base start}{\pgf@anchor@mimodoisdireita@B}
+
+  \anchor{first antenna base end}{
+    \csname pgf@anchor@mimodoisdireita@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \csname pgf@anchor@mimodoisdireita@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+
+  \anchor{first antenna}{
+    \csname pgf@anchor@mimodoisdireita@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    \csname pgf@anchor@mimodoisdireita@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+
+  % Draw the rectangle box and the three circles
+  \backgroundpath{
+    % Rectangle box
+    \pgfpathrectanglecorners{\southwest}{\northeast}
+    
+    %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \pgf@anchor@mimodoisdireita@A
+    \csname pgf@anchor@\shape@name @A\endcsname
+    \desenhaantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \csname pgf@anchor@\shape@name @B\endcsname
+    % \pgf@anchor@mimodoisdireita@B
+    \desenhaantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  }
+}
+
+
+% Key to add font macros to the current font
+\tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}} 
+
+% Define default style for this node
+%\tikzset{flip flop/port labels/.style={font=\sffamily\scriptsize}}
+\tikzset{every mimodoisdireita node/.style={draw,minimum width=1.5cm,minimum 
+height=2cm,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
+font=\sffamily}}
+
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Modified from the example in
+% http://www.texample.net/tikz/examples/d-flip-flops-and-shift-register/
+\makeatletter
+
+\pgfdeclareshape{mimodoisesquerda}{
+  \savedmacro\antennaoffset{\def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}}
+  % The 'minimum width' and 'minimum height' keys, not the content, determine
+  % the size
+
+  % Inherit saved anchor from rectangle (\northeast and \southwest)
+  \inheritsavedanchors[from=rectangle]
+
+  % Inherit from rectangle
+  \inheritanchorborder[from=mimodoisdireita]
+
+  % Inherit normal anchors from rectangle
+  \inheritanchor[from=mimodoisdireita]{center}
+  \inheritanchor[from=mimodoisdireita]{north}
+  \inheritanchor[from=mimodoisdireita]{east}
+  \inheritanchor[from=mimodoisdireita]{south}
+  \inheritanchor[from=mimodoisdireita]{west}
+  \inheritanchor[from=mimodoisdireita]{north east}
+  \inheritanchor[from=mimodoisdireita]{north west}
+  \inheritanchor[from=mimodoisdireita]{south west}
+  \inheritanchor[from=mimodoisdireita]{south east}
+  \inheritanchor[from=mimodoisdireita]{text}
+  \inheritanchor[from=mimodoisdireita]{base}
+  \inheritanchor[from=mimodoisdireita]{mid}
+  % Posso herdar outras como "mid west", "base west", etc. Veja no código do rectangle
+
+  % Define helper anchors
+  \anchor{A}{
+    \pgf@process{\northeast}%
+    \pgf@ya=\pgf@y
+    \pgf@process{\southwest}%
+    \pgf@y=0.4\pgf@ya
+  }
+
+  \anchor{B}{
+    \pgf@process{\southwest}%
+    \pgf@y=0.6\pgf@y%
+  }
+
+  % Define some more useful anchors
+  \anchor{first antenna base start}{\pgf@anchor@mimodoisesquerda@A}
+  \anchor{second antenna base start}{\pgf@anchor@mimodoisesquerda@B}
+
+  \anchor{first antenna base end}{
+    \csname pgf@anchor@mimodoisesquerda@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \csname pgf@anchor@mimodoisesquerda@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+
+  \anchor{first antenna}{
+    \csname pgf@anchor@mimodoisesquerda@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    \csname pgf@anchor@mimodoisesquerda@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+
+  % Draw the rectangle box and the three circles
+  \inheritbackgroundpath[from=mimodoisdireita]
+}
+
+% Key to add font macros to the current font
+% \tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}} 
+
+% Define default style for this node
+%\tikzset{flip flop/port labels/.style={font=\sffamily\scriptsize}}
+\tikzset{every mimodoisesquerda node/.style={draw,minimum width=1.5cm,minimum 
+height=2cm,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
+font=\sffamily}}
+
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "figs/testnewshape_mimo2.tex"
+%%% TeX-PDF-mode: t
+%%% End: 

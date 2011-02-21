@@ -1,0 +1,325 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \pgfmathparse{1+1}\pgfmathresult
+%keys no manual do pgf -> pag 481
+
+
+% Modified from the example in
+% http://www.texample.net/tikz/examples/d-flip-flops-and-shift-register/
+\makeatletter
+
+
+\pgfset{%/pgf/.cd,%
+  antenna offset/.initial=0.3,%
+% antennaoffset/.default=0.3,%
+%  antennaoffset/.code=#1,
+  espelho/.initial=1
+  espelho/.code={\pgfkeyssetvalue{/pgf/espelho}{-\pgfkeysvalueof{/pgf/espelho}}}
+  %espelho/.code={\pgfkeyssetvalue{/pgf/antennaoffset}{-0.3cm}}
+}
+
+
+% Macro com código comum para o desenho das antenas. Antes de chamar esse
+% macro, sete os valores de pgf@x e pgf@y apropriadamente. O argumento é o
+% tamanho da reta que vai do ponto inicial até o ponto em que a antenna
+% sobe.
+\def\desenhaantenna{
+  % Guardo as posições atuais, que devem ser o ponto onde a antena começa a
+  % ser desenhada
+  \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+  \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
+
+  % #1 deve ser positivo para antena na direita e negativo caso contrário
+  \advance\pgf@xa by \antennaoffset cm
+  \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+  \pgfpathclose
+  \pgfmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+
+  \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+  \advance\pgf@yb by 0.2cm
+  \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+  
+  \pgf@xc=\pgf@xb \pgf@yc=\pgf@yb
+  \advance\pgf@xc by 0.2cm
+  \advance\pgf@yc by 0.3cm
+  \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+
+  \pgf@xa=\pgf@xc \pgf@ya=\pgf@yc
+  \advance\pgf@xa by -0.4cm
+  \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+  
+  \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+  \advance\pgf@xb by 0.2cm
+  \advance\pgf@yb by -0.3cm
+  \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+}
+
+
+\pgfdeclareshape{mimotresdireita}{
+  \savedmacro\antennaoffset{\def\antennaoffset{\pgfkeysvalueof{/pgf/antenna offset}}}
+  \savedmacro\espelho{\def\espelho{\pgfkeysvalueof{/pgf/espelho}}}
+
+  % The 'minimum width' and 'minimum height' keys, not the content, determine
+  % the size
+
+  % Inherit saved anchor from rectangle (\northeast and \southwest)
+  \inheritsavedanchors[from=rectangle]
+
+  % Inherit anchor border from rectangle
+  \inheritanchorborder[from=rectangle]
+
+  % Inherit normal anchors from rectangle
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{north west}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{south east}
+  \inheritanchor[from=rectangle]{text}
+  \inheritanchor[from=rectangle]{base}
+  \inheritanchor[from=rectangle]{mid}
+  % Posso herdar outras como "mid west", "base west", etc. Veja no código do rectangle
+
+  % Define anchors for the start of the antennas
+  \anchor{A}{
+    \pgf@process{\northeast}
+    \pgf@y=.5\pgf@y
+  }
+
+  \anchor{C}{
+    \pgf@process{\southwest}
+    \pgf@ya=.9\pgf@y % Na coordenada southwest o valor de y é negativo
+    \pgf@process{\northeast}
+    \pgf@y=\pgf@ya
+  }
+
+  % B is in the middle of A and C
+  \anchor{B}{
+    \csname pgf@anchor@mimotresdireita@C\endcsname
+    \pgf@ya=.5\pgf@y
+    \csname pgf@anchor@mimotresdireita@A\endcsname
+    \pgf@y=.5\pgf@y
+    \advance\pgf@y by \pgf@ya
+  }
+
+  % Define some more useful anchors
+  \anchor{first antenna base start}{\pgf@anchor@mimotresdireita@A}
+  \anchor{second antenna base start}{\pgf@anchor@mimotresdireita@B}
+  \anchor{third antenna base start}{\pgf@anchor@mimotresdireita@C}
+
+  \anchor{first antenna base end}{
+    % Preciso usar o \csname ... \endcsname porque a âncora "first antenna
+    % base start" possui espaços. Note que não pode ter espaço entre o
+    % final de "first antenna base start" e o \endcsname
+    \csname pgf@anchor@mimotresdireita@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \csname pgf@anchor@mimotresdireita@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{third antenna base end}{
+    \csname pgf@anchor@mimotresdireita@third antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{first antenna}{
+    \csname pgf@anchor@mimotresdireita@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    \csname pgf@anchor@mimotresdireita@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{third antenna}{
+    \csname pgf@anchor@mimotresdireita@third antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.4cm%
+  }
+
+
+  % Draw the rectangle box and the antennas
+  \backgroundpath{
+    % Rectangle box
+    \pgfpathrectanglecorners{\southwest}{\northeast}
+    %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Você pode usar \pgf@anchor@SHAPE_NAME@ANCHOR_NAME para mudar o \pgf@x
+    % e o \pgf@y para as coordenadas de uma âncora. Só que se você resolver
+    % mudar o nome do shape depois vai ter que mudar todas as linhas que
+    % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
+    \csname pgf@anchor@\shape@name @A\endcsname
+    %\pgf@anchor@mimotresdireita@A
+    \desenhaantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% \pgf@anchor@mimotresdireita@B
+    \csname pgf@anchor@\shape@name @B\endcsname
+    \desenhaantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+
+    %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% \pgf@anchor@mimotresdireita@C
+    \csname pgf@anchor@\shape@name @C\endcsname
+    \desenhaantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  }
+}
+
+
+% Key to add font macros to the current font
+\tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}} 
+
+% Define default style for this node
+%\tikzset{flip flop/port labels/.style={font=\sffamily\scriptsize}}
+\tikzset{every mimotresdireita node/.style={draw,minimum width=1.5cm,minimum 
+height=2cm,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
+font=\sffamily}}
+% \tikzset{every mimotresdireita node/.style={draw,minimum width=1.5cm,minimum 
+% height=2.12132034375cm,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
+% font=\sffamily}}
+
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Modified from the example in
+% http://www.texample.net/tikz/examples/d-flip-flops-and-shift-register/
+\makeatletter
+
+\pgfdeclareshape{mimotresesquerda}{
+  \savedmacro\antennaoffset{\def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}}
+  \savedmacro\espelho{\def\espelho{\pgfkeysvalueof{/pgf/espelho}}}
+
+  % The 'minimum width' and 'minimum height' keys, not the content, determine
+  % the size
+
+  % Inherit saved anchor from rectangle (\northeast and \southwest)
+  \inheritsavedanchors[from=rectangle]
+
+  % Inherit from rectangle
+  \inheritanchorborder[from=mimotresdireita]
+
+  % Inherit normal anchors from rectangle
+  \inheritanchor[from=mimotresdireita]{center}
+  \inheritanchor[from=mimotresdireita]{north}
+  \inheritanchor[from=mimotresdireita]{east}
+  \inheritanchor[from=mimotresdireita]{south}
+  \inheritanchor[from=mimotresdireita]{west}
+  \inheritanchor[from=mimotresdireita]{north east}
+  \inheritanchor[from=mimotresdireita]{north west}
+  \inheritanchor[from=mimotresdireita]{south west}
+  \inheritanchor[from=mimotresdireita]{south east}
+  \inheritanchor[from=mimotresdireita]{text}
+  \inheritanchor[from=mimotresdireita]{base}
+  \inheritanchor[from=mimotresdireita]{mid}
+  % Posso herdar outras como "mid west", "base west", etc. Veja no código do rectangle
+
+
+  % Define anchors for the start of the antennas
+  \anchor{A}{
+    \pgf@process{\southwest}
+    \pgf@xa=\pgf@x
+    \pgf@process{\northeast}
+    \pgf@x=\pgf@xa
+    \pgf@y=.5\pgf@y
+  }
+
+  \anchor{C}{
+    \pgf@process{\southwest}
+    \pgf@xa=\pgf@x
+    \pgf@ya=.9\pgf@y % Na coordenada southwest o valor de y é negativo
+    \pgf@process{\northeast}
+    \pgf@x=\pgf@xa
+    \pgf@y=\pgf@ya
+  }
+
+  % B is in the middle of A and C
+  \anchor{B}{
+    \csname pgf@anchor@mimotresesquerda@C\endcsname
+    \pgf@ya=.5\pgf@y
+    \csname pgf@anchor@mimotresesquerda@A\endcsname
+    \pgf@y=.5\pgf@y
+    \advance\pgf@y by \pgf@ya
+  }
+
+  % Define some more useful anchors
+  \anchor{first antenna base start}{\pgf@anchor@mimotresesquerda@A}
+  \anchor{second antenna base start}{\pgf@anchor@mimotresesquerda@B}
+  \anchor{third antenna base start}{\pgf@anchor@mimotresesquerda@C}
+
+  \anchor{first antenna base end}{
+    % Preciso usar o \csname ... \endcsname porque a âncora "first antenna
+    % base start" possui espaços. Note que não pode ter espaço entre o
+    % final de "first antenna base start" e o \endcsname
+    \csname pgf@anchor@mimotresesquerda@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \csname pgf@anchor@mimotresesquerda@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{third antenna base end}{
+    \csname pgf@anchor@mimotresesquerda@third antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{first antenna}{
+    \csname pgf@anchor@mimotresesquerda@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    \csname pgf@anchor@mimotresesquerda@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{third antenna}{
+    \csname pgf@anchor@mimotresesquerda@third antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset cm%
+    \advance\pgf@y by 0.4cm%
+  }
+
+
+  % Draw the rectangle box and the antennas
+  \inheritbackgroundpath[from=mimotresdireita]
+}
+
+% Key to add font macros to the current font
+% \tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}} 
+
+% Define default style for this node
+%\tikzset{flip flop/port labels/.style={font=\sffamily\scriptsize}}
+\tikzset{every mimotresesquerda node/.style={draw,minimum width=1.5cm,minimum 
+height=2cm,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
+font=\sffamily}}
+
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "figs/testnewshape.tex"
+%%% TeX-PDF-mode: t
+%%% End: 
