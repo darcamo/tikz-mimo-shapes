@@ -1,0 +1,553 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Modified from the example in
+% http://www.texample.net/tikz/examples/d-flip-flops-and-shift-register/
+\makeatletter
+
+\pgfdeclareshape{mimotresdireita}{
+  % The 'minimum width' and 'minimum height' keys, not the content, determine
+  % the size
+
+
+  % \pgf@y=.\ht\pgfnodeparttextbox % height of the box
+  % \pgf@x=.\wd\pgfnodeparttextbox % width of the box
+  % \setlength{\pgf@xa}{\pgfshapeminwidth}
+  % \ifdim\pgf@x<.5\pgf@xa
+  % \pgf@x=.5\pgf@xa
+  % \fi
+
+  \savedanchor\northeast{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{\pgfshapeminwidth}
+    \ifdim\pgf@x<.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+  }
+  % This is redundant, but makes some things easier:
+  \savedanchor\southwest{%
+    \pgf@y=-.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=-.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{-\pgfshapeminwidth}
+    \ifdim\pgf@x>.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{-\pgfshapeminheight}
+    \ifdim\pgf@y>.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+  }
+
+  \savedanchor\firstantennabase{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{\pgfshapeminwidth}
+    \ifdim\pgf@x<.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.3\pgf@ya
+    \pgf@y=.3\pgf@ya
+    \fi
+  }
+
+  \savedanchor\secondantennabase{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{\pgfshapeminwidth}
+    \ifdim\pgf@x<.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \pgf@y=0.0\pgf@y
+  }
+  
+  \savedanchor\thirdantennabase{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{\pgfshapeminwidth}
+    \ifdim\pgf@x<.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y>-.3\pgf@ya
+    \pgf@y=-.3\pgf@ya
+    \fi
+  }
+
+  % Inherit from rectangle
+  \inheritanchorborder[from=rectangle]
+
+  % Define same anchor a normal rectangle has
+  \anchor{center}{\pgfpointorigin}
+  \anchor{north}{\northeast \pgf@x=0pt}
+  \anchor{east}{\northeast \pgf@y=0pt}
+  \anchor{south}{\southwest \pgf@x=0pt}
+  \anchor{west}{\southwest \pgf@y=0pt}
+  \anchor{north east}{\northeast}
+  \anchor{north west}{\northeast \pgf@x=-\pgf@x}
+  \anchor{south west}{\southwest}
+  \anchor{south east}{\southwest \pgf@x=-\pgf@x}
+  \anchor{text}{
+    \pgfpointorigin
+    \advance\pgf@x by -.5\wd\pgfnodeparttextbox%
+    \advance\pgf@y by -.5\ht\pgfnodeparttextbox%
+    \advance\pgf@y by +.5\dp\pgfnodeparttextbox%
+  }
+
+  % \anchor{first antenna base}{
+  %   \pgf@process{\northeast}%
+  %   \pgf@y=0.6\pgf@y%
+  % }
+  \anchor{first antenna base start}{\firstantennabase}
+  \anchor{second antenna base start}{\secondantennabase}
+  \anchor{third antenna base start}{\thirdantennabase}
+
+  \anchor{first antenna base end}{
+    \firstantennabase
+    \advance\pgf@x by 0.3cm%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \secondantennabase
+    \advance\pgf@x by 0.3cm%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{third antenna base end}{
+    \thirdantennabase
+    \advance\pgf@x by 0.3cm%
+    \advance\pgf@y by 0.2cm%
+  }
+
+
+  \anchor{first antenna}{
+    \firstantennabase
+    \advance\pgf@x by 0.3cm%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    \secondantennabase
+    \advance\pgf@x by 0.3cm%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{third antenna}{
+    \thirdantennabase
+    \advance\pgf@x by 0.3cm%
+    \advance\pgf@y by 0.4cm%
+  }
+
+  % Define anchors for signal ports
+
+  \anchor{A}{
+    \pgf@process{\firstantennabase}%
+    % \pgf@x=0\pgf@x%
+    % \pgf@y=0.6\pgf@y%
+  }
+
+  \anchor{B}{
+    \pgf@process{\secondantennabase}%
+    % \pgf@x=0\pgf@x%
+    % \pgf@y=0\pgf@y%
+  }
+
+  \anchor{C}{
+    \pgf@process{\thirdantennabase}%
+    % \pgf@x=0\pgf@x%
+    % \pgf@y=-0.6\pgf@y%
+  }
+
+
+  % Draw the rectangle box and the three circles
+  \backgroundpath{
+    % Rectangle box
+    \pgfpathrectanglecorners{\southwest}{\northeast}
+    
+    %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%\pgf@anchor@mimotresdireita@A
+    % Você pode usar \pgf@anchor@SHAPE_NAME@ANCHOR_NAME para mudar o \pgf@x
+    % e o \pgf@y para as coordenadas de uma âncora. Só que se você resolver
+    % mudar o nome do shape depois vai ter que mudar todas as linhas que
+    % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
+    \csname pgf@anchor@\shape@name @A\endcsname
+    \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
+
+    \advance\pgf@xa by 0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@yb by 0.2cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    
+    \pgf@xc=\pgf@xb \pgf@yc=\pgf@yb
+    \advance\pgf@xc by 0.2cm
+    \advance\pgf@yc by 0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+
+    \pgf@xa=\pgf@xc \pgf@ya=\pgf@yc
+    \advance\pgf@xa by -0.4cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@xb by 0.2cm
+    \advance\pgf@yb by -0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %\pgf@anchor@mimotresdireita@B
+    \csname pgf@anchor@\shape@name @B\endcsname
+    \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
+
+    \advance\pgf@xa by 0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@yb by 0.2cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    
+    \pgf@xc=\pgf@xb \pgf@yc=\pgf@yb
+    \advance\pgf@xc by 0.2cm
+    \advance\pgf@yc by 0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+
+    \pgf@xa=\pgf@xc \pgf@ya=\pgf@yc
+    \advance\pgf@xa by -0.4cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@xb by 0.2cm
+    \advance\pgf@yb by -0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+
+    %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %\pgf@anchor@mimotresdireita@C
+    \csname pgf@anchor@\shape@name @C\endcsname
+    \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
+
+    \advance\pgf@xa by 0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@yb by 0.2cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    
+    \pgf@xc=\pgf@xb \pgf@yc=\pgf@yb
+    \advance\pgf@xc by 0.2cm
+    \advance\pgf@yc by 0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+
+    \pgf@xa=\pgf@xc \pgf@ya=\pgf@yc
+    \advance\pgf@xa by -0.4cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@xb by 0.2cm
+    \advance\pgf@yb by -0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  }
+}
+
+
+% Key to add font macros to the current font
+\tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}} 
+
+% Define default style for this node
+%\tikzset{flip flop/port labels/.style={font=\sffamily\scriptsize}}
+\tikzset{every mimotresdireita node/.style={draw,minimum width=1.5cm,minimum 
+height=2.12132034375cm,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
+font=\sffamily}}
+
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Modified from the example in
+% http://www.texample.net/tikz/examples/d-flip-flops-and-shift-register/
+\makeatletter
+
+\pgfdeclareshape{mimotresesquerda}{
+  % The 'minimum width' and 'minimum height' keys, not the content, determine
+  % the size
+
+
+  % \pgf@y=.\ht\pgfnodeparttextbox % height of the box
+  % \pgf@x=.\wd\pgfnodeparttextbox % width of the box
+  % \setlength{\pgf@xa}{\pgfshapeminwidth}
+  % \ifdim\pgf@x<.5\pgf@xa
+  % \pgf@x=.5\pgf@xa
+  % \fi
+
+  \savedanchor\northeast{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{\pgfshapeminwidth}
+    \ifdim\pgf@x<.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+  }
+  % This is redundant, but makes some things easier:
+  \savedanchor\southwest{%
+    \pgf@y=-.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=-.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{-\pgfshapeminwidth}
+    \ifdim\pgf@x>.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{-\pgfshapeminheight}
+    \ifdim\pgf@y>.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+  }
+
+  \savedanchor\firstantennabase{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=-.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{\pgfshapeminwidth}
+    \ifdim\pgf@x>-.5\pgf@xa
+    \pgf@x=-.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.3\pgf@ya
+    \pgf@y=.3\pgf@ya
+    \fi
+  }
+
+  \savedanchor\secondantennabase{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=-.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{\pgfshapeminwidth}
+    \ifdim\pgf@x>-.5\pgf@xa
+    \pgf@x=-.5\pgf@xa
+    \fi
+    \pgf@y=0.0\pgf@y
+  }
+  
+  \savedanchor\thirdantennabase{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=-.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{\pgfshapeminwidth}
+    \ifdim\pgf@x>-.5\pgf@xa
+    \pgf@x=-.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y>-.3\pgf@ya
+    \pgf@y=-.3\pgf@ya
+    \fi
+  }
+
+  % Inherit from rectangle
+  \inheritanchorborder[from=rectangle]
+
+  % Define same anchor a normal rectangle has
+  \anchor{center}{\pgfpointorigin}
+  \anchor{north}{\northeast \pgf@x=0pt}
+  \anchor{east}{\northeast \pgf@y=0pt}
+  \anchor{south}{\southwest \pgf@x=0pt}
+  \anchor{west}{\southwest \pgf@y=0pt}
+  \anchor{north east}{\northeast}
+  \anchor{north west}{\northeast \pgf@x=-\pgf@x}
+  \anchor{south west}{\southwest}
+  \anchor{south east}{\southwest \pgf@x=-\pgf@x}
+  \anchor{text}{
+    \pgfpointorigin
+    \advance\pgf@x by -.5\wd\pgfnodeparttextbox%
+    \advance\pgf@y by -.5\ht\pgfnodeparttextbox%
+    \advance\pgf@y by +.5\dp\pgfnodeparttextbox%
+  }
+
+  % \anchor{first antenna base}{
+  %   \pgf@process{\northeast}%
+  %   \pgf@y=0.6\pgf@y%
+  % }
+  \anchor{first antenna base start}{\firstantennabase}
+  \anchor{second antenna base start}{\secondantennabase}
+  \anchor{third antenna base start}{\thirdantennabase}
+
+  \anchor{first antenna base end}{
+    \firstantennabase
+    \advance\pgf@x by -0.3cm%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \secondantennabase
+    \advance\pgf@x by -0.3cm%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{third antenna base end}{
+    \thirdantennabase
+    \advance\pgf@x by -0.3cm%
+    \advance\pgf@y by 0.2cm%
+  }
+
+
+  \anchor{first antenna}{
+    \firstantennabase
+    \advance\pgf@x by -0.3cm%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    \secondantennabase
+    \advance\pgf@x by -0.3cm%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{third antenna}{
+    \thirdantennabase
+    \advance\pgf@x by -0.3cm%
+    \advance\pgf@y by 0.4cm%
+  }
+
+
+  % Define helper anchors
+  \anchor{A}{
+    \pgf@process{\firstantennabase}%
+    % \pgf@x=0\pgf@x%
+    % \pgf@y=0.6\pgf@y%
+  }
+
+  \anchor{B}{
+    \pgf@process{\secondantennabase}%
+    % \pgf@x=0\pgf@x%
+    % \pgf@y=0\pgf@y%
+  }
+
+  \anchor{C}{
+    \pgf@process{\thirdantennabase}%
+    % \pgf@x=0\pgf@x%
+    % \pgf@y=-0.6\pgf@y%
+  }
+
+
+  % Draw the rectangle box and the three circles
+  \backgroundpath{
+    % Rectangle box
+    \pgfpathrectanglecorners{\southwest}{\northeast}
+        %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \pgf@anchor@mimotresesquerda@A
+    \csname pgf@anchor@\shape@name @A\endcsname
+    \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
+
+    \advance\pgf@xa by -0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@yb by 0.2cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    
+    \pgf@xc=\pgf@xb \pgf@yc=\pgf@yb
+    \advance\pgf@xc by 0.2cm
+    \advance\pgf@yc by 0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+
+    \pgf@xa=\pgf@xc \pgf@ya=\pgf@yc
+    \advance\pgf@xa by -0.4cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@xb by 0.2cm
+    \advance\pgf@yb by -0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \pgf@anchor@mimotresesquerda@B
+    \csname pgf@anchor@\shape@name @B\endcsname
+    \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
+
+    \advance\pgf@xa by -0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@yb by 0.2cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    
+    \pgf@xc=\pgf@xb \pgf@yc=\pgf@yb
+    \advance\pgf@xc by 0.2cm
+    \advance\pgf@yc by 0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+
+    \pgf@xa=\pgf@xc \pgf@ya=\pgf@yc
+    \advance\pgf@xa by -0.4cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@xb by 0.2cm
+    \advance\pgf@yb by -0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+
+    %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \pgf@anchor@mimotresesquerda@C
+    \csname pgf@anchor@\shape@name @C\endcsname
+    \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
+
+    \advance\pgf@xa by -0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@yb by 0.2cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    
+    \pgf@xc=\pgf@xb \pgf@yc=\pgf@yb
+    \advance\pgf@xc by 0.2cm
+    \advance\pgf@yc by 0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+
+    \pgf@xa=\pgf@xc \pgf@ya=\pgf@yc
+    \advance\pgf@xa by -0.4cm
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    
+    \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+    \advance\pgf@xb by 0.2cm
+    \advance\pgf@yb by -0.3cm
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  }
+}
+
+% Key to add font macros to the current font
+% \tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}} 
+
+% Define default style for this node
+%\tikzset{flip flop/port labels/.style={font=\sffamily\scriptsize}}
+\tikzset{every mimotresesquerda node/.style={draw,minimum width=1.5cm,minimum 
+height=2.12132034375cm,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
+font=\sffamily}}
+
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "figs/testnewshape.tex"
+%%% TeX-PDF-mode: t
+%%% End: 
