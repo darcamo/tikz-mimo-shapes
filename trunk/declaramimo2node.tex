@@ -25,7 +25,7 @@
 % Macro with the common code to draw an antenna. Before calling this macro
 % (inside the backgroundpath or similar)you need to set the values of
 % \pgf@x and \pgf@y to point to the start of the antenna. 
-\def\drawantennas{
+\def\drawantenna{
   % Store the current positions
   \pgf@xa=\pgf@x \pgf@ya=\pgf@y
   \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
@@ -249,16 +249,16 @@
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % \pgf@anchor@mimodois@A
     \csname pgf@anchor@\shape@name @A\endcsname
-    % The drawantennas command only needs that pgf@x and pgf@y are
+    % The drawantenna command only needs that pgf@x and pgf@y are
     % correctly set. This is set by calling the anchor A
-    \drawantennas
+    \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \csname pgf@anchor@\shape@name @B\endcsname
     % \pgf@anchor@mimodois@B
-    \drawantennas
+    \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
 }
@@ -512,16 +512,16 @@
 %     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     % \pgf@anchor@mimodoisdireita@A
 %     \csname pgf@anchor@\shape@name @A\endcsname
-%     % The drawantennas command only needs that pgf@x and pgf@y are
+%     % The drawantenna command only needs that pgf@x and pgf@y are
 %     % correctly set. This is set by calling the anchor A
-%     \drawantennas
+%     \drawantenna
 %     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     \csname pgf@anchor@\shape@name @B\endcsname
 %     % \pgf@anchor@mimodoisdireita@B
-%     \drawantennas
+%     \drawantenna
 %     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %   }
