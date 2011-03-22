@@ -9,10 +9,8 @@
 
 \newif\ifleftantennas
 
-% The keys that the user can provide are:
-%   "right antennas" (default if not provided)
-%   "left antennas"
-%   "antenna offset=some value" (default is 0.3cm)
+% The keys that the user can provide are all the keys below, except
+% "leftantennas" (use the "right antennas" or "left antennas" keys instead)
 \pgfkeys{
   /mimonode/leftantennas/.is if=leftantennas,
   /pgf/.cd,
@@ -20,10 +18,14 @@
   left antennas/.code={\pgfkeys{/mimonode/leftantennas=true}},
   minimum width/.initial=1.5cm,
   minimum height/.initial=2cm,
-  circle color/.initial=white,
+  circle fill color/.initial=white,
+  circle stroke color/.initial=black,
   antenna offset/.initial=0.3 cm,
   antenna base height/.initial=0.2 cm,
+  antenna side/.initial=0.4cm, % Ainda não estou usando
 }
+
+
 
 % Macro with the common code to draw an antenna. Before calling this macro
 % (inside the backgroundpath or similar)you need to set the values of
@@ -38,22 +40,28 @@
   \pgfpathclose
   \pgfmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
 
+  % \pgf@xb and \pgf@yb will have the coordinate with the starting point to
+  % draw the triangle
   \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
   \advance\pgf@yb by \antennabaseheight cm
   \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
   
-  \pgf@xc=\pgf@xb \pgf@yc=\pgf@yb
-  \advance\pgf@xc by 0.2cm
-  \advance\pgf@yc by 0.3cm
-  \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
 
-  \pgf@xa=\pgf@xc \pgf@ya=\pgf@yc
-  \advance\pgf@xa by -0.4cm
-  \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+  \pgf@process{
+    \pgfpointadd{\pgfpoint{\pgf@xb}{\pgf@yb}}{\pgfpointpolar{60}{\pgfkeysvalueof{/pgf/antenna side}}}
+  }
+  \pgf@xc=\pgf@x \pgf@yc=\pgf@y
+  \pgfpathlineto{\pgfpoint{\pgf@x}{\pgf@y}}
   
-  \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
-  \advance\pgf@xb by 0.2cm
-  \advance\pgf@yb by -0.3cm
+  
+  \pgf@process{
+    \pgfpointadd{\pgfpoint{\pgf@xc}{\pgf@yc}}{\pgfpointpolar{180}{\pgfkeysvalueof{/pgf/antenna side}}}
+  }
+  \pgfpathlineto{\pgfpoint{\pgf@x}{\pgf@y}}
+  
+  \pgf@process{
+    \pgfpointadd{\pgfpoint{\pgf@xb}{\pgf@yb}}{\pgfpointpolar{240}{\pgfkeysvalueof{/pgf/antenna side}}}
+  }
   \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
 }
 
@@ -511,7 +519,8 @@
       \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
       \csname pgf@anchor@\shape@name @B\endcsname
       \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
-      \pgfsetfillcolor{\pgfkeysvalueof{/pgf/circle color}}
+      \pgfsetfillcolor{\pgfkeysvalueof{/pgf/circle fill color}}
+      \pgfsetstrokecolor{\pgfkeysvalueof{/pgf/circle stroke color}}
       \pgfusepath{stroke,fill}
     }
   }
@@ -581,7 +590,8 @@
       \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
       \csname pgf@anchor@\shape@name @C\endcsname
       \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
-      \pgfsetfillcolor{\pgfkeysvalueof{/pgf/circle color}}
+      \pgfsetfillcolor{\pgfkeysvalueof{/pgf/circle fill color}}
+      \pgfsetstrokecolor{\pgfkeysvalueof{/pgf/circle stroke color}}
       \pgfusepath{stroke,fill}
       }
   }
