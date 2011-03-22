@@ -1,0 +1,607 @@
+% Modified from the example in
+% http://www.texample.net/tikz/examples/d-flip-flops-and-shift-register/
+
+
+%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxx Mimo Shape with two antennas xxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\makeatletter
+
+\newif\ifleftantennas
+
+% The keys that the user can provide are:
+%   "right antennas" (default if not provided)
+%   "left antennas"
+%   "antenna offset=some value" (default is 0.3cm)
+\pgfkeys{
+  /mimonode/leftantennas/.is if=leftantennas,
+  /pgf/.cd,
+  right antennas/.code={\pgfkeys{/mimonode/leftantennas=false}},
+  left antennas/.code={\pgfkeys{/mimonode/leftantennas=true}},
+  minimum width/.initial=1.5cm,
+  minimum height/.initial=2cm,
+  circle color/.initial=white,
+  antenna offset/.initial=0.3 cm,
+  antenna base height/.initial=0.2 cm,
+}
+
+% Macro with the common code to draw an antenna. Before calling this macro
+% (inside the backgroundpath or similar)you need to set the values of
+% \pgf@x and \pgf@y to point to the start of the antenna. 
+\def\drawantenna{
+  % Store the current positions in \pgf@xa and \pgf@ya
+  \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+  \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
+
+  \advance\pgf@xa by \antennaoffset
+  \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+  \pgfpathclose
+  \pgfmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+
+  \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+  \advance\pgf@yb by \antennabaseheight cm
+  \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+  
+  \pgf@xc=\pgf@xb \pgf@yc=\pgf@yb
+  \advance\pgf@xc by 0.2cm
+  \advance\pgf@yc by 0.3cm
+  \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+
+  \pgf@xa=\pgf@xc \pgf@ya=\pgf@yc
+  \advance\pgf@xa by -0.4cm
+  \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+  
+  \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+  \advance\pgf@xb by 0.2cm
+  \advance\pgf@yb by -0.3cm
+  \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+}
+
+% The code to determine the X coordinate for the anchors in the start of
+% each antenna is common for all antennas. Therefore, it is better to
+% define a macro with it and just call the macro when define the
+% savedanchors
+\def\antennaStartXCoordinate{
+  % x position
+  \ifleftantennas
+  % Anchor position when the "left antennas" key is used
+  \pgf@x=-.5\wd\pgfnodeparttextbox
+  \setlength{\pgf@xa}{-\pgfshapeminwidth}
+  \ifdim\pgf@x>.5\pgf@xa
+  \pgf@x=.5\pgf@xa
+  \fi
+  \else
+  % Anchor position when the "left antennas" key is not used or when
+  % the "right antennas" key is used.
+  \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+  \setlength{\pgf@xa}{\pgfshapeminwidth}
+  \ifdim\pgf@x<.5\pgf@xa
+  \pgf@x=.5\pgf@xa
+  \fi
+  \fi
+}
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx mimodois shape declaration xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\pgfdeclareshape{mimodois}{
+  \savedmacro\antennaoffset{
+    \ifleftantennas
+      \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
+    \else
+      \def\antennaoffset{\pgfkeysvalueof{/pgf/antenna offset}}
+    \fi
+  }
+
+  \savedmacro\antennabaseheight{
+    \def\antennabaseheight{\pgfkeysvalueof{/pgf/antenna base height}}
+  }
+
+  \savedmacro\shapewidth{
+    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
+    }
+
+    \savedmacro\shapeheight{
+      \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
+    }
+
+
+  % Inherit saved anchor from rectangle (\northeast and \southwest)
+    %\inheritsavedanchors[from=rectangle]
+  \savedanchor\northeast{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{\shapewidth}
+    \ifdim\pgf@x<.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{\shapeheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+  }
+  % This is redundant, but makes some things easier:
+  \savedanchor\southwest{%
+    % \pgf@x=\xmin
+    % \pgf@y=\ymin
+    \pgf@y=-.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=-.5\wd\pgfnodeparttextbox % width of the box
+    \setlength{\pgf@xa}{-\shapewidth}
+    \ifdim\pgf@x>.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{-\shapeheight}
+    \ifdim\pgf@y>.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+  }
+
+  % This anchor position will depend if the "left antennas" option was
+  % passed or not
+  \savedanchor{\anchorA}{
+    % y position for the first antenna
+    \pgf@y=.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@y=0.4\pgf@y
+    %
+    % x position
+    \antennaStartXCoordinate
+  }
+
+  % This anchor position will depend if the "left antennas" option was
+  % passed or not
+  \savedanchor{\anchorB}{
+    % y position for the first antenna
+    \pgf@y=-.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{-\pgfshapeminheight}
+    \ifdim\pgf@y>.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@y=0.6\pgf@y
+    %
+    % x position
+    \antennaStartXCoordinate
+  }
+ 
+  \anchor{A}{\anchorA}
+  \anchor{B}{\anchorB}
+
+  % Inherit anchor border from rectangle
+    \inheritanchorborder[from=rectangle]
+
+  % Inherit normal anchors from rectangle
+  % \inheritanchor[from=rectangle]{center}
+    \anchor{center}{\pgfpointorigin}
+  % \inheritanchor[from=rectangle]{north}
+    \anchor{north}{ \northeast \pgf@x=0pt }
+  % \inheritanchor[from=rectangle]{east}
+    \anchor{east}{\northeast \pgf@y=0pt}
+  % \inheritanchor[from=rectangle]{south}
+    \anchor{south}{ \southwest \pgf@x=0pt }
+  % \inheritanchor[from=rectangle]{west}
+    \anchor{west}{\southwest \pgf@y=0pt}
+  % \inheritanchor[from=rectangle]{north east}
+    \anchor{north east}{\northeast}
+  % \inheritanchor[from=rectangle]{north west}
+    \anchor{north west}{\northeast \pgf@x=-\pgf@x}
+  % \inheritanchor[from=rectangle]{south west}
+    \anchor{south west}{\southwest}
+  % \inheritanchor[from=rectangle]{south east}
+    \anchor{south east}{\southwest \pgf@x=-\pgf@x}
+  % \inheritanchor[from=rectangle]{text}
+    \anchor{text}{
+    \pgfpointorigin
+    \advance\pgf@x by -.5\wd\pgfnodeparttextbox%
+    \advance\pgf@y by -.5\ht\pgfnodeparttextbox%
+    \advance\pgf@y by +.5\dp\pgfnodeparttextbox%
+  }
+  % \inheritanchor[from=rectangle]{base}
+  % \inheritanchor[from=rectangle]{mid}
+  % We can inheritanchor other anchors, such as "mid west", "base west",
+  % etc. See the code for the rectangle shape.
+
+
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % Define some more useful anchors
+  \anchor{first antenna base start}{
+    \pgf@anchor@mimodois@A
+  }
+  
+  \anchor{second antenna base start}{
+    \pgf@anchor@mimodois@B
+  }
+
+  \anchor{first antenna base end}{
+    \csname pgf@anchor@mimodois@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \csname pgf@anchor@mimodois@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+
+  \anchor{first antenna}{
+    \csname pgf@anchor@mimodois@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    \csname pgf@anchor@mimodois@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+
+  % Draw the rectangle box and the three circles
+  \backgroundpath{
+    % Rectangle box
+    \pgfpathrectanglecorners{\southwest}{\northeast}
+
+    % Delete the two lines below (used for debugging)
+    %\southwest
+    % \pgftext[top,right,at={\pgfpoint{\pgf@x}{\pgf@y}}]{\pgfkeysvalueof{/mimonode/antennastotheleft}}
+
+    %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \pgf@anchor@mimodois@A
+    \csname pgf@anchor@\shape@name @A\endcsname
+    % The drawantenna command only needs that pgf@x and pgf@y are
+    % correctly set. This is set by calling the anchor A
+    \drawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \csname pgf@anchor@\shape@name @B\endcsname
+    % \pgf@anchor@mimodois@B
+    \drawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  }
+}
+
+
+% Key to add font macros to the current font
+\tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}} 
+
+% Define default style for this node
+%\tikzset{flip flop/port labels/.style={font=\sffamily\scriptsize}}
+% \tikzset{every mimodois node/.style={draw,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
+% font=\sffamily}}
+
+\makeatother
+
+
+
+%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxx Mimo Shape with three antennas xxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\makeatletter
+
+\pgfdeclareshape{mimotres}{
+  \savedmacro\antennaoffset{
+    \ifleftantennas
+      \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
+    \else
+      \def\antennaoffset{\pgfkeysvalueof{/pgf/antenna offset}}
+    \fi
+  }
+
+  \savedmacro\antennabaseheight{
+    \def\antennabaseheight{\pgfkeysvalueof{/pgf/antenna base height}}
+  }
+
+  \savedmacro\shapewidth{
+    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
+  }
+
+  \savedmacro\shapeheight{
+    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
+  }
+
+
+  % Inherit saved anchor from rectangle (\northeast and \southwest)
+  % \inheritsavedanchors[from=rectangle]
+  \inheritsavedanchors[from=mimodois]
+
+  % Inherit anchor border from mimodois
+  \inheritanchorborder[from=mimodois]
+
+  % Inherit normal anchors from mimodois
+  \inheritanchor[from=mimodois]{center}
+  \inheritanchor[from=mimodois]{north}
+  \inheritanchor[from=mimodois]{east}
+  \inheritanchor[from=mimodois]{south}
+  \inheritanchor[from=mimodois]{west}
+  \inheritanchor[from=mimodois]{north east}
+  \inheritanchor[from=mimodois]{north west}
+  \inheritanchor[from=mimodois]{south west}
+  \inheritanchor[from=mimodois]{south east}
+  \inheritanchor[from=mimodois]{text}
+  % \inheritanchor[from=mimodois]{base}
+  % \inheritanchor[from=mimodois]{mid}
+  % Posso herdar outras como "mid west", "base west", etc. Veja no código do rectangle
+
+  % Define anchors for the start of the antennas
+  \savedanchor{\anchorA}{
+    % \pgf@process{\northeast}
+    % \pgf@y=.5\pgf@y
+        % y position for the first antenna
+    \pgf@y=.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@y=0.5\pgf@y
+    %
+    % x position
+    \antennaStartXCoordinate
+  }
+
+  \savedanchor{\anchorC}{
+    % y position for the first antenna
+    \pgf@y=-.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{-\pgfshapeminheight}
+    \ifdim\pgf@y>.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@y=0.9\pgf@y
+    %
+    % x position
+    \antennaStartXCoordinate
+  }
+
+  % B is in the middle of A and C
+  \savedanchor{\anchorB}{
+    % y position
+    % First we get y position of anchor A
+    \pgf@y=.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@ya=0.5\pgf@y
+    % Then we get y position of anchor C
+    \pgf@y=-.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@yc}{-\pgfshapeminheight}
+    \ifdim\pgf@y>.5\pgf@yc
+    \pgf@y=.5\pgf@yc
+    \fi
+    \pgf@yc=0.9\pgf@y
+    % y position of anchor B is in the middle of anchor A and C
+    \pgf@y=0.5\pgf@yc
+    \advance\pgf@y by 0.5\pgf@ya
+    %
+    % x position
+    \antennaStartXCoordinate
+  }
+
+  \anchor{A}{\anchorA}
+  \anchor{B}{\anchorB}
+  \anchor{C}{\anchorC}
+
+
+  % Define some more useful anchors
+  \anchor{first antenna base start}{\pgf@anchor@mimotres@A}
+  \anchor{second antenna base start}{\pgf@anchor@mimotres@B}
+  \anchor{third antenna base start}{\pgf@anchor@mimotres@C}
+
+  \anchor{first antenna base end}{
+    % Preciso usar o \csname ... \endcsname porque a âncora "first antenna
+    % base start" possui espaços. Note que não pode ter espaço entre o
+    % final de "first antenna base start" e o \endcsname
+    \csname pgf@anchor@mimotres@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \csname pgf@anchor@mimotres@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{third antenna base end}{
+    \csname pgf@anchor@mimotres@third antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{first antenna}{
+    \csname pgf@anchor@mimotres@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    \csname pgf@anchor@mimotres@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{third antenna}{
+    \csname pgf@anchor@mimotres@third antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+
+
+  % Draw the rectangle box and the antennas
+  \backgroundpath{
+    % Rectangle box
+    \pgfpathrectanglecorners{\southwest}{\northeast}
+    %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Você pode usar \pgf@anchor@SHAPE_NAME@ANCHOR_NAME para mudar o \pgf@x
+    % e o \pgf@y para as coordenadas de uma âncora. Só que se você resolver
+    % mudar o nome do shape depois vai ter que mudar todas as linhas que
+    % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
+    \csname pgf@anchor@\shape@name @A\endcsname
+    %\pgf@anchor@mimotres@A
+    \drawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% \pgf@anchor@mimotres@B
+    \csname pgf@anchor@\shape@name @B\endcsname
+    \drawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+
+    %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% \pgf@anchor@mimotres@C
+    \csname pgf@anchor@\shape@name @C\endcsname
+    \drawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  }
+}
+
+\makeatother
+
+
+%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxx Caixa Dois Node xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\makeatletter
+
+\pgfdeclareshape{caixadois}{
+
+  \inheritsavedanchors[from=mimodois]
+
+  % Inherit from rectangle
+  \inheritanchorborder[from=mimodois]
+
+  % Define same anchor a normal rectangle has
+  \inheritanchor[from=mimodois]{center}
+  \inheritanchor[from=mimodois]{north}
+  \inheritanchor[from=mimodois]{east}
+  \inheritanchor[from=mimodois]{south}
+  \inheritanchor[from=mimodois]{west}
+  \inheritanchor[from=mimodois]{north east}
+  \inheritanchor[from=mimodois]{north west}
+  \inheritanchor[from=mimodois]{south west}
+  \inheritanchor[from=mimodois]{south east}
+  \inheritanchor[from=mimodois]{text}
+
+  % Define anchors for signal ports
+
+  \anchor{A}{
+    \pgf@process{\northeast}%
+    \pgf@x=0\pgf@x%
+    \pgf@y=0.5\pgf@y%
+  }
+
+  \anchor{B}{
+    \pgf@process{\northeast}%
+    \pgf@x=0\pgf@x%
+    \pgf@y=-0.5\pgf@y%
+  }
+
+
+  % Draw the rectangle box and the three circles
+  \backgroundpath{
+    % Rectangle box
+    {
+      \pgfpathrectanglecorners{\southwest}{\northeast}
+      \pgfusepath{stroke,fill}
+    }
+    
+    % The two circles
+    {
+      \csname pgf@anchor@\shape@name @A\endcsname
+      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+      \csname pgf@anchor@\shape@name @B\endcsname
+      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+      \pgfsetfillcolor{\pgfkeysvalueof{/pgf/circle color}}
+      \pgfusepath{stroke,fill}
+    }
+  }
+}
+
+\makeatother
+
+
+%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxx Caixa Tres Node xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\makeatletter
+
+\pgfdeclareshape{caixatres}{
+
+  \inheritsavedanchors[from=mimodois]
+
+  % Inherit from rectangle
+  \inheritanchorborder[from=mimodois]
+
+  % Define same anchor a normal rectangle has
+  \inheritanchor[from=mimodois]{center}
+  \inheritanchor[from=mimodois]{north}
+  \inheritanchor[from=mimodois]{east}
+  \inheritanchor[from=mimodois]{south}
+  \inheritanchor[from=mimodois]{west}
+  \inheritanchor[from=mimodois]{north east}
+  \inheritanchor[from=mimodois]{north west}
+  \inheritanchor[from=mimodois]{south west}
+  \inheritanchor[from=mimodois]{south east}
+  \inheritanchor[from=mimodois]{text}
+
+  % Define anchors for signal ports
+
+  \anchor{A}{
+    \pgf@process{\northeast}%
+    \pgf@x=0\pgf@x%
+    \pgf@y=0.6\pgf@y%
+  }
+
+  \anchor{B}{
+    \pgf@process{\northeast}%
+    \pgf@x=0\pgf@x%
+    \pgf@y=0\pgf@y%
+  }
+
+  \anchor{C}{
+    \pgf@process{\northeast}%
+    \pgf@x=0\pgf@x%
+    \pgf@y=-0.6\pgf@y%
+  }
+
+
+  % Draw the rectangle box and the three circles
+  \backgroundpath{
+    % Rectangle box
+    {
+      \pgfpathrectanglecorners{\southwest}{\northeast}
+      \pgfusepath{stroke,fill}
+    }
+    
+    % The three circles
+    {
+      \csname pgf@anchor@\shape@name @A\endcsname
+      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+      \csname pgf@anchor@\shape@name @B\endcsname
+      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+      \csname pgf@anchor@\shape@name @C\endcsname
+      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+      \pgfsetfillcolor{\pgfkeysvalueof{/pgf/circle color}}
+      \pgfusepath{stroke,fill}
+      }
+  }
+  
+  % \inheritbackgroundpath[from=rectangle]
+
+  % \behindbackgroundpath{
+  %   \csname pgf@anchor@\shape@name @A\endcsname
+  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+  %   \csname pgf@anchor@\shape@name @B\endcsname
+  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+  %   \csname pgf@anchor@\shape@name @C\endcsname
+  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+  % }
+}
+
+\makeatother
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "testmimoshapes.tex"
+%%% TeX-PDF-mode: t
+%%% End: 
