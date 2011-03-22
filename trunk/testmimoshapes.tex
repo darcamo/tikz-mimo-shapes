@@ -1,0 +1,160 @@
+\documentclass[a4]{report}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc} % Use this if the file is encoded with utf-8
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{tikz} % Create graphics in Latex
+
+
+\input{mimoshapes}
+% \input{declarecaixadoisnode}
+% \input{declarecaixanode}
+
+\begin{document}
+
+\usetikzlibrary{positioning}
+
+\begin{tikzpicture}
+  \draw[help lines] (0,-3) grid (8,6);
+
+  % Coordinate system origin
+  \path (0,0) coordinate (origin);
+  \draw[fill=red] (origin) circle (1pt);
+  \draw[gray!40!white] (origin) node[rotate=45] {origin};
+
+
+  % If I draw the node at the origin some bugs could not be seem
+  \path (2,1.5) coordinate (mimo2);
+  \path (2,-1.5) coordinate (mimo3);
+
+  \tikzset{test mimo node/.style={fill=blue!30,draw,mimodois,antenna offset=0.3cm,thick}}
+
+
+  % Nodes with two antennas
+  \draw (mimo2) node[test mimo node] (mynode) {\pgftypesetversion};
+  \node[test mimo node,right=3cm of mynode,left antennas] (mynode2) {\pgftypesetversion};
+
+  % Nodes with tree antennas
+  \draw (mimo3) node[test mimo node,mimotres] (mynode3) {\pgftypesetversion};
+  \node[test mimo node,right=3cm of mynode3,mimotres,left antennas] (mynode4) {\pgftypesetversion};
+
+  % Test all anchors in the Shape
+  \foreach \ancora in {
+    north,
+    east,
+    south,
+    west,
+    north east,
+    north west,
+    south east,
+    south west,
+    text,
+    % base,
+    first antenna base start,
+    second antenna base start,
+    first antenna base end,
+    second antenna base end,
+    first antenna,
+    second antenna,
+    % A,
+    % B,
+    center} % text is the same as the center anchor
+  {
+    \draw[fill=green] (mynode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mynode2.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+  }
+
+
+  % Test all anchors in the Shape
+  \foreach \ancora in {
+    north,
+    east,
+    south,
+    west,
+    north east,
+    north west,
+    south east,
+    south west,
+    text,
+    % base,
+    first antenna base start,
+    second antenna base start,
+    third antenna base start,
+    first antenna base end,
+    second antenna base end,
+    third antenna base end,
+    first antenna,
+    second antenna,
+    third antenna,
+    % A,
+    % B,
+    % C,
+    center} % text is the same as the center anchor
+  {
+    \draw[fill=green] (mynode3.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mynode4.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+  }
+
+
+
+  % % Test the angle anchor
+  % \foreach \angulo in {0,15,...,360} 
+  % {
+  %   \draw[fill=blue] (mynode.\angulo) circle (1pt);
+  %   \draw (mynode.center) -- ++(\angulo:1.5cm);
+  % }
+
+
+  Bounding Box
+  \foreach \ancora in {north,east,west,south,north east,north west,south east,south west} 
+  {
+    \draw[overlay,fill=red!50!black] (current bounding box.\ancora) circle (1pt) node[blue,rotate=45] {\tiny{\ancora}};
+  }
+
+  \draw[help lines] (current bounding box.south west) rectangle (current bounding box.north east);
+
+
+
+  % xxxxxxxxxxxxxxx Mimo Caixa xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \path (2,4.5) coordinate (mimocaixa);
+
+  \draw (mimocaixa) node[test mimo node,caixadois] (mimocaixa2) {\pgftypesetversion};
+  \node[test mimo node,right=3cm of mimocaixa2,caixatres] (mimocaixa3) {\pgftypesetversion};
+
+    % Test all anchors in the Shape
+  \foreach \ancora in {
+    north,
+    east,
+    south,
+    west,
+    north east,
+    north west,
+    south east,
+    south west,
+    text,
+    % base,
+    % first antenna base start,
+    % second antenna base start,
+    % first antenna base end,
+    % second antenna base end,
+    % first antenna,
+    % second antenna,
+    A,
+    B,
+    center} % text is the same as the center anchor
+  {
+    \draw[fill=green] (mimocaixa2.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mimocaixa3.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+  }
+  \draw[fill=green] (mimocaixa3.C) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{C}};
+
+\end{tikzpicture}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-PDF-mode: t
+%%% TeX-master: t
+%%% End:
