@@ -20,9 +20,10 @@
   minimum height/.initial=2cm,
   circle fill color/.initial=white,
   circle stroke color/.initial=black,
+  circle radius/.initial=2mm,
   antenna offset/.initial=0.3 cm,
   antenna base height/.initial=0.2 cm,
-  antenna side/.initial=0.4cm, % Ainda não estou usando
+  antenna side/.initial=0.4cm,
 }
 
 
@@ -92,9 +93,9 @@
 
 
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-% xxxxxxxxxxxxxxx mimodois shape declaration xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx mimotwo shape declaration xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-\pgfdeclareshape{mimodois}{
+\pgfdeclareshape{mimotwo}{
   \savedmacro\antennaoffset{
     \ifleftantennas
       \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
@@ -217,31 +218,31 @@
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % Define some more useful anchors
   \anchor{first antenna base start}{
-    \pgf@anchor@mimodois@A
+    \pgf@anchor@mimotwo@A
   }
   
   \anchor{second antenna base start}{
-    \pgf@anchor@mimodois@B
+    \pgf@anchor@mimotwo@B
   }
 
   \anchor{first antenna base end}{
-    \csname pgf@anchor@mimodois@first antenna base start\endcsname
+    \csname pgf@anchor@mimotwo@first antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
   }
   \anchor{second antenna base end}{
-    \csname pgf@anchor@mimodois@second antenna base start\endcsname
+    \csname pgf@anchor@mimotwo@second antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
   }
 
   \anchor{first antenna}{
-    \csname pgf@anchor@mimodois@first antenna base start\endcsname
+    \csname pgf@anchor@mimotwo@first antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.4cm%
   }
   \anchor{second antenna}{
-    \csname pgf@anchor@mimodois@second antenna base start\endcsname
+    \csname pgf@anchor@mimotwo@second antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.4cm%
   }
@@ -256,7 +257,7 @@
     % \pgftext[top,right,at={\pgfpoint{\pgf@x}{\pgf@y}}]{\pgfkeysvalueof{/mimonode/antennastotheleft}}
 
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % \pgf@anchor@mimodois@A
+    % \pgf@anchor@mimotwo@A
     \csname pgf@anchor@\shape@name @A\endcsname
     % The drawantenna command only needs that pgf@x and pgf@y are
     % correctly set. This is set by calling the anchor A
@@ -266,7 +267,7 @@
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \csname pgf@anchor@\shape@name @B\endcsname
-    % \pgf@anchor@mimodois@B
+    % \pgf@anchor@mimotwo@B
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
@@ -278,7 +279,7 @@
 
 % Define default style for this node
 %\tikzset{flip flop/port labels/.style={font=\sffamily\scriptsize}}
-% \tikzset{every mimodois node/.style={draw,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
+% \tikzset{every mimotwo node/.style={draw,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
 % font=\sffamily}}
 
 \makeatother
@@ -290,7 +291,7 @@
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \makeatletter
 
-\pgfdeclareshape{mimotres}{
+\pgfdeclareshape{mimothree}{
   \savedmacro\antennaoffset{
     \ifleftantennas
       \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
@@ -314,24 +315,24 @@
 
   % Inherit saved anchor from rectangle (\northeast and \southwest)
   % \inheritsavedanchors[from=rectangle]
-  \inheritsavedanchors[from=mimodois]
+  \inheritsavedanchors[from=mimotwo]
 
-  % Inherit anchor border from mimodois
-  \inheritanchorborder[from=mimodois]
+  % Inherit anchor border from mimotwo
+  \inheritanchorborder[from=mimotwo]
 
-  % Inherit normal anchors from mimodois
-  \inheritanchor[from=mimodois]{center}
-  \inheritanchor[from=mimodois]{north}
-  \inheritanchor[from=mimodois]{east}
-  \inheritanchor[from=mimodois]{south}
-  \inheritanchor[from=mimodois]{west}
-  \inheritanchor[from=mimodois]{north east}
-  \inheritanchor[from=mimodois]{north west}
-  \inheritanchor[from=mimodois]{south west}
-  \inheritanchor[from=mimodois]{south east}
-  \inheritanchor[from=mimodois]{text}
-  % \inheritanchor[from=mimodois]{base}
-  % \inheritanchor[from=mimodois]{mid}
+  % Inherit normal anchors from mimotwo
+  \inheritanchor[from=mimotwo]{center}
+  \inheritanchor[from=mimotwo]{north}
+  \inheritanchor[from=mimotwo]{east}
+  \inheritanchor[from=mimotwo]{south}
+  \inheritanchor[from=mimotwo]{west}
+  \inheritanchor[from=mimotwo]{north east}
+  \inheritanchor[from=mimotwo]{north west}
+  \inheritanchor[from=mimotwo]{south west}
+  \inheritanchor[from=mimotwo]{south east}
+  \inheritanchor[from=mimotwo]{text}
+  % \inheritanchor[from=mimotwo]{base}
+  % \inheritanchor[from=mimotwo]{mid}
   % Posso herdar outras como "mid west", "base west", etc. Veja no código do rectangle
 
   % Define anchors for the start of the antennas
@@ -394,40 +395,40 @@
 
 
   % Define some more useful anchors
-  \anchor{first antenna base start}{\pgf@anchor@mimotres@A}
-  \anchor{second antenna base start}{\pgf@anchor@mimotres@B}
-  \anchor{third antenna base start}{\pgf@anchor@mimotres@C}
+  \anchor{first antenna base start}{\pgf@anchor@mimothree@A}
+  \anchor{second antenna base start}{\pgf@anchor@mimothree@B}
+  \anchor{third antenna base start}{\pgf@anchor@mimothree@C}
 
   \anchor{first antenna base end}{
     % Preciso usar o \csname ... \endcsname porque a âncora "first antenna
     % base start" possui espaços. Note que não pode ter espaço entre o
     % final de "first antenna base start" e o \endcsname
-    \csname pgf@anchor@mimotres@first antenna base start\endcsname
+    \csname pgf@anchor@mimothree@first antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
   }
   \anchor{second antenna base end}{
-    \csname pgf@anchor@mimotres@second antenna base start\endcsname
+    \csname pgf@anchor@mimothree@second antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
   }
   \anchor{third antenna base end}{
-    \csname pgf@anchor@mimotres@third antenna base start\endcsname
+    \csname pgf@anchor@mimothree@third antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
   }
   \anchor{first antenna}{
-    \csname pgf@anchor@mimotres@first antenna base start\endcsname
+    \csname pgf@anchor@mimothree@first antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.4cm%
   }
   \anchor{second antenna}{
-    \csname pgf@anchor@mimotres@second antenna base start\endcsname
+    \csname pgf@anchor@mimothree@second antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.4cm%
   }
   \anchor{third antenna}{
-    \csname pgf@anchor@mimotres@third antenna base start\endcsname
+    \csname pgf@anchor@mimothree@third antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.4cm%
   }
@@ -443,20 +444,20 @@
     % mudar o nome do shape depois vai ter que mudar todas as linhas que
     % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
     \csname pgf@anchor@\shape@name @A\endcsname
-    %\pgf@anchor@mimotres@A
+    %\pgf@anchor@mimothree@A
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% \pgf@anchor@mimotres@B
+    %% \pgf@anchor@mimothree@B
     \csname pgf@anchor@\shape@name @B\endcsname
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
     %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% \pgf@anchor@mimotres@C
+    %% \pgf@anchor@mimothree@C
     \csname pgf@anchor@\shape@name @C\endcsname
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -473,22 +474,22 @@
 
 \pgfdeclareshape{caixadois}{
 
-  \inheritsavedanchors[from=mimodois]
+  \inheritsavedanchors[from=mimotwo]
 
   % Inherit from rectangle
-  \inheritanchorborder[from=mimodois]
+  \inheritanchorborder[from=mimotwo]
 
   % Define same anchor a normal rectangle has
-  \inheritanchor[from=mimodois]{center}
-  \inheritanchor[from=mimodois]{north}
-  \inheritanchor[from=mimodois]{east}
-  \inheritanchor[from=mimodois]{south}
-  \inheritanchor[from=mimodois]{west}
-  \inheritanchor[from=mimodois]{north east}
-  \inheritanchor[from=mimodois]{north west}
-  \inheritanchor[from=mimodois]{south west}
-  \inheritanchor[from=mimodois]{south east}
-  \inheritanchor[from=mimodois]{text}
+  \inheritanchor[from=mimotwo]{center}
+  \inheritanchor[from=mimotwo]{north}
+  \inheritanchor[from=mimotwo]{east}
+  \inheritanchor[from=mimotwo]{south}
+  \inheritanchor[from=mimotwo]{west}
+  \inheritanchor[from=mimotwo]{north east}
+  \inheritanchor[from=mimotwo]{north west}
+  \inheritanchor[from=mimotwo]{south west}
+  \inheritanchor[from=mimotwo]{south east}
+  \inheritanchor[from=mimotwo]{text}
 
   % Define anchors for signal ports
 
@@ -516,9 +517,9 @@
     % The two circles
     {
       \csname pgf@anchor@\shape@name @A\endcsname
-      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
       \csname pgf@anchor@\shape@name @B\endcsname
-      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
       \pgfsetfillcolor{\pgfkeysvalueof{/pgf/circle fill color}}
       \pgfsetstrokecolor{\pgfkeysvalueof{/pgf/circle stroke color}}
       \pgfusepath{stroke,fill}
@@ -536,22 +537,22 @@
 
 \pgfdeclareshape{caixatres}{
 
-  \inheritsavedanchors[from=mimodois]
+  \inheritsavedanchors[from=mimotwo]
 
   % Inherit from rectangle
-  \inheritanchorborder[from=mimodois]
+  \inheritanchorborder[from=mimotwo]
 
   % Define same anchor a normal rectangle has
-  \inheritanchor[from=mimodois]{center}
-  \inheritanchor[from=mimodois]{north}
-  \inheritanchor[from=mimodois]{east}
-  \inheritanchor[from=mimodois]{south}
-  \inheritanchor[from=mimodois]{west}
-  \inheritanchor[from=mimodois]{north east}
-  \inheritanchor[from=mimodois]{north west}
-  \inheritanchor[from=mimodois]{south west}
-  \inheritanchor[from=mimodois]{south east}
-  \inheritanchor[from=mimodois]{text}
+  \inheritanchor[from=mimotwo]{center}
+  \inheritanchor[from=mimotwo]{north}
+  \inheritanchor[from=mimotwo]{east}
+  \inheritanchor[from=mimotwo]{south}
+  \inheritanchor[from=mimotwo]{west}
+  \inheritanchor[from=mimotwo]{north east}
+  \inheritanchor[from=mimotwo]{north west}
+  \inheritanchor[from=mimotwo]{south west}
+  \inheritanchor[from=mimotwo]{south east}
+  \inheritanchor[from=mimotwo]{text}
 
   % Define anchors for signal ports
 
@@ -585,11 +586,11 @@
     % The three circles
     {
       \csname pgf@anchor@\shape@name @A\endcsname
-      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
       \csname pgf@anchor@\shape@name @B\endcsname
-      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
       \csname pgf@anchor@\shape@name @C\endcsname
-      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+      \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
       \pgfsetfillcolor{\pgfkeysvalueof{/pgf/circle fill color}}
       \pgfsetstrokecolor{\pgfkeysvalueof{/pgf/circle stroke color}}
       \pgfusepath{stroke,fill}
@@ -600,11 +601,11 @@
 
   % \behindbackgroundpath{
   %   \csname pgf@anchor@\shape@name @A\endcsname
-  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
   %   \csname pgf@anchor@\shape@name @B\endcsname
-  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
   %   \csname pgf@anchor@\shape@name @C\endcsname
-  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{2mm}
+  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
   % }
 }
 

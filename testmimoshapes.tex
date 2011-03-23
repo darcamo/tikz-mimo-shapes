@@ -28,7 +28,7 @@
   \path (2,1.5) coordinate (mimo2);
   \path (2,-1.5) coordinate (mimo3);
 
-  \tikzset{test mimo node/.style={fill=blue!30,draw,mimodois,antenna offset=0.3cm,thick}}
+  \tikzset{test mimo node/.style={fill=blue!30,draw,mimotwo,antenna offset=0.3cm,thick}}
 
 
   % Nodes with two antennas
@@ -36,8 +36,8 @@
   \node[test mimo node,right=3cm of mynode,left antennas] (mynode2) {\pgftypesetversion};
 
   % Nodes with tree antennas
-  \draw (mimo3) node[test mimo node,mimotres] (mynode3) {\pgftypesetversion};
-  \node[test mimo node,right=3cm of mynode3,mimotres,left antennas] (mynode4) {\pgftypesetversion};
+  \draw (mimo3) node[test mimo node,mimothree] (mynode3) {\pgftypesetversion};
+  \node[test mimo node,right=3cm of mynode3,mimothree,left antennas] (mynode4) {\pgftypesetversion};
 
   % Test all anchors in the Shape
   \foreach \ancora in {
@@ -119,8 +119,8 @@
   % xxxxxxxxxxxxxxx Mimo Caixa xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \path (2,4.5) coordinate (mimocaixa);
 
-  \draw (mimocaixa) node[test mimo node,caixadois] (mimocaixa2) {\pgftypesetversion};
-  \node[test mimo node,right=3cm of mimocaixa2,caixatres] (mimocaixa3) {\pgftypesetversion};
+  \draw (mimocaixa) node[test mimo node,caixadois,circle radius=3mm] (mimocaixa2) {\pgftypesetversion};
+  \node[test mimo node,right=3cm of mimocaixa2,caixatres,circle radius=1.5mm] (mimocaixa3) {\pgftypesetversion};
 
     % Test all anchors in the Shape
   \foreach \ancora in {
@@ -149,6 +149,10 @@
   }
   \draw[fill=green] (mimocaixa3.C) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{C}};
 
+
+
+  
+  \draw (0,0) node[draw] {rectangle};
 \end{tikzpicture}
 
 \end{document}
