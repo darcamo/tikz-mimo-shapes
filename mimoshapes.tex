@@ -66,15 +66,21 @@
   \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
 }
 
-% The code to determine the X coordinate for the anchors in the start of
+% The code to determine the x coordinate for the anchors in the start of
 % each antenna is common for all antennas. Therefore, it is better to
-% define a macro with it and just call the macro when define the
-% savedanchors
+% define a macro with it and just call the macro when define the respective
+% savedanchor.
 \def\antennaStartXCoordinate{
   % x position
   \ifleftantennas
   % Anchor position when the "left antennas" key is used
   \pgf@x=-.5\wd\pgfnodeparttextbox
+  % Advance by the inner xsep
+  \pgfmathsetlength\pgf@xc{-\pgfkeysvalueof{/pgf/inner xsep}}
+  \advance\pgf@x by \pgf@xc%
+  %
+  % If the resulting x coordinate is lower the value required for the
+  % minimum width then the value for the minimum width will be used instead
   \setlength{\pgf@xa}{-\pgfshapeminwidth}
   \ifdim\pgf@x>.5\pgf@xa
   \pgf@x=.5\pgf@xa
@@ -83,6 +89,8 @@
   % Anchor position when the "left antennas" key is not used or when
   % the "right antennas" key is used.
   \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+  \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}
+  \advance\pgf@x by \pgf@xc%
   \setlength{\pgf@xa}{\pgfshapeminwidth}
   \ifdim\pgf@x<.5\pgf@xa
   \pgf@x=.5\pgf@xa
@@ -118,10 +126,18 @@
 
 
   % Inherit saved anchor from rectangle (\northeast and \southwest)
-    %\inheritsavedanchors[from=rectangle]
   \savedanchor\northeast{%
     \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
     \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+    %
+    % -----> Take the inner sep into account
+    \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}
+    \advance\pgf@x by \pgf@xc%
+    \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}
+    \advance\pgf@y by \pgf@yc%
+    % -----
+    % Test if the minimum width and height are respected. If not, set it as
+    % the minimum width/height.
     \setlength{\pgf@xa}{\shapewidth}
     \ifdim\pgf@x<.5\pgf@xa
     \pgf@x=.5\pgf@xa
@@ -130,13 +146,34 @@
     \ifdim\pgf@y<.5\pgf@ya
     \pgf@y=.5\pgf@ya
     \fi
+    %
+    % -----> Take the outer sep into account
+    % Now that we have the values of x and y we could stop here. However,
+    % in order to take into account the "outer sep" we need to add it to
+    % the anchor position(the idea is that the anchor will be outside the
+    % actual node (by the outer sep ammount). The default value of the
+    % outer sep is half the length of a line. Note that we are including
+    % the outer sep value in the anchor definition, but it should not be
+    % taken into account when drawing the background. Therefore, we need to
+    % remove this when drawing the rectangle box.
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \advance\pgf@x by\pgf@xa%
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \advance\pgf@y by\pgf@ya%
   }
-  % This is redundant, but makes some things easier:
+
   \savedanchor\southwest{%
-    % \pgf@x=\xmin
-    % \pgf@y=\ymin
     \pgf@y=-.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
     \pgf@x=-.5\wd\pgfnodeparttextbox % width of the box
+    %
+    % -----> Take the inner sep into account
+    \pgfmathsetlength\pgf@xc{-\pgfkeysvalueof{/pgf/inner xsep}}
+    \advance\pgf@x by \pgf@xc%
+    \pgfmathsetlength\pgf@yc{-\pgfkeysvalueof{/pgf/inner ysep}}
+    \advance\pgf@y by \pgf@yc%
+    % 
+    % Test if the minimum width and height are respected. If not, set it as
+    % the minimum width/height.
     \setlength{\pgf@xa}{-\shapewidth}
     \ifdim\pgf@x>.5\pgf@xa
     \pgf@x=.5\pgf@xa
@@ -145,12 +182,18 @@
     \ifdim\pgf@y>.5\pgf@ya
     \pgf@y=.5\pgf@ya
     \fi
+    %
+    % -----> Take the outer sep into account (see comment in the northeast savedanchor)
+    \pgfmathsetlength\pgf@xa{-\pgfkeysvalueof{/pgf/outer xsep}}%
+    \advance\pgf@x by\pgf@xa%
+    \pgfmathsetlength\pgf@ya{-\pgfkeysvalueof{/pgf/outer ysep}}%
+    \advance\pgf@y by\pgf@ya%
   }
 
   % This anchor position will depend if the "left antennas" option was
-  % passed or not
+  % passed or not.
   \savedanchor{\anchorA}{
-    % y position for the first antenna
+    % -----> y position for the first antenna
     \pgf@y=.5\ht\pgfnodeparttextbox
     \setlength{\pgf@ya}{\pgfshapeminheight}
     \ifdim\pgf@y<.5\pgf@ya
@@ -158,14 +201,14 @@
     \fi
     \pgf@y=0.4\pgf@y
     %
-    % x position
+    % -----> x position
     \antennaStartXCoordinate
   }
 
   % This anchor position will depend if the "left antennas" option was
   % passed or not
   \savedanchor{\anchorB}{
-    % y position for the first antenna
+    % -----> y position for the first antenna
     \pgf@y=-.5\ht\pgfnodeparttextbox
     \setlength{\pgf@ya}{-\pgfshapeminheight}
     \ifdim\pgf@y>.5\pgf@ya
@@ -173,50 +216,34 @@
     \fi
     \pgf@y=0.6\pgf@y
     %
-    % x position
+    % -----> x position
     \antennaStartXCoordinate
   }
  
   \anchor{A}{\anchorA}
   \anchor{B}{\anchorB}
 
-  % Inherit anchor border from rectangle
-    \inheritanchorborder[from=rectangle]
+  % -----> Inherit anchor border from rectangle
+  \inheritanchorborder[from=rectangle]
 
-  % Inherit normal anchors from rectangle
-  % \inheritanchor[from=rectangle]{center}
+  % -----> Define anchors people usually expect in a node
     \anchor{center}{\pgfpointorigin}
-  % \inheritanchor[from=rectangle]{north}
     \anchor{north}{ \northeast \pgf@x=0pt }
-  % \inheritanchor[from=rectangle]{east}
     \anchor{east}{\northeast \pgf@y=0pt}
-  % \inheritanchor[from=rectangle]{south}
     \anchor{south}{ \southwest \pgf@x=0pt }
-  % \inheritanchor[from=rectangle]{west}
     \anchor{west}{\southwest \pgf@y=0pt}
-  % \inheritanchor[from=rectangle]{north east}
     \anchor{north east}{\northeast}
-  % \inheritanchor[from=rectangle]{north west}
     \anchor{north west}{\northeast \pgf@x=-\pgf@x}
-  % \inheritanchor[from=rectangle]{south west}
     \anchor{south west}{\southwest}
-  % \inheritanchor[from=rectangle]{south east}
     \anchor{south east}{\southwest \pgf@x=-\pgf@x}
-  % \inheritanchor[from=rectangle]{text}
     \anchor{text}{
     \pgfpointorigin
     \advance\pgf@x by -.5\wd\pgfnodeparttextbox%
     \advance\pgf@y by -.5\ht\pgfnodeparttextbox%
     \advance\pgf@y by +.5\dp\pgfnodeparttextbox%
   }
-  % \inheritanchor[from=rectangle]{base}
-  % \inheritanchor[from=rectangle]{mid}
-  % We can inheritanchor other anchors, such as "mid west", "base west",
-  % etc. See the code for the rectangle shape.
 
-
-  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  % Define some more useful anchors
+  % -----> Define some more useful anchors
   \anchor{first antenna base start}{
     \pgf@anchor@mimotwo@A
   }
@@ -247,27 +274,26 @@
     \advance\pgf@y by 0.4cm%
   }
 
-  % Draw the rectangle box and the three circles
+
+  % -----> Draw the background
   \backgroundpath{
     % Rectangle box
-    \pgfpathrectanglecorners{\southwest}{\northeast}
-
-    % Delete the two lines below (used for debugging)
-    %\southwest
-    % \pgftext[top,right,at={\pgfpoint{\pgf@x}{\pgf@y}}]{\pgfkeysvalueof{/mimonode/antennastotheleft}}
+    % \pgfpathrectanglecorners{\southwest}{\northeast}
+    \pgfpathrectanglecorners
+    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
 
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % \pgf@anchor@mimotwo@A
     \csname pgf@anchor@\shape@name @A\endcsname
-    % The drawantenna command only needs that pgf@x and pgf@y are
-    % correctly set. This is set by calling the anchor A
+    % The drawantenna command only needs that the pgf@x and pgf@y variables
+    % are correctly set. This is done by calling the anchor A
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \csname pgf@anchor@\shape@name @B\endcsname
-    % \pgf@anchor@mimotwo@B
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
@@ -275,7 +301,7 @@
 
 
 % Key to add font macros to the current font
-\tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}} 
+% \tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}} 
 
 % Define default style for this node
 %\tikzset{flip flop/port labels/.style={font=\sffamily\scriptsize}}
@@ -313,14 +339,13 @@
   }
 
 
-  % Inherit saved anchor from rectangle (\northeast and \southwest)
-  % \inheritsavedanchors[from=rectangle]
+  % -----> Inherit saved anchor from mimotwo (\northeast and \southwest)
   \inheritsavedanchors[from=mimotwo]
 
-  % Inherit anchor border from mimotwo
+  % -----> Inherit anchor border from mimotwo
   \inheritanchorborder[from=mimotwo]
 
-  % Inherit normal anchors from mimotwo
+  % -----> Inherit normal anchors from mimotwo
   \inheritanchor[from=mimotwo]{center}
   \inheritanchor[from=mimotwo]{north}
   \inheritanchor[from=mimotwo]{east}
@@ -331,15 +356,10 @@
   \inheritanchor[from=mimotwo]{south west}
   \inheritanchor[from=mimotwo]{south east}
   \inheritanchor[from=mimotwo]{text}
-  % \inheritanchor[from=mimotwo]{base}
-  % \inheritanchor[from=mimotwo]{mid}
-  % Posso herdar outras como "mid west", "base west", etc. Veja no código do rectangle
 
-  % Define anchors for the start of the antennas
+
+  % -----> Define more savedanchors for the start of the antennas
   \savedanchor{\anchorA}{
-    % \pgf@process{\northeast}
-    % \pgf@y=.5\pgf@y
-        % y position for the first antenna
     \pgf@y=.5\ht\pgfnodeparttextbox
     \setlength{\pgf@ya}{\pgfshapeminheight}
     \ifdim\pgf@y<.5\pgf@ya
@@ -389,20 +409,17 @@
     \antennaStartXCoordinate
   }
 
+
+  % -----> Define the normal anchors
   \anchor{A}{\anchorA}
   \anchor{B}{\anchorB}
   \anchor{C}{\anchorC}
 
-
-  % Define some more useful anchors
   \anchor{first antenna base start}{\pgf@anchor@mimothree@A}
   \anchor{second antenna base start}{\pgf@anchor@mimothree@B}
   \anchor{third antenna base start}{\pgf@anchor@mimothree@C}
 
   \anchor{first antenna base end}{
-    % Preciso usar o \csname ... \endcsname porque a âncora "first antenna
-    % base start" possui espaços. Note que não pode ter espaço entre o
-    % final de "first antenna base start" e o \endcsname
     \csname pgf@anchor@mimothree@first antenna base start\endcsname
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
@@ -434,10 +451,12 @@
   }
 
 
-  % Draw the rectangle box and the antennas
+  % -----> Draw the rectangle box and the antennas
   \backgroundpath{
     % Rectangle box
-    \pgfpathrectanglecorners{\southwest}{\northeast}
+    \pgfpathrectanglecorners
+    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Você pode usar \pgf@anchor@SHAPE_NAME@ANCHOR_NAME para mudar o \pgf@x
     % e o \pgf@y para as coordenadas de uma âncora. Só que se você resolver
@@ -468,18 +487,18 @@
 
 
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-%% xxxxxxxxxxxxxxx Caixa Dois Node xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxx Boxtwo Node xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \makeatletter
 
-\pgfdeclareshape{caixadois}{
+\pgfdeclareshape{boxtwo}{
 
   \inheritsavedanchors[from=mimotwo]
 
-  % Inherit from rectangle
+  % -----> Inherit from rectangle
   \inheritanchorborder[from=mimotwo]
 
-  % Define same anchor a normal rectangle has
+  % -----> Define same anchor a normal rectangle has
   \inheritanchor[from=mimotwo]{center}
   \inheritanchor[from=mimotwo]{north}
   \inheritanchor[from=mimotwo]{east}
@@ -491,7 +510,7 @@
   \inheritanchor[from=mimotwo]{south east}
   \inheritanchor[from=mimotwo]{text}
 
-  % Define anchors for signal ports
+  % -----> Define anchors for signal ports
 
   \anchor{A}{
     \pgf@process{\northeast}%
@@ -506,11 +525,13 @@
   }
 
 
-  % Draw the rectangle box and the three circles
+  % -----> Draw the rectangle box and the three circles
   \backgroundpath{
     % Rectangle box
     {
-      \pgfpathrectanglecorners{\southwest}{\northeast}
+      \pgfpathrectanglecorners
+    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
       \pgfusepath{stroke,fill}
     }
     
@@ -531,18 +552,18 @@
 
 
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-%% xxxxxxxxxxxxxxx Caixa Tres Node xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxx Boxthree Node xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \makeatletter
 
-\pgfdeclareshape{caixatres}{
+\pgfdeclareshape{boxthree}{
 
   \inheritsavedanchors[from=mimotwo]
 
-  % Inherit from rectangle
+  % -----> Inherit from rectangle
   \inheritanchorborder[from=mimotwo]
 
-  % Define same anchor a normal rectangle has
+  % -----> Define same anchor a normal rectangle has
   \inheritanchor[from=mimotwo]{center}
   \inheritanchor[from=mimotwo]{north}
   \inheritanchor[from=mimotwo]{east}
@@ -554,7 +575,7 @@
   \inheritanchor[from=mimotwo]{south east}
   \inheritanchor[from=mimotwo]{text}
 
-  % Define anchors for signal ports
+  % -----> Define anchors for signal ports
 
   \anchor{A}{
     \pgf@process{\northeast}%
@@ -575,11 +596,13 @@
   }
 
 
-  % Draw the rectangle box and the three circles
+  % -----> Draw the rectangle box and the three circles
   \backgroundpath{
     % Rectangle box
     {
-      \pgfpathrectanglecorners{\southwest}{\northeast}
+      \pgfpathrectanglecorners
+    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
       \pgfusepath{stroke,fill}
     }
     
@@ -596,17 +619,6 @@
       \pgfusepath{stroke,fill}
       }
   }
-  
-  % \inheritbackgroundpath[from=rectangle]
-
-  % \behindbackgroundpath{
-  %   \csname pgf@anchor@\shape@name @A\endcsname
-  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
-  %   \csname pgf@anchor@\shape@name @B\endcsname
-  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
-  %   \csname pgf@anchor@\shape@name @C\endcsname
-  %   \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
-  % }
 }
 
 \makeatother

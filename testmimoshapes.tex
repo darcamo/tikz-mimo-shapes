@@ -8,14 +8,12 @@
 
 
 \input{mimoshapes}
-% \input{declarecaixadoisnode}
-% \input{declarecaixanode}
 
 \begin{document}
 
 \usetikzlibrary{positioning}
 
-\begin{tikzpicture}
+\begin{tikzpicture}[every node/.append style={scale=1}]
   \draw[help lines] (0,-3) grid (8,6);
 
   % Coordinate system origin
@@ -98,15 +96,14 @@
 
 
 
-  % % Test the angle anchor
-  % \foreach \angulo in {0,15,...,360} 
-  % {
-  %   \draw[fill=blue] (mynode.\angulo) circle (1pt);
-  %   \draw (mynode.center) -- ++(\angulo:1.5cm);
-  % }
+  % Test the angle anchor
+  \foreach \angulo in {0,15,...,360} 
+  {
+    \draw[fill=blue] (mynode.\angulo) circle (1pt);
+    \draw (mynode.center) -- ++(\angulo:1.5cm);
+  }
 
-
-  Bounding Box
+  % Bounding Box
   \foreach \ancora in {north,east,west,south,north east,north west,south east,south west} 
   {
     \draw[overlay,fill=red!50!black] (current bounding box.\ancora) circle (1pt) node[blue,rotate=45] {\tiny{\ancora}};
@@ -116,11 +113,11 @@
 
 
 
-  % xxxxxxxxxxxxxxx Mimo Caixa xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  \path (2,4.5) coordinate (mimocaixa);
+  % xxxxxxxxxxxxxxx boxtwo and boxthree xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \path (2,4.5) coordinate (mimobox);
 
-  \draw (mimocaixa) node[test mimo node,caixadois,circle radius=3mm] (mimocaixa2) {\pgftypesetversion};
-  \node[test mimo node,right=3cm of mimocaixa2,caixatres,circle radius=1.5mm] (mimocaixa3) {\pgftypesetversion};
+  \draw (mimobox) node[test mimo node,boxtwo,circle radius=3mm] (mimobox2) {\pgftypesetversion};
+  \node[test mimo node,right=3cm of mimobox2,boxthree,circle radius=1.5mm] (mimobox3) {\pgftypesetversion};
 
     % Test all anchors in the Shape
   \foreach \ancora in {
@@ -134,38 +131,20 @@
     south west,
     text,
     % base,
-    % first antenna base start,
-    % second antenna base start,
-    % first antenna base end,
-    % second antenna base end,
-    % first antenna,
-    % second antenna,
     A,
     B,
     center} % text is the same as the center anchor
   {
-    \draw[fill=green] (mimocaixa2.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
-    \draw[fill=green] (mimocaixa3.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mimobox2.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mimobox3.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
   }
-  \draw[fill=green] (mimocaixa3.C) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{C}};
+  \draw[fill=green] (mimobox3.C) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{C}};
 
-
-
-
-  
-  \draw (0,0) node[draw,mimotwo] (mimodois) {rectangle};
-
-  \draw (0,-1cm) node[draw,outer sep=0.5\pgflinewidth] (retangulo) {rectangle};
-  \draw node[draw,mimotwo,left antennas,left=0mm of mimodois] {mais um};
-  \draw node[draw,left=10mm of retangulo] (maisUm) {mais um};
-
-  %\draw[fill=red] (retangulo.west) circle (1pt);
-  \draw (maisUm) -- (retangulo);
-  
 \end{tikzpicture}
 
 \end{document}
 
+% Used by Emacs
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-PDF-mode: t
