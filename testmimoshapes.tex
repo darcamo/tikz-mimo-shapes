@@ -28,7 +28,7 @@
   \path (2,1.5) coordinate (mimo2);
   \path (2,-1.5) coordinate (mimo3);
 
-  \tikzset{test mimo node/.style={fill=blue!30,draw,mimotwo,antenna offset=0.3cm,thick}}
+  \tikzset{test mimo node/.style={fill=blue!30,draw,mimotwo,antenna offset=0.3cm,thick,minimum width=1.5cm,minimum height=2cm}}
 
 
   % Nodes with two antennas
@@ -151,8 +151,17 @@
 
 
 
+
   
-  \draw (0,0) node[draw] {rectangle};
+  \draw (0,0) node[draw,mimotwo] (mimodois) {rectangle};
+
+  \draw (0,-1cm) node[draw,outer sep=0.5\pgflinewidth] (retangulo) {rectangle};
+  \draw node[draw,mimotwo,left antennas,left=0mm of mimodois] {mais um};
+  \draw node[draw,left=10mm of retangulo] (maisUm) {mais um};
+
+  %\draw[fill=red] (retangulo.west) circle (1pt);
+  \draw (maisUm) -- (retangulo);
+  
 \end{tikzpicture}
 
 \end{document}
