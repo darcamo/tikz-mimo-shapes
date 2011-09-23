@@ -47,7 +47,8 @@
   \advance\pgf@yb by \antennabaseheight cm
   \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
   
-
+  % See section "Internals of How Point Commands Work" of the pgf manual to
+  % understand pgf@process
   \pgf@process{
     \pgfpointadd{\pgfpoint{\pgf@xb}{\pgf@yb}}{\pgfpointpolar{60}{\pgfkeysvalueof{/pgf/antenna side}}}
   }
@@ -65,6 +66,23 @@
   }
   \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
 }
+
+
+% Macro with the common code to draw the ellipses. Before calling this
+% macro (inside the backgroundpath or similar)you need to set the values of
+% \pgf@x and \pgf@y to point to the center of the ellipses.
+\def\drawellipses{
+  % Store the current positions in \pgf@xa and \pgf@ya
+  \pgf@xa=\pgf@x 
+  \pgf@ya=\pgf@y
+  
+  % See section "Internals of How Point Commands Work" of the pgf manual to
+  % understand pgf@process
+  \pgf@process{\pgfpathcircle{\pgfpoint{\pgf@xa}{-1pt}}{1pt}}
+  \pgf@process{\pgfpathcircle{\pgfpoint{\pgf@xa}{2pt}}{1pt}}
+  \pgf@process{\pgfpathcircle{\pgfpoint{\pgf@xa}{5pt}}{1pt}}
+}
+
 
 % The code to determine the x coordinate for the anchors in the start of
 % each antenna is common for all antennas. Therefore, it is better to
@@ -486,6 +504,183 @@
 \makeatother
 
 
+
+%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxx Mimo Shape with three antennas xxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\makeatletter
+
+\pgfdeclareshape{mimoind}{
+  \savedmacro\antennaoffset{
+    \ifleftantennas
+      \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
+    \else
+      \def\antennaoffset{\pgfkeysvalueof{/pgf/antenna offset}}
+    \fi
+  }
+
+  \savedmacro\antennabaseheight{
+    \def\antennabaseheight{\pgfkeysvalueof{/pgf/antenna base height}}
+  }
+
+  \savedmacro\shapewidth{
+    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
+  }
+
+  \savedmacro\shapeheight{
+    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
+  }
+
+
+  % -----> Inherit saved anchor from mimotwo (\northeast and \southwest)
+  \inheritsavedanchors[from=mimotwo]
+
+  % -----> Inherit anchor border from mimotwo
+  \inheritanchorborder[from=mimotwo]
+
+  % -----> Inherit normal anchors from mimotwo
+  \inheritanchor[from=mimotwo]{center}
+  \inheritanchor[from=mimotwo]{north}
+  \inheritanchor[from=mimotwo]{east}
+  \inheritanchor[from=mimotwo]{south}
+  \inheritanchor[from=mimotwo]{west}
+  \inheritanchor[from=mimotwo]{north east}
+  \inheritanchor[from=mimotwo]{north west}
+  \inheritanchor[from=mimotwo]{south west}
+  \inheritanchor[from=mimotwo]{south east}
+  \inheritanchor[from=mimotwo]{text}
+
+
+  % -----> Define more savedanchors for the start of the antennas
+  \savedanchor{\anchorA}{
+    \pgf@y=.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@y=0.5\pgf@y
+    %
+    % x position
+    \antennaStartXCoordinate
+  }
+
+  \savedanchor{\anchorC}{
+    % y position for the first antenna
+    \pgf@y=-.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{-\pgfshapeminheight}
+    \ifdim\pgf@y>.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@y=0.9\pgf@y
+    %
+    % x position
+    \antennaStartXCoordinate
+  }
+
+  % B is in the middle of A and C
+  \savedanchor{\anchorB}{
+    % y position
+    % First we get y position of anchor A
+    \pgf@y=.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@ya=0.5\pgf@y
+    % Then we get y position of anchor C
+    \pgf@y=-.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@yc}{-\pgfshapeminheight}
+    \ifdim\pgf@y>.5\pgf@yc
+    \pgf@y=.5\pgf@yc
+    \fi
+    \pgf@yc=0.9\pgf@y
+    % y position of anchor B is in the middle of anchor A and C
+    \pgf@y=0.5\pgf@yc
+    \advance\pgf@y by 0.5\pgf@ya
+    %
+    % x position
+    \antennaStartXCoordinate
+  }
+
+
+  % -----> Define the normal anchors
+  \anchor{A}{\anchorA}
+  \anchor{B}{\anchorB}
+  \anchor{C}{\anchorC}
+
+  \anchor{first antenna base start}{\pgf@anchor@mimoind@A}
+  \anchor{second antenna base start}{\pgf@anchor@mimoind@B}
+  \anchor{third antenna base start}{\pgf@anchor@mimoind@C}
+
+  \anchor{first antenna base end}{
+    \csname pgf@anchor@mimoind@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \csname pgf@anchor@mimoind@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{third antenna base end}{
+    \csname pgf@anchor@mimoind@third antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{first antenna}{
+    \csname pgf@anchor@mimoind@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    \csname pgf@anchor@mimoind@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{third antenna}{
+    \csname pgf@anchor@mimoind@third antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+
+
+  % -----> Draw the rectangle box and the antennas
+  \backgroundpath{
+    % Rectangle box
+    \pgfpathrectanglecorners
+    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
+    %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % Você pode usar \pgf@anchor@SHAPE_NAME@ANCHOR_NAME para mudar o \pgf@x
+    % e o \pgf@y para as coordenadas de uma âncora. Só que se você resolver
+    % mudar o nome do shape depois vai ter que mudar todas as linhas que
+    % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
+    \csname pgf@anchor@\shape@name @A\endcsname
+    %\pgf@anchor@mimoind@A
+    \drawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% \pgf@anchor@mimoind@B
+    \csname pgf@anchor@\shape@name @second antenna base end\endcsname
+    %\drawantenna
+    \drawellipses
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+
+    %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% \pgf@anchor@mimoind@C
+    \csname pgf@anchor@\shape@name @C\endcsname
+    \drawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  }
+}
+
+\makeatother
+
+
+
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxx Boxtwo Node xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -512,6 +707,8 @@
 
   % -----> Define anchors for signal ports
 
+  % See section "Internals of How Point Commands Work" of the pgf manual to
+  % understand pgf@process
   \anchor{A}{
     \pgf@process{\northeast}%
     \pgf@x=0\pgf@x%
@@ -577,6 +774,8 @@
 
   % -----> Define anchors for signal ports
 
+  % See section "Internals of How Point Commands Work" of the pgf manual to
+  % understand pgf@process
   \anchor{A}{
     \pgf@process{\northeast}%
     \pgf@x=0\pgf@x%
