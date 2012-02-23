@@ -1,0 +1,372 @@
+\documentclass[a4]{report}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc} % Use this if the file is encoded with utf-8
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{tikz} % Create graphics in Latex
+
+\makeatletter
+
+\newif\ifleftantennas
+
+% The keys that the user can provide are all the keys below, except
+% "leftantennas" (use the "right antennas" or "left antennas" keys instead)
+\pgfkeys{
+  /mimonode/leftantennas/.is if=leftantennas,
+  /pgf/.cd,
+  right antennas/.code={\pgfkeys{/mimonode/leftantennas=false}},
+  left antennas/.code={\pgfkeys{/mimonode/leftantennas=true}},
+  % minimum width/.initial=1.5cm,
+  % minimum height/.initial=2cm,
+  circle fill color/.initial=white,
+  circle stroke color/.initial=black,
+  circle radius/.initial=2mm,
+  antenna offset/.initial=0.3 cm,
+  antenna base height/.initial=0.2 cm,
+  antenna side/.initial=0.4cm,
+}
+
+
+
+% Macro with the common code to draw an antenna. Before calling this macro
+% (inside the backgroundpath or similar)you need to set the values of
+% \pgf@x and \pgf@y to point to the start of the antenna. 
+\def\drawantenna{
+  % Store the current positions in \pgf@xa and \pgf@ya
+  \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+  \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
+
+  \advance\pgf@xa by \antennaoffset
+  \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+  \pgfpathclose
+  \pgfmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+
+  % \pgf@xb and \pgf@yb will have the coordinate with the starting point to
+  % draw the triangle
+  \pgf@xb=\pgf@xa \pgf@yb=\pgf@ya
+  \advance\pgf@yb by \antennabaseheight cm
+  \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+  
+
+  \pgf@process{
+    \pgfpointadd{\pgfpoint{\pgf@xb}{\pgf@yb}}{\pgfpointpolar{60}{\pgfkeysvalueof{/pgf/antenna side}}}
+  }
+  \pgf@xc=\pgf@x \pgf@yc=\pgf@y
+  \pgfpathlineto{\pgfpoint{\pgf@x}{\pgf@y}}
+  
+  
+  \pgf@process{
+    \pgfpointadd{\pgfpoint{\pgf@xc}{\pgf@yc}}{\pgfpointpolar{180}{\pgfkeysvalueof{/pgf/antenna side}}}
+  }
+  \pgfpathlineto{\pgfpoint{\pgf@x}{\pgf@y}}
+  
+  \pgf@process{
+    \pgfpointadd{\pgfpoint{\pgf@xb}{\pgf@yb}}{\pgfpointpolar{240}{\pgfkeysvalueof{/pgf/antenna side}}}
+  }
+  \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+}
+
+% The code to determine the x coordinate for the anchors in the start of
+% each antenna is common for all antennas. Therefore, it is better to
+% define a macro with it and just call the macro when define the respective
+% savedanchor.
+\def\antennaStartXCoordinate{
+  % x position
+  \ifleftantennas
+  % Anchor position when the "left antennas" key is used
+  \pgf@x=-.5\wd\pgfnodeparttextbox
+  % Advance by the inner xsep
+  \pgfmathsetlength\pgf@xc{-\pgfkeysvalueof{/pgf/inner xsep}}
+  \advance\pgf@x by \pgf@xc%
+  %
+  % If the resulting x coordinate is lower the value required for the
+  % minimum width then the value for the minimum width will be used instead
+  \setlength{\pgf@xa}{-\pgfshapeminwidth}
+  \ifdim\pgf@x>.5\pgf@xa
+  \pgf@x=.5\pgf@xa
+  \fi
+  \else
+  % Anchor position when the "left antennas" key is not used or when
+  % the "right antennas" key is used.
+  \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+  \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}
+  \advance\pgf@x by \pgf@xc%
+  \setlength{\pgf@xa}{\pgfshapeminwidth}
+  \ifdim\pgf@x<.5\pgf@xa
+  \pgf@x=.5\pgf@xa
+  \fi
+  \fi
+}
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx mimotwo shape declaration xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\pgfdeclareshape{mimotwo}{
+  \savedmacro\antennaoffset{
+    \ifleftantennas
+      \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
+    \else
+      \def\antennaoffset{\pgfkeysvalueof{/pgf/antenna offset}}
+    \fi
+  }
+
+  \savedmacro\antennabaseheight{
+    \def\antennabaseheight{\pgfkeysvalueof{/pgf/antenna base height}}
+  }
+
+  \savedmacro\shapewidth{
+    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
+    }
+
+    \savedmacro\shapeheight{
+      \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
+    }
+
+
+  % Inherit saved anchor from rectangle (\northeast and \southwest)
+  \savedanchor\northeast{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+    %
+    % -----> Take the inner sep into account
+    \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}
+    \advance\pgf@x by \pgf@xc%
+    \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}
+    \advance\pgf@y by \pgf@yc%
+    % -----
+    % Test if the minimum width and height are respected. If not, set it as
+    % the minimum width/height.
+    \setlength{\pgf@xa}{\shapewidth}
+    \ifdim\pgf@x<.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{\shapeheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    %
+    % -----> Take the outer sep into account
+    % Now that we have the values of x and y we could stop here. However,
+    % in order to take into account the "outer sep" we need to add it to
+    % the anchor position(the idea is that the anchor will be outside the
+    % actual node (by the outer sep ammount). The default value of the
+    % outer sep is half the length of a line. Note that we are including
+    % the outer sep value in the anchor definition, but it should not be
+    % taken into account when drawing the background. Therefore, we need to
+    % remove this when drawing the rectangle box.
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \advance\pgf@x by\pgf@xa%
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \advance\pgf@y by\pgf@ya%
+  }
+
+  \savedanchor\southwest{%
+    \pgf@y=-.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=-.5\wd\pgfnodeparttextbox % width of the box
+    %
+    % -----> Take the inner sep into account
+    \pgfmathsetlength\pgf@xc{-\pgfkeysvalueof{/pgf/inner xsep}}
+    \advance\pgf@x by \pgf@xc%
+    \pgfmathsetlength\pgf@yc{-\pgfkeysvalueof{/pgf/inner ysep}}
+    \advance\pgf@y by \pgf@yc%
+    % 
+    % Test if the minimum width and height are respected. If not, set it as
+    % the minimum width/height.
+    \setlength{\pgf@xa}{-\shapewidth}
+    \ifdim\pgf@x>.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{-\shapeheight}
+    \ifdim\pgf@y>.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    %
+    % -----> Take the outer sep into account (see comment in the northeast savedanchor)
+    \pgfmathsetlength\pgf@xa{-\pgfkeysvalueof{/pgf/outer xsep}}%
+    \advance\pgf@x by\pgf@xa%
+    \pgfmathsetlength\pgf@ya{-\pgfkeysvalueof{/pgf/outer ysep}}%
+    \advance\pgf@y by\pgf@ya%
+  }
+
+  % This anchor position will depend if the "left antennas" option was
+  % passed or not.
+  \savedanchor{\anchorA}{
+    % -----> y position for the first antenna
+    \pgf@y=.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@y=0.4\pgf@y
+    %
+    % -----> x position
+    \antennaStartXCoordinate
+  }
+
+  % This anchor position will depend if the "left antennas" option was
+  % passed or not
+  \savedanchor{\anchorB}{
+    % -----> y position for the first antenna
+    \pgf@y=-.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{-\pgfshapeminheight}
+    \ifdim\pgf@y>.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@y=0.6\pgf@y
+    %
+    % -----> x position
+    \antennaStartXCoordinate
+  }
+ 
+  \anchor{A}{\anchorA}
+  \anchor{B}{\anchorB}
+
+  % -----> Inherit anchor border from rectangle
+  \inheritanchorborder[from=rectangle]
+
+  % -----> Define anchors people usually expect in a node
+    \anchor{center}{\pgfpointorigin}
+    \anchor{north}{ \northeast \pgf@x=0pt }
+    \anchor{east}{\northeast \pgf@y=0pt}
+    \anchor{south}{ \southwest \pgf@x=0pt }
+    \anchor{west}{\southwest \pgf@y=0pt}
+    \anchor{north east}{\northeast}
+    \anchor{north west}{\northeast \pgf@x=-\pgf@x}
+    \anchor{south west}{\southwest}
+    \anchor{south east}{\southwest \pgf@x=-\pgf@x}
+    \anchor{text}{
+    \pgfpointorigin
+    \advance\pgf@x by -.5\wd\pgfnodeparttextbox%
+    \advance\pgf@y by -.5\ht\pgfnodeparttextbox%
+    \advance\pgf@y by +.5\dp\pgfnodeparttextbox%
+  }
+
+  % -----> Define some more useful anchors
+  \anchor{first antenna base start}{
+    \pgf@anchor@mimotwo@A
+  }
+  
+  \anchor{second antenna base start}{
+    \pgf@anchor@mimotwo@B
+  }
+
+  \anchor{first antenna base end}{
+    \csname pgf@anchor@mimotwo@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \csname pgf@anchor@mimotwo@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+
+  \anchor{first antenna}{
+    \csname pgf@anchor@mimotwo@first antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    \csname pgf@anchor@mimotwo@second antenna base start\endcsname
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+
+
+  % -----> Draw the background
+  \backgroundpath{
+    % Rectangle box
+    % \pgfpathrectanglecorners{\southwest}{\northeast}
+    \pgfpathrectanglecorners
+    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
+
+    %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % \pgf@anchor@mimotwo@A
+    \csname pgf@anchor@\shape@name @A\endcsname
+    % The drawantenna command only needs that the pgf@x and pgf@y variables
+    % are correctly set. This is done by calling the anchor A
+    \drawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \csname pgf@anchor@\shape@name @B\endcsname
+    \drawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  }
+}
+
+\makeatother
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+\begin{document}
+\usetikzlibrary{positioning}
+
+\begin{tikzpicture}[every node/.append style={scale=1}]
+  \draw[help lines] (0,-1) grid (8,4);
+
+  % Coordinate system origin
+  \path (0,0) coordinate (origin);
+  \draw[fill=red] (origin) circle (1pt);
+  \draw[gray!40!white] (origin) node[rotate=45] {origin};
+
+
+  % If I draw the node at the origin some bugs could not be seem
+  \path (2,1.5) coordinate (mimo2);
+  \path (2,-1.5) coordinate (mimo3);
+
+  \tikzset{test mimo node/.style={fill=blue!30,draw,mimotwo,antenna offset=0.3cm,thick,minimum width=1.5cm,minimum height=2cm}}
+
+
+  % Nodes with two antennas
+  \draw (mimo2) node[test mimo node] (mynode) {};
+  \node[test mimo node,right=3cm of mynode,left antennas] (mynode2) {};
+
+  % Test all anchors in the Shape
+  \foreach \ancora in {
+    north,
+    east,
+    south,
+    west,
+    north east,
+    north west,
+    south east,
+    south west,
+    text,
+    % base,
+    first antenna base start,
+    second antenna base start,
+    first antenna base end,
+    second antenna base end,
+    first antenna,
+    second antenna,
+    % A,
+    % B,
+    center} % text is the same as the center anchor
+  {
+    \draw[fill=green] (mynode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mynode2.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+  }
+
+  % Test the angle anchor (the only code inherited from rectangle)
+  \foreach \angulo in {0,15,...,360} 
+  {
+    \draw[fill=blue] (mynode.\angulo) circle (1pt);
+    \draw (mynode.center) -- ++(\angulo:1.3cm);
+  }
+\end{tikzpicture}
+
+\end{document}
+
+% Used by Emacs
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-PDF-mode: t
+%%% TeX-master: t
+%%% End:
