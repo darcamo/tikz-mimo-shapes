@@ -1,0 +1,198 @@
+\makeatletter
+
+% % The keys that the user can provide are all the keys below
+% \pgfkeys{
+%   antenna offset/.initial=0.3 cm,
+%   antenna base height/.initial=0.2 cm,
+%   antenna side/.initial=0.4cm,
+% }
+
+
+\def\my@widthcode{
+    \pgf@xa=\pgfkeysvalueof{/pgf/minimum width}
+    \pgf@xb=\pgfkeysvalueof{/pgf/inner xsep}
+    \pgf@xc=\pgfkeysvalueof{/pgf/outer xsep}
+    \pgf@x=.5\pgf@xa
+    \advance\pgf@x by .5\pgf@xb
+    \advance\pgf@x by .5\pgf@xc
+}
+
+
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx BaseStationTwo Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\pgfdeclareshape{BaseStationTwo}{
+
+  \savedanchor{\center}{
+    \pgf@x=0pt
+    \pgf@y=0pt
+  }
+
+  \savedanchor{\northeast}{
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/minimum width}}
+    \pgf@x=0.5\pgf@xa
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/minimum height}}
+    \pgf@y=0.5\pgf@ya
+  }
+
+  \savedanchor{\southwest}{
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/minimum width}}
+    \pgf@x=-0.5\pgf@xa
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/minimum height}}
+    \pgf@y=-0.5\pgf@ya
+  }
+
+  \savedanchor{\BaseAsouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/minimum width}}
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/minimum height}}
+    \pgf@y=-0.5\pgf@ya
+    \pgf@x=-0.1\pgf@xa
+  }
+
+  \savedanchor{\BaseAnortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/minimum width}}
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/minimum height}}
+    \pgf@y=-0.1\pgf@ya
+    \pgf@x=0.1\pgf@xa
+  }
+  
+
+  % xxxxxxxxxx Regular Anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \anchor{center}{\center}
+  \anchor{north east}{\northeast}
+  \anchor{south west}{\southwest}
+  \anchor{base A south west}{\BaseAsouthwest}
+  \anchor{base A north east}{\BaseAnortheast}
+
+  \backgroundpath{
+    
+  }
+}
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx END xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
+
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx Base Station xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\pgfdeclareshape{BaseStation}{
+  % -----> Inherit saved anchor from rectangle (\northeast and \southwest)
+  \inheritsavedanchors[from=rectangle]%
+
+  \savedanchor{\baseAsouthwest}{
+      % Calculate x
+      %
+      % First, is width < minimum width?
+      \pgf@x=-.25\wd\pgfnodeparttextbox%
+      \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
+      \advance\pgf@x by 2\pgf@xc%
+      \pgfmathsetlength\pgf@xb{.25\pgfkeysvalueof{/pgf/minimum width}}%
+      \ifdim\pgf@x<\pgf@xb%
+        % yes, too small. Enlarge...
+        \pgf@x=\pgf@xb%
+      \fi%
+      % Now, calculate left border: .5\wd\pgfnodeparttextbox - .5 \pgf@x - outer sep
+      \pgf@x=-.5\pgf@x%
+      \advance\pgf@x by.5\wd\pgfnodeparttextbox%
+      \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
+      \advance\pgf@x by-\pgf@xa%
+      %
+      % Calculate y
+      %
+      % First, is height+depth < minimum height?
+      \pgf@y=\ht\pgfnodeparttextbox%
+      \advance\pgf@y by\dp\pgfnodeparttextbox%
+      \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
+      \advance\pgf@y by 2\pgf@yc%
+      \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/minimum height}}%
+      \ifdim\pgf@y<\pgf@yb%
+        % yes, too small. Enlarge...
+        \pgf@y=\pgf@yb%
+      \fi%
+       % Now, calculate upper border: .5\ht-.5\dp - .5 \pgf@y - outer sep
+      \pgf@y=-.5\pgf@y%
+      \advance\pgf@y by-.5\dp\pgfnodeparttextbox%
+      \advance\pgf@y by.5\ht\pgfnodeparttextbox%
+      \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
+      \advance\pgf@y by-\pgf@ya%
+  }
+
+
+  % \savedanchor{\baseAnortheast}{
+  %   % Calculate x
+  %   %
+  %   % First, is width < minimum width?
+  %   \pgf@x=0.25\wd\pgfnodeparttextbox%
+  %   \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}%
+  %   \advance\pgf@x by 2\pgf@xc%
+  %   \pgfmathsetlength\pgf@xb{0.25\pgfkeysvalueof{/pgf/minimum width}}%
+  %   \ifdim\pgf@x<\pgf@xb%
+  %     % yes, too small. Enlarge...
+  %     \pgf@x=\pgf@xb%
+  %   \fi%
+  %   % Now, calculate right border: .5\wd\pgfnodeparttextbox + .5 \pgf@x + outer sep
+  %   \pgf@x=.5\pgf@x%
+  %   \advance\pgf@x by.5\wd\pgfnodeparttextbox%
+  %   \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
+  %   \advance\pgf@x by\pgf@xa%
+  %   % Calculate y
+  %   %
+  %   % First, is height+depth < minimum height?
+  %   \pgf@y=0.1\ht\pgfnodeparttextbox%
+  %   \advance\pgf@y by\dp\pgfnodeparttextbox%
+  %   \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}%
+  %   \advance\pgf@y by 2\pgf@yc%
+  %   \pgfmathsetlength\pgf@yb{\pgfkeysvalueof{/pgf/minimum height}}%
+  %   \pgfmathsetlength\pgf@yb{0.1\pgf@yb}
+  %   \ifdim\pgf@y<\pgf@yb%
+  %     % yes, too small. Enlarge...
+  %     \pgf@y=\pgf@yb%
+  %   \fi%
+  %   % Now, calculate upper border: .5\ht-.5\dp + .5 \pgf@y + outer sep
+  %   \pgf@y=.5\pgf@y%
+  %   \advance\pgf@y by-.5\dp\pgfnodeparttextbox%
+  %   \advance\pgf@y by.5\ht\pgfnodeparttextbox%
+  %   \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
+  %   \advance\pgf@y by\pgf@ya%
+  %   \pgf@y=-\pgf@y
+  % }
+
+
+  % -----> Inherit some normal anchors from rectangle
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{north west}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{south east}
+  %\inheritanchor[from=rectangle]{text}
+
+  % -----> Inherit anchor border from rectangle
+  \inheritanchorborder[from=rectangle]%
+
+  % -----> Define anchors people usually expect in a node
+  % \anchor{center}{\pgfpointorigin}
+  \anchor{bla}{\baseAsouthwest}
+  % \anchor{ble}{\baseAnortheast}
+
+  % -----> Draw the background
+  \backgroundpath{
+    
+  }
+}
+
+
+
+\makeatother
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "testbasestation.tex"
+%%% TeX-PDF-mode: t
+%%% End: 

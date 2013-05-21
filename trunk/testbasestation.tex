@@ -1,0 +1,82 @@
+\documentclass[a4]{report}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc} % Use this if the file is encoded with utf-8
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{tikz} % Create graphics in Latex
+
+
+\input{basestation.tex}
+
+\begin{document}
+
+\usetikzlibrary{positioning}
+
+\begin{tikzpicture}[every node/.append style={scale=1}]
+  \draw[help lines] (0,-3) grid (8,6);
+  
+  % Coordinate system origin
+  \path (0,0) coordinate (origin);
+  \draw[fill=red] (origin) circle (1pt);
+  \draw[gray!40!white] (origin) node[rotate=45] {origin};
+
+  \path (2,1.5) coordinate (BS1Pos);
+  
+  \draw (BS1Pos) node[draw,minimum width=1cm, minimum height=2.5cm] {};
+
+  \draw (BS1Pos) node[
+  draw,
+  BaseStationTwo, 
+  minimum width=1cm,
+  minimum height=2.5cm,
+  inner sep=0,
+  outer sep=0] (mynode) {\pgftypesetversion};
+
+  % \foreach \ancora in {
+  %   north,
+  %   east,
+  %   south,
+  %   west,
+  %   north east,
+  %   north west,
+  %   south east,
+  %   south west,
+  %   % text,
+  %   % % base,
+  %   % first antenna base start,
+  %   % second antenna base start,
+  %   % third antenna base start,
+  %   % first antenna base end,
+  %   % second antenna base end,
+  %   % third antenna base end,
+  %   % first antenna,
+  %   % second antenna,
+  %   % third antenna,
+  %   % A,
+  %   % B,
+  %   % C,
+  %   center} % text is the same as the center anchor
+  % {
+  %   \draw[fill=green] (mynode.\ancora) circle (0.8pt) node[scale=0.5,red!50!black,rotate=45] {\tiny{\ancora}};
+  %   % \draw[fill=green] (mynode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+  % }
+
+  \fill[fill=red] (mynode.center) circle (0.8pt);
+  \fill[fill=red] (mynode.north east) circle (0.8pt);
+  \fill[fill=red] (mynode.south west) circle (0.8pt);
+  \fill[fill=blue] (mynode.base A south west) circle (0.8pt);
+  \fill[fill=blue] (mynode.base A north east) circle (0.8pt);
+  % \fill[fill=red] (mynode.ble) circle (0.8pt);
+
+
+\end{tikzpicture}
+
+\end{document}
+
+% Used by Emacs
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-PDF-mode: t
+%%% TeX-master: t
+%%% End:
