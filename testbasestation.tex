@@ -16,6 +16,9 @@
 \begin{tikzpicture}[every node/.append style={scale=1}]
   \draw[help lines] (0,-3) grid (8,6);
   
+  \tikzset{my sizes/.style={minimum width=1cm, minimum height=4cm}}
+
+
   % Coordinate system origin
   \path (0,0) coordinate (origin);
   \draw[fill=red] (origin) circle (1pt);
@@ -23,15 +26,17 @@
 
   \path (2,1.5) coordinate (BS1Pos);
   
-  \draw (BS1Pos) node[draw,minimum width=1cm, minimum height=2.5cm] {};
+  \draw (BS1Pos) node[draw,my sizes,dashed, gray] {};
 
   \draw (BS1Pos) node[
   draw,
   BaseStationTwo, 
-  minimum width=1cm,
-  minimum height=2.5cm,
+  my sizes,
   inner sep=0,
-  outer sep=0] (mynode) {\pgftypesetversion};
+  outer sep=0
+  draw=red,  % Not working
+  fill=gray  % Not working
+  ] (mynode) {\pgftypesetversion};
 
   % \foreach \ancora in {
   %   north,
@@ -63,11 +68,18 @@
   % }
 
   \fill[fill=red] (mynode.center) circle (0.8pt);
-  \fill[fill=red] (mynode.north east) circle (0.8pt);
-  \fill[fill=red] (mynode.south west) circle (0.8pt);
-  \fill[fill=blue] (mynode.base A south west) circle (0.8pt);
-  \fill[fill=blue] (mynode.base A north east) circle (0.8pt);
-  % \fill[fill=red] (mynode.ble) circle (0.8pt);
+  % \fill[fill=red] (mynode.north east) circle (0.8pt);
+  % \fill[fill=red] (mynode.south west) circle (0.8pt);
+  % \fill[fill=blue] (mynode.base A south west) circle (0.8pt);
+  % \fill[fill=blue] (mynode.base A north east) circle (0.8pt);
+  % \fill[fill=green!60!black] (mynode.base B south east) circle (0.8pt);
+  % \fill[fill=green!60!black] (mynode.base B north west) circle (0.8pt);
+  % \fill[fill=blue] (mynode.base C south west) circle (0.8pt);
+  % \fill[fill=blue] (mynode.base C north east) circle (0.8pt);
+  \fill[fill=blue] (mynode.bla) circle (0.8pt);
+  \fill[fill=black] (mynode.ble) circle (0.8pt);
+  \fill[fill=black] (mynode.bli) circle (0.8pt);
+
 
 
 \end{tikzpicture}

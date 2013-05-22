@@ -7,21 +7,38 @@
 %   antenna side/.initial=0.4cm,
 % }
 
+% The keys that the user can provide are all the keys below
+% \pgfkeys{
+%   basestation fill color/.initial=white,
+%   basestation stroke color/.initial=black,
+% }
 
-\def\my@widthcode{
-    \pgf@xa=\pgfkeysvalueof{/pgf/minimum width}
-    \pgf@xb=\pgfkeysvalueof{/pgf/inner xsep}
-    \pgf@xc=\pgfkeysvalueof{/pgf/outer xsep}
-    \pgf@x=.5\pgf@xa
-    \advance\pgf@x by .5\pgf@xb
-    \advance\pgf@x by .5\pgf@xc
-}
+
+% \def\my@widthcode{
+%     \pgf@xa=\pgfkeysvalueof{/pgf/minimum width}
+%     \pgf@xb=\pgfkeysvalueof{/pgf/inner xsep}
+%     \pgf@xc=\pgfkeysvalueof{/pgf/outer xsep}
+%     \pgf@x=.5\pgf@xa
+%     \advance\pgf@x by .5\pgf@xb
+%     \advance\pgf@x by .5\pgf@xc
+% }
 
 
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxx BaseStationTwo Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{BaseStationTwo}{
+  \savedmacro\shapewidth{
+    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
+  }
+
+  \savedmacro\shapeheight{
+    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
+  }
+
+  % \savedmacro\innersep{
+  %   \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
+  % }
 
   \savedanchor{\center}{
     \pgf@x=0pt
@@ -29,43 +46,198 @@
   }
 
   \savedanchor{\northeast}{
-    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/minimum width}}
+    \pgfmathsetlength\pgf@xa{\shapewidth}
     \pgf@x=0.5\pgf@xa
-    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/minimum height}}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
     \pgf@y=0.5\pgf@ya
   }
 
   \savedanchor{\southwest}{
-    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/minimum width}}
+    \pgfmathsetlength\pgf@xa{\shapewidth}
     \pgf@x=-0.5\pgf@xa
-    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/minimum height}}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
     \pgf@y=-0.5\pgf@ya
   }
 
   \savedanchor{\BaseAsouthwest}{
-    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/minimum width}}
-    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/minimum height}}
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
     \pgf@y=-0.5\pgf@ya
-    \pgf@x=-0.1\pgf@xa
+    \pgf@x=-0.2\pgf@xa
   }
 
   \savedanchor{\BaseAnortheast}{
-    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/minimum width}}
-    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/minimum height}}
-    \pgf@y=-0.1\pgf@ya
-    \pgf@x=0.1\pgf@xa
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@y=-0.05\pgf@ya
+    \pgf@x=0.2\pgf@xa
+  }
+
+  \savedanchor{\BaseBsoutheast}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@y=-0.05\pgf@ya
+    \pgf@x=0.15\pgf@xa
+    % \advance\pgf@x by -0.5mm
+  }
+
+  \savedanchor{\BaseBnorthwest}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@y=0.15\pgf@ya
+    \pgf@x=-0.15\pgf@xa
+    % \advance\pgf@x by 0.5mm
+  }
+
+  \savedanchor{\BaseCsouthwest}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@y=0.15\pgf@ya
+    \pgf@x=-0.1\pgf@xa
+    % \advance\pgf@x by 0.5mm
   }
   
+  \savedanchor{\BaseCnortheast}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@y=0.30\pgf@ya
+    \pgf@x=0.1\pgf@xa
+    %\advance\pgf@x by 0.5mm
+  }
+  
+  % Maybe I don't need this savedanchor
+  \savedanchor{\MiddleAntennasouth}{
+    \pgf@x=0pt
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@y=0.29\pgf@ya
+  }
 
+
+  \savedanchor{\AntennaConnectorsouthwest}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@x=-0.5\pgf@xa
+    \pgf@y=0.38\pgf@ya
+  }
+
+  \savedanchor{\AntennaConnectornortheast}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@x=0.5\pgf@xa
+    \pgf@y=0.42\pgf@ya
+  }
+
+  \savedanchor{\MiddleAntennasouthwest}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgf@x=-0.15\pgf@xa
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@y=0.29\pgf@ya
+  }
+
+  \savedanchor{\MiddleAntennanortheast}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgf@x=0.15\pgf@xa
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@y=0.5\pgf@ya
+  }
+
+  \savedanchor{\LeftAntennasouthwest}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@x=-0.5\pgf@xa
+    \pgf@y=0.29\pgf@ya
+  }
+
+  \savedanchor{\LeftAntennanortheast}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@x=-0.25\pgf@xa
+    \pgf@y=0.5\pgf@ya
+  }
+
+  \savedanchor{\RightAntennasouthwest}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@x=0.25\pgf@xa
+    \pgf@y=0.29\pgf@ya
+  }
+
+  \savedanchor{\RightAntennanortheast}{
+    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@ya{\shapeheight}
+    \pgf@x=0.5\pgf@xa
+    \pgf@y=0.5\pgf@ya
+  }
+  
   % xxxxxxxxxx Regular Anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \anchor{center}{\center}
   \anchor{north east}{\northeast}
   \anchor{south west}{\southwest}
   \anchor{base A south west}{\BaseAsouthwest}
   \anchor{base A north east}{\BaseAnortheast}
-
+  \anchor{base B south east}{\BaseBsoutheast}
+  \anchor{base B north west}{\BaseBnorthwest}
+  \anchor{base C south west}{\BaseCsouthwest}
+  \anchor{base C north east}{\BaseCnortheast}
+  \anchor{text}
+  {
+    \center
+    \advance\pgf@x by -0.5\wd\pgfnodeparttextbox
+  }
+  \anchor{bla}{\MiddleAntennasouth}
+  \anchor{ble}{\MiddleAntennasouthwest}
+  \anchor{bli}{\MiddleAntennanortheast}
+  
   \backgroundpath{
-    
+    % Scope for the Base
+    \begin{scope}
+      % Draw the bottom base
+      \pgfpathrectanglecorners
+      {\BaseAsouthwest}
+      {\BaseAnortheast}
+
+      % Draw the middle base
+      \pgfpathrectanglecorners
+      {\BaseBsoutheast}
+      {\BaseBnorthwest}
+
+      % Draw the bottom base
+      \pgfpathrectanglecorners
+      {\BaseCsouthwest}
+      {\BaseCnortheast}
+
+      \pgfusepath{stroke,fill}
+    \end{scope}
+
+    % Scope for the antenna connector
+    \begin{scope}
+      % Draw Antenna connector
+      \pgfpathrectanglecorners
+      {\AntennaConnectorsouthwest}
+      {\AntennaConnectornortheast}
+
+      \pgfusepath{stroke,fill}
+    \end{scope}
+
+    % Scope for the antennas
+    \begin{scope}
+      % Draw the middle antenna
+      \pgfpathrectanglecorners
+      {\MiddleAntennasouthwest}
+      {\MiddleAntennanortheast}
+      
+      % Draw the Left antenna
+      \pgfpathrectanglecorners
+      {\LeftAntennasouthwest}
+      {\LeftAntennanortheast}
+      
+      % Draw the Right antenna
+      \pgfpathrectanglecorners
+      {\RightAntennasouthwest}
+      {\RightAntennanortheast}
+
+      \pgfusepath{stroke,fill}
+    \end{scope}
   }
 }
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
