@@ -1,163 +1,111 @@
 \makeatletter
 
 
+% The keys that the user can provide are all the keys below, except
+% "leftantennas" (use the "right antennas" or "left antennas" keys instead)
+\pgfkeys{
+  /pgf/.cd,
+  button fill color/.initial=white
+}
+
+
+
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-% xxxxxxxxxxxxxxx BaseStation Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx UserTerminal Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-\pgfdeclareshape{BaseStation}{
-  \savedmacro\shapewidth{
-    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
-  }
-
-  \savedmacro\shapeheight{
-    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
-  }
-
-  % \savedmacro\innersep{
-  %   \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
-  % }
-
+\pgfdeclareshape{UserTerminal}{
+  
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % Macros and savedanchors common to UserTerminal and BaseStation Shapes
   \savedanchor{\center}{
     \pgf@x=0pt
     \pgf@y=0pt
   }
 
+
+  % Note that pgf provides the text macros \pgfshapeminwidth and
+  % pgfshapeminheight that store the minim width and minimum height,
+  % respectivelly. Note that They are "TEXT macros" and not
+  % "lengths". Calling them simple
+  % replaces for the text.
   \savedanchor{\northeast}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
     \pgf@x=0.5\pgf@xa
-    \pgfmathsetlength\pgf@ya{\shapeheight}
     \pgf@y=0.5\pgf@ya
+    % NOTE: We can't use 0.5\pgfshapeminwidth directly because the minimum
+    % width is stored in a "plain text macro". If minimum width is 2cm, for
+    % instance, and we write "\pgf@x=.5\pgfshapeminwidth" then \pgf@x would
+    % be set to 0.52cm, which is not what we want. See the explanation for
+    % \savedanchor in the pgfmanual (page 627).
   }
 
   \savedanchor{\southwest}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
     \pgf@x=-0.5\pgf@xa
-    \pgfmathsetlength\pgf@ya{\shapeheight}
     \pgf@y=-0.5\pgf@ya
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  \savedanchor{\BaseAsouthwest}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@y=-0.5\pgf@ya
-    \pgf@x=-0.2\pgf@xa
-  }
-
-  \savedanchor{\BaseAnortheast}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@y=-0.05\pgf@ya
-    \pgf@x=0.2\pgf@xa
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % Savedanchors specific to the UserTerminal shape
+  \savedanchor{\screennortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=0.45\pgf@xa
+    \pgf@y=0.45\pgf@ya
   }
 
-  \savedanchor{\BaseBsoutheast}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@y=-0.05\pgf@ya
-    \pgf@x=0.15\pgf@xa
-    % \advance\pgf@x by -0.5mm
+  \savedanchor{\screensouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=-0.45\pgf@xa
+    \pgf@y=-0.35\pgf@ya
   }
 
-  \savedanchor{\BaseBnorthwest}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@y=0.15\pgf@ya
-    \pgf@x=-0.15\pgf@xa
-    % \advance\pgf@x by 0.5mm
-  }
-
-  \savedanchor{\BaseCsouthwest}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@y=0.15\pgf@ya
-    \pgf@x=-0.1\pgf@xa
-    % \advance\pgf@x by 0.5mm
-  }
-  
-  \savedanchor{\BaseCnortheast}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@y=0.30\pgf@ya
-    \pgf@x=0.1\pgf@xa
-    %\advance\pgf@x by 0.5mm
-  }
-  
-  % Maybe I don't need this savedanchor
-  \savedanchor{\MiddleAntennasouth}{
+  \savedanchor{\buttonsouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
     \pgf@x=0pt
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@y=0.29\pgf@ya
+    \pgf@y=-0.425\pgf@ya
+    \advance\pgf@x by -0.15\pgf@xa
+    \advance\pgf@y by -0.04\pgf@ya
   }
 
-
-  \savedanchor{\AntennaConnectorsouthwest}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@x=-0.5\pgf@xa
-    \pgf@y=0.38\pgf@ya
+  \savedanchor{\buttonnortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=0pt
+    \pgf@y=-0.425\pgf@ya
+    \advance\pgf@x by 0.15\pgf@xa
+    \advance\pgf@y by 0.04\pgf@ya
   }
 
-  \savedanchor{\AntennaConnectornortheast}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@x=0.5\pgf@xa
-    \pgf@y=0.42\pgf@ya
-  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  \savedanchor{\MiddleAntennasouthwest}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgf@x=-0.15\pgf@xa
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@y=0.29\pgf@ya
-  }
-
-  \savedanchor{\MiddleAntennanortheast}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgf@x=0.15\pgf@xa
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@y=0.5\pgf@ya
-  }
-
-  \savedanchor{\LeftAntennasouthwest}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@x=-0.5\pgf@xa
-    \pgf@y=0.29\pgf@ya
-  }
-
-  \savedanchor{\LeftAntennanortheast}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@x=-0.25\pgf@xa
-    \pgf@y=0.5\pgf@ya
-  }
-
-  \savedanchor{\RightAntennasouthwest}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@x=0.25\pgf@xa
-    \pgf@y=0.29\pgf@ya
-  }
-
-  \savedanchor{\RightAntennanortheast}{
-    \pgfmathsetlength\pgf@xa{\shapewidth}
-    \pgfmathsetlength\pgf@ya{\shapeheight}
-    \pgf@x=0.5\pgf@xa
-    \pgf@y=0.5\pgf@ya
-  }
-  
   % xxxxxxxxxx Regular Anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  % \anchor{base A south west}{\BaseAsouthwest}
-  % \anchor{base A north east}{\BaseAnortheast}
-  % \anchor{base B south east}{\BaseBsoutheast}
-  % \anchor{base B north west}{\BaseBnorthwest}
-  % \anchor{base C south west}{\BaseCsouthwest}
-  % \anchor{base C north east}{\BaseCnortheast}
   \anchor{text}
   {
-    \center
+    % This will get the center of the screen
+    \pgfpointlineattime{0.5}{\screensouthwest}{\screennortheast}
+    % Lets put the center of the text in the center of the screen
     \advance\pgf@x by -0.5\wd\pgfnodeparttextbox
+    \advance\pgf@y by -0.5\ht\pgfnodeparttextbox
   }
+
+  \anchor{button}{
+    \pgfpointlineattime{0.5}{\buttonsouthwest}{\buttonnortheast}
+  }
+
+  \anchor{screen}{
+    \pgfpointlineattime{0.5}{\screensouthwest}{\screennortheast}
+  }
+
+  % % xxxxxxxxxx ERASE LATER these two anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % \anchor{button south west}{\buttonsouthwest}
+  % \anchor{button north east}{\buttonnortheast}
+
 
   % We define the savedanchors "northeast" and "southwest". With these two
   % defined we can inherit code for the regular anchors from the
@@ -177,10 +125,183 @@
 
   % We can even inherit the "angle" anchors.
   \inheritanchorborder[from=rectangle]%
+
+  \backgroundpath{
+    % Scope for Terminal Body
+    \begin{pgfscope}
+      \pgfsetcornersarced{\pgfpoint{0.1\pgfshapeminheight}{0.1\pgfshapeminheight}}
+      \pgfpathrectanglecorners
+      {\southwest}
+      {\northeast}
+      \pgfusepath{stroke,fill}
+    \end{pgfscope}
+    
+    % Scope for the terminal Screen
+    \begin{pgfscope}
+      \pgfsetcornersarced{\pgfpoint{0.1\pgfshapeminheight}{0.1\pgfshapeminheight}}
+      \pgfsetfillcolor{white}
+      \pgfpathrectanglecorners
+      {\screensouthwest}
+      {\screennortheast}
+      \pgfusepath{stroke,fill}
+    \end{pgfscope}
+    
+    % Scope for the button
+    \begin{pgfscope}
+      \pgfsetcornersarced{\pgfpoint{0.03\pgfshapeminheight}{0.03\pgfshapeminheight}}
+      \pgfsetfillcolor{\pgfkeysvalueof{/pgf/button fill color}}
+      %\pgfsetfillcolor{white}
+      \pgfpathrectanglecorners
+      {\buttonsouthwest}
+      {\buttonnortheast}
+      \pgfusepath{stroke,fill}
+    \end{pgfscope}
+  }
+}
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx END xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx BaseStation Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\pgfdeclareshape{BaseStation}{
+  % Inherit all savedanchors from UserTerminal. We are interested in
+  % northeast and southwest. Note that this will also inherits the saved
+  % macros.
+  \inheritsavedanchors[from=UserTerminal]
+
+
+  % xxxxx Define savedanchors specific to the BaseStation shape xxxxxxxxxxx
+  \savedanchor{\BaseAsouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=-0.5\pgf@ya
+    \pgf@x=-0.2\pgf@xa
+  }
+
+  \savedanchor{\BaseAnortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=-0.05\pgf@ya
+    \pgf@x=0.2\pgf@xa
+  }
+
+  \savedanchor{\BaseBsoutheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=-0.05\pgf@ya
+    \pgf@x=0.15\pgf@xa
+  }
+
+  \savedanchor{\BaseBnorthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=0.15\pgf@ya
+    \pgf@x=-0.15\pgf@xa
+  }
+
+  \savedanchor{\BaseCsouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=0.15\pgf@ya
+    \pgf@x=-0.1\pgf@xa
+  }
+  
+  \savedanchor{\BaseCnortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=0.30\pgf@ya
+    \pgf@x=0.1\pgf@xa
+  }
+  
+  % Maybe I don't need this savedanchor
+  \savedanchor{\MiddleAntennasouth}{
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=0pt
+    \pgf@y=0.29\pgf@ya
+  }
+
+  \savedanchor{\AntennaConnectorsouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=-0.5\pgf@xa
+    \pgf@y=0.38\pgf@ya
+  }
+
+  \savedanchor{\AntennaConnectornortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=0.5\pgf@xa
+    \pgf@y=0.42\pgf@ya
+  }
+
+  \savedanchor{\MiddleAntennasouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=-0.15\pgf@xa
+    \pgf@y=0.29\pgf@ya
+  }
+
+  \savedanchor{\MiddleAntennanortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=0.15\pgf@xa
+    \pgf@y=0.5\pgf@ya
+  }
+
+  \savedanchor{\LeftAntennasouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=-0.5\pgf@xa
+    \pgf@y=0.29\pgf@ya
+  }
+
+  \savedanchor{\LeftAntennanortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=-0.25\pgf@xa
+    \pgf@y=0.5\pgf@ya
+  }
+
+  \savedanchor{\RightAntennasouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=0.25\pgf@xa
+    \pgf@y=0.29\pgf@ya
+  }
+
+  \savedanchor{\RightAntennanortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@x=0.5\pgf@xa
+    \pgf@y=0.5\pgf@ya
+  }
+  
+  % xxxxxxxxxx Regular Anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % We define the savedanchors "northeast" and "southwest". With these two
+  % defined we can inherit code for the regular anchors from the
+  % UserTerminal shape (even thought the northeast and southwest saved anchors
+  % in the UserTerminal shape are different from ours)..
+  \inheritanchor[from=UserTerminal]{center}
+  \inheritanchor[from=UserTerminal]{north}
+  \inheritanchor[from=UserTerminal]{east}
+  \inheritanchor[from=UserTerminal]{south}
+  \inheritanchor[from=UserTerminal]{west}
+  \inheritanchor[from=UserTerminal]{north east}
+  \inheritanchor[from=UserTerminal]{north west}
+  \inheritanchor[from=UserTerminal]{south west}
+  \inheritanchor[from=UserTerminal]{south east}
+  \inheritanchor[from=rectangle]{text}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % We can even inherit the "angle" anchors.
+  \inheritanchorborder[from=UserTerminal]%
   
   \backgroundpath{
     % Scope for the Base
-    \begin{scope}
+    \begin{pgfscope}
       % Draw the bottom base
       \pgfpathrectanglecorners
       {\BaseAsouthwest}
@@ -197,20 +318,20 @@
       {\BaseCnortheast}
 
       \pgfusepath{stroke,fill}
-    \end{scope}
+    \end{pgfscope}
 
     % Scope for the antenna connector
-    \begin{scope}
+    \begin{pgfscope}
       % Draw Antenna connector
       \pgfpathrectanglecorners
       {\AntennaConnectorsouthwest}
       {\AntennaConnectornortheast}
 
       \pgfusepath{stroke,fill}
-    \end{scope}
+    \end{pgfscope}
 
     % Scope for the antennas
-    \begin{scope}
+    \begin{pgfscope}
       % Draw the middle antenna
       \pgfpathrectanglecorners
       {\MiddleAntennasouthwest}
@@ -227,7 +348,7 @@
       {\RightAntennanortheast}
 
       \pgfusepath{stroke,fill}
-    \end{scope}
+    \end{pgfscope}
   }
 }
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
