@@ -30,7 +30,7 @@
 
   \draw (BS1Pos) node[
   draw,
-  BaseStationTwo, 
+  BaseStation, 
   my sizes,
   inner sep=0,
   outer sep=0
@@ -38,16 +38,16 @@
   fill=gray  % Not working
   ] (mynode) {\pgftypesetversion};
 
-  % \foreach \ancora in {
-  %   north,
-  %   east,
-  %   south,
-  %   west,
-  %   north east,
-  %   north west,
-  %   south east,
-  %   south west,
-  %   % text,
+  \foreach \ancora in {
+    north,
+    east,
+    south,
+    west,
+    north east,
+    north west,
+    south east,
+    south west,
+    text,
   %   % % base,
   %   % first antenna base start,
   %   % second antenna base start,
@@ -61,26 +61,14 @@
   %   % A,
   %   % B,
   %   % C,
-  %   center} % text is the same as the center anchor
-  % {
-  %   \draw[fill=green] (mynode.\ancora) circle (0.8pt) node[scale=0.5,red!50!black,rotate=45] {\tiny{\ancora}};
-  %   % \draw[fill=green] (mynode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
-  % }
+    center} % text is the same as the center anchor
+  {
+    \draw[fill=green] (mynode.\ancora) circle (0.8pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    % \draw[fill=green] (mynode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+  }
 
-  \fill[fill=red] (mynode.center) circle (0.8pt);
-  % \fill[fill=red] (mynode.north east) circle (0.8pt);
-  % \fill[fill=red] (mynode.south west) circle (0.8pt);
-  % \fill[fill=blue] (mynode.base A south west) circle (0.8pt);
-  % \fill[fill=blue] (mynode.base A north east) circle (0.8pt);
-  % \fill[fill=green!60!black] (mynode.base B south east) circle (0.8pt);
-  % \fill[fill=green!60!black] (mynode.base B north west) circle (0.8pt);
-  % \fill[fill=blue] (mynode.base C south west) circle (0.8pt);
-  % \fill[fill=blue] (mynode.base C north east) circle (0.8pt);
-  \fill[fill=blue] (mynode.bla) circle (0.8pt);
-  \fill[fill=black] (mynode.ble) circle (0.8pt);
-  \fill[fill=black] (mynode.bli) circle (0.8pt);
-
-
+  \draw[fill=yellow] (mynode.60) node[circle,draw,scale=0.2,fill=yellow] {60};
+  \draw[fill=yellow] (mynode.250) node[circle,draw,scale=0.2,fill=yellow] {250};
 
 \end{tikzpicture}
 
