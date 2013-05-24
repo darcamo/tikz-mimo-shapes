@@ -16,10 +16,6 @@
 \begin{tikzpicture}[every node/.append style={scale=1}]
   \draw[help lines] (0,-3) grid (8,6);
   
-  \tikzset{bs sizes/.style={minimum width=1cm, minimum height=4cm}}
-  \tikzset{ue sizes/.style={minimum width=1.2cm, minimum height=2cm}}
-
-
   % Coordinate system origin
   \path (0,0) coordinate (origin);
   \draw[fill=red] (origin) circle (1pt);
@@ -28,19 +24,23 @@
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxx Test the BaseStation Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  \path (2,1.5) coordinate (BS1Pos);
-  
-  \draw (BS1Pos) node[draw,bs sizes,dashed, gray] {};
+  \tikzset{BS style/.style={
+      draw, 
+      minimum width=1cm, 
+      minimum height=4cm,
+      fill=gray, 
+      inner sep=0,
+      outer sep=0,
+    }}
 
-  \draw (BS1Pos) node[
-  draw,
-  BaseStation, 
-  bs sizes,
-  inner sep=0,
-  outer sep=0
-  draw=red,  % Not working
-  fill=gray  % Not working
-  ] (mynode) {\pgftypesetversion};
+  \path (2,1.5) coordinate (BS1Pos);
+  \path (4,1.5) coordinate (BS2Pos);
+  
+  \draw (BS1Pos) node[BS style,dashed,gray,fill=none] {};
+  \draw (BS2Pos) node[BS style,dashed,gray,fill=none] {};
+
+  \draw (BS1Pos) node[BaseStation, BS style] (mynode) {\pgftypesetversion};
+  \draw (BS2Pos) node[BaseStationSimple, BS style] (mynode2) {\pgftypesetversion};
 
   \foreach \ancora in {
     north,
@@ -56,11 +56,13 @@
     center} % text is the same as the center anchor
   {
     \draw[fill=green] (mynode.\ancora) circle (0.8pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
-    % \draw[fill=green] (mynode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mynode2.\ancora) circle (0.8pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
   }
 
   \draw[fill=yellow] (mynode.60) node[circle,draw,scale=0.2,fill=yellow] {60};
   \draw[fill=yellow] (mynode.250) node[circle,draw,scale=0.2,fill=yellow] {250};
+  \draw[fill=yellow] (mynode2.60) node[circle,draw,scale=0.2,fill=yellow] {60};
+  \draw[fill=yellow] (mynode2.250) node[circle,draw,scale=0.2,fill=yellow] {250};
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -68,9 +70,15 @@
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxx Test The UserTerminal Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  \path (4,1.5) coordinate (UE1Pos);
+  \tikzset{UE Style/.style={
+      draw,
+      fill=gray,
+      minimum width=1.2cm, 
+      minimum height=2cm}}
 
-  \draw (UE1Pos) node[UserTerminal,draw,ue sizes,fill=gray, button fill color=gray!40] (myterminal) {UE};
+  \path (6,1.5) coordinate (UE1Pos);
+
+  \draw (UE1Pos) node[UserTerminal,UE Style, button fill color=gray!40] (myterminal) {UE};
 
   \foreach \ancora in {
     north,
@@ -88,12 +96,10 @@
     center}
   {
     \draw[fill=green] (myterminal.\ancora) circle (0.8pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
-    % \draw[fill=green] (myterminal.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
   }
 
   \draw[fill=yellow] (myterminal.60) node[circle,draw,scale=0.2,fill=yellow] {60};
   \draw[fill=yellow] (myterminal.250) node[circle,draw,scale=0.2,fill=yellow] {250};
-
 \end{tikzpicture}
 
 \end{document}
