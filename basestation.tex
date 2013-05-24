@@ -9,7 +9,6 @@
 }
 
 
-
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxx UserTerminal Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -21,7 +20,6 @@
     \pgf@x=0pt
     \pgf@y=0pt
   }
-
 
   % Note that pgf provides the text macros \pgfshapeminwidth and
   % pgfshapeminheight that store the minim width and minimum height,
@@ -102,15 +100,10 @@
     \pgfpointlineattime{0.5}{\screensouthwest}{\screennortheast}
   }
 
-  % % xxxxxxxxxx ERASE LATER these two anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  % \anchor{button south west}{\buttonsouthwest}
-  % \anchor{button north east}{\buttonnortheast}
-
-
   % We define the savedanchors "northeast" and "southwest". With these two
   % defined we can inherit code for the regular anchors from the
   % rectangle shape (even thought the northeast and southwest saved anchors
-  % in the rectangle shape are different from ours)..
+  % in the rectangle shape are different from ours).
   \inheritanchor[from=rectangle]{center}
   \inheritanchor[from=rectangle]{north}
   \inheritanchor[from=rectangle]{east}
@@ -120,7 +113,6 @@
   \inheritanchor[from=rectangle]{north west}
   \inheritanchor[from=rectangle]{south west}
   \inheritanchor[from=rectangle]{south east}
-  %\inheritanchor[from=rectangle]{text}
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
   % We can even inherit the "angle" anchors.
@@ -164,56 +156,26 @@
 
 
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-% xxxxxxxxxxxxxxx BaseStation Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx BaseStationSimple xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-\pgfdeclareshape{BaseStation}{
-  % Inherit all savedanchors from UserTerminal. We are interested in
-  % northeast and southwest. Note that this will also inherits the saved
-  % macros.
+\pgfdeclareshape{BaseStationSimple}{
+  % Inherit all savedanchors from UserTerminal. We only need northeast and
+  % southwest, but we can't choose which ones to inherit.
   \inheritsavedanchors[from=UserTerminal]
-
 
   % xxxxx Define savedanchors specific to the BaseStation shape xxxxxxxxxxx
   \savedanchor{\BaseAsouthwest}{
     \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
     \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
     \pgf@y=-0.5\pgf@ya
-    \pgf@x=-0.2\pgf@xa
+    \pgf@x=-0.12\pgf@xa
   }
 
   \savedanchor{\BaseAnortheast}{
     \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
     \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
-    \pgf@y=-0.05\pgf@ya
-    \pgf@x=0.2\pgf@xa
-  }
-
-  \savedanchor{\BaseBsoutheast}{
-    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
-    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
-    \pgf@y=-0.05\pgf@ya
-    \pgf@x=0.15\pgf@xa
-  }
-
-  \savedanchor{\BaseBnorthwest}{
-    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
-    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
-    \pgf@y=0.15\pgf@ya
-    \pgf@x=-0.15\pgf@xa
-  }
-
-  \savedanchor{\BaseCsouthwest}{
-    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
-    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
-    \pgf@y=0.15\pgf@ya
-    \pgf@x=-0.1\pgf@xa
-  }
-  
-  \savedanchor{\BaseCnortheast}{
-    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
-    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
     \pgf@y=0.30\pgf@ya
-    \pgf@x=0.1\pgf@xa
+    \pgf@x=0.12\pgf@xa
   }
   
   % Maybe I don't need this savedanchor
@@ -299,7 +261,9 @@
   % We can even inherit the "angle" anchors.
   \inheritanchorborder[from=UserTerminal]%
   
-  \backgroundpath{
+  % The base of the antenna will be in the behindbackgroundpath while the
+  % antennas will be in the backgroundpath.
+  \behindbackgroundpath{
     % Scope for the Base
     \begin{pgfscope}
       % Draw the bottom base
@@ -307,19 +271,13 @@
       {\BaseAsouthwest}
       {\BaseAnortheast}
 
-      % Draw the middle base
-      \pgfpathrectanglecorners
-      {\BaseBsoutheast}
-      {\BaseBnorthwest}
-
-      % Draw the bottom base
-      \pgfpathrectanglecorners
-      {\BaseCsouthwest}
-      {\BaseCnortheast}
-
       \pgfusepath{stroke,fill}
     \end{pgfscope}
+  }
 
+  % The base of the antenna will be in the behindbackgroundpath while the
+  % antennas will be in the backgroundpath.
+  \backgroundpath{
     % Scope for the antenna connector
     \begin{pgfscope}
       % Draw Antenna connector
@@ -355,6 +313,105 @@
 % xxxxxxxxxxxxxxx END xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx BaseStation Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\pgfdeclareshape{BaseStation}{
+  % Inherit all savedanchors from BaseStationSimple.
+  \inheritsavedanchors[from=BaseStationSimple]
+
+
+  % xxxxx Define savedanchors specific to the BaseStation shape xxxxxxxxxxx
+  \savedanchor{\BaseAsouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=-0.5\pgf@ya
+    \pgf@x=-0.2\pgf@xa
+  }
+
+  \savedanchor{\BaseAnortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=-0.05\pgf@ya
+    \pgf@x=0.2\pgf@xa
+  }
+
+  \savedanchor{\BaseBsoutheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=-0.05\pgf@ya
+    \pgf@x=0.15\pgf@xa
+  }
+
+  \savedanchor{\BaseBnorthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=0.15\pgf@ya
+    \pgf@x=-0.15\pgf@xa
+  }
+
+  \savedanchor{\BaseCsouthwest}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=0.15\pgf@ya
+    \pgf@x=-0.1\pgf@xa
+  }
+  
+  \savedanchor{\BaseCnortheast}{
+    \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
+    \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+    \pgf@y=0.30\pgf@ya
+    \pgf@x=0.1\pgf@xa
+  }
+    
+  % xxxxxxxxxx Regular Anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % We define the savedanchors "northeast" and "southwest". With these two
+  % defined we can inherit code for the regular anchors from the
+  % BaseStationSimple shape (even thought the northeast and southwest saved anchors
+  % in the BaseStationSimple shape are different from ours)..
+  \inheritanchor[from=BaseStationSimple]{center}
+  \inheritanchor[from=BaseStationSimple]{north}
+  \inheritanchor[from=BaseStationSimple]{east}
+  \inheritanchor[from=BaseStationSimple]{south}
+  \inheritanchor[from=BaseStationSimple]{west}
+  \inheritanchor[from=BaseStationSimple]{north east}
+  \inheritanchor[from=BaseStationSimple]{north west}
+  \inheritanchor[from=BaseStationSimple]{south west}
+  \inheritanchor[from=BaseStationSimple]{south east}
+  \inheritanchor[from=rectangle]{text}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % We can even inherit the "angle" anchors.
+  \inheritanchorborder[from=BaseStationSimple]%
+  
+  \behindbackgroundpath{
+    % Scope for the Base
+    \begin{pgfscope}
+      % Draw the bottom base
+      \pgfpathrectanglecorners
+      {\BaseAsouthwest}
+      {\BaseAnortheast}
+
+      % Draw the middle base
+      \pgfpathrectanglecorners
+      {\BaseBsoutheast}
+      {\BaseBnorthwest}
+
+      % Draw the bottom base
+      \pgfpathrectanglecorners
+      {\BaseCsouthwest}
+      {\BaseCnortheast}
+
+      \pgfusepath{stroke,fill}
+    \end{pgfscope}
+  }
+  
+  \inheritbackgroundpath[from=BaseStationSimple]
+}
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx END xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 \makeatother
 
