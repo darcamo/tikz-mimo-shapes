@@ -33,7 +33,8 @@
 % \pgf@x and \pgf@y to point to the start of the antenna. 
 \def\drawantenna{
   % Store the current positions in \pgf@xa and \pgf@ya
-  \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+  \pgf@xa=\pgf@x 
+  \pgf@ya=\pgf@y
   \pgfpathmoveto{\pgfpoint{\pgf@x}{\pgf@y}}
 
   \advance\pgf@xa by \antennaoffset
@@ -52,7 +53,8 @@
   \pgf@process{
     \pgfpointadd{\pgfpoint{\pgf@xb}{\pgf@yb}}{\pgfpointpolar{60}{\pgfkeysvalueof{/pgf/antenna side}}}
   }
-  \pgf@xc=\pgf@x \pgf@yc=\pgf@y
+  \pgf@xc=\pgf@x 
+  \pgf@yc=\pgf@y
   \pgfpathlineto{\pgfpoint{\pgf@x}{\pgf@y}}
   
   
@@ -121,6 +123,8 @@
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxx mimotwo shape declaration xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+% xxxxxxxxxx First we define some savedmacros xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{mimotwo}{
   \savedmacro\antennaoffset{
     \ifleftantennas
@@ -136,14 +140,14 @@
 
   \savedmacro\shapewidth{
     \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
-    }
+  }
 
-    \savedmacro\shapeheight{
-      \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
-    }
+  \savedmacro\shapeheight{
+    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-
-  % Inherit saved anchor from rectangle (\northeast and \southwest)
+  % xxxxxxxxxx Now we define the savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \savedanchor\northeast{%
     \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
     \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
@@ -237,73 +241,91 @@
     % -----> x position
     \antennaStartXCoordinate
   }
- 
-  \anchor{A}{\anchorA}
-  \anchor{B}{\anchorB}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % -----> Inherit anchor border from rectangle
+  % xxxxxxxxxx Inherit anchor border from rectangle xxxxxxxxxxxxxxxxxxxxxxx
   \inheritanchorborder[from=rectangle]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  
+  
+  % xxxxxxxxxx Now we define the regular anchors xxxxxxxxxxxxxxxxxxxxxxxxxx
+  \anchor{A}{
+    \pgf@process{\anchorA}
+  }
+  \anchor{B}{
+    \pgf@process{\anchorB}
+  }
 
-  % -----> Define anchors people usually expect in a node
-    \anchor{center}{\pgfpointorigin}
-    \anchor{north}{ \northeast \pgf@x=0pt }
-    \anchor{east}{\northeast \pgf@y=0pt}
-    \anchor{south}{ \southwest \pgf@x=0pt }
-    \anchor{west}{\southwest \pgf@y=0pt}
-    \anchor{north east}{\northeast}
-    \anchor{north west}{\northeast \pgf@x=-\pgf@x}
-    \anchor{south west}{\southwest}
-    \anchor{south east}{\southwest \pgf@x=-\pgf@x}
-    \anchor{text}{
-    \pgfpointorigin
+  % We can inherit the "usual" from rectangle. They depend on the
+  % "\southwest" and "\northeast" savedanchors but this will use our
+  % version instead of the rectangle's version.
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{north west}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{south east}
+
+  \anchor{text}
+  {
+    \pgf@process{\pgfpointorigin}
     \advance\pgf@x by -.5\wd\pgfnodeparttextbox%
     \advance\pgf@y by -.5\ht\pgfnodeparttextbox%
     \advance\pgf@y by +.5\dp\pgfnodeparttextbox%
   }
-
+  
   % -----> Define some more useful anchors
   \anchor{first antenna base start}{
-    \pgf@anchor@mimotwo@A
+    \pgf@process{\anchorA}
   }
   
   \anchor{second antenna base start}{
-    \pgf@anchor@mimotwo@B
+    \pgf@process{\anchorB}
   }
 
   \anchor{first antenna base end}{
-    \csname pgf@anchor@mimotwo@first antenna base start\endcsname
+    \pgf@process{\anchorA}
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
   }
   \anchor{second antenna base end}{
-    \csname pgf@anchor@mimotwo@second antenna base start\endcsname
+    \pgf@process{\anchorB}
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
   }
 
   \anchor{first antenna}{
-    \csname pgf@anchor@mimotwo@first antenna base start\endcsname
+    %\csname pgf@anchor@mimotwo@first antenna base start\endcsname
+    \pgf@process{\anchorA}
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.4cm%
   }
   \anchor{second antenna}{
-    \csname pgf@anchor@mimotwo@second antenna base start\endcsname
+    %\csname pgf@anchor@mimotwo@second antenna base start\endcsname
+    \pgf@process{\anchorB}
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.4cm%
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
-  % -----> Draw the background
+  % xxxxxxxxxx Draw the background xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \backgroundpath{
     % Rectangle box
     % \pgfpathrectanglecorners{\southwest}{\northeast}
     \pgfpathrectanglecorners
-    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
-    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
+    { % First corner of the rectangle
+      \pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}
+    }
+    { % Second corner of the rectangle
+      \pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+    }
 
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % \pgf@anchor@mimotwo@A
-    \csname pgf@anchor@\shape@name @A\endcsname
+    \pgf@process{\anchorA}
     % The drawantenna command only needs that the pgf@x and pgf@y variables
     % are correctly set. This is done by calling the anchor A
     \drawantenna
@@ -311,30 +333,22 @@
 
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \csname pgf@anchor@\shape@name @B\endcsname
+    \anchorB
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 }
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx End of mimotwo shape declaration xxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-
-% Key to add font macros to the current font
-% \tikzset{add font/.code={\expandafter\def\expandafter\tikz@textfont\expandafter{\tikz@textfont#1}}} 
-
-% Define default style for this node
-%\tikzset{flip flop/port labels/.style={font=\sffamily\scriptsize}}
-% \tikzset{every mimotwo node/.style={draw,thick,inner sep=1mm,outer sep=0pt,cap=round,add 
-% font=\sffamily}}
-
-\makeatother
 
 
 
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxx Mimo Shape with three antennas xxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-\makeatletter
-
 \pgfdeclareshape{mimothree}{
   \savedmacro\antennaoffset{
     \ifleftantennas
@@ -500,16 +514,17 @@
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
 }
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx End of mimothree shape declaration xxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-\makeatother
+
 
 
 
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxx Mimo Shape with three antennas xxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-\makeatletter
-
 \pgfdeclareshape{mimoind}{
   \savedmacro\antennaoffset{
     \ifleftantennas
@@ -677,15 +692,12 @@
   }
 }
 
-\makeatother
 
 
 
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxx Boxtwo Node xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-\makeatletter
-
 \pgfdeclareshape{boxtwo}{
 
   \inheritsavedanchors[from=mimotwo]
@@ -711,13 +723,13 @@
   % understand pgf@process
   \anchor{A}{
     \pgf@process{\northeast}%
-    \pgf@x=0\pgf@x%
+    \pgf@x=0pt
     \pgf@y=0.5\pgf@y%
   }
 
   \anchor{B}{
     \pgf@process{\northeast}%
-    \pgf@x=0\pgf@x%
+    \pgf@x=0pt
     \pgf@y=-0.5\pgf@y%
   }
 
@@ -745,14 +757,11 @@
   }
 }
 
-\makeatother
 
 
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxx Boxthree Node xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-\makeatletter
-
 \pgfdeclareshape{boxthree}{
 
   \inheritsavedanchors[from=mimotwo]
@@ -777,20 +786,19 @@
   % See section "Internals of How Point Commands Work" of the pgf manual to
   % understand pgf@process
   \anchor{A}{
-    \pgf@process{\northeast}%
-    \pgf@x=0\pgf@x%
+    \northeast
+    \pgf@x=0pt
     \pgf@y=0.6\pgf@y%
   }
 
   \anchor{B}{
-    \pgf@process{\northeast}%
-    \pgf@x=0\pgf@x%
-    \pgf@y=0\pgf@y%
+    \pgf@x=0pt
+    \pgf@y=0pt
   }
 
   \anchor{C}{
-    \pgf@process{\northeast}%
-    \pgf@x=0\pgf@x%
+    \northeast
+    \pgf@x=0pt
     \pgf@y=-0.6\pgf@y%
   }
 
