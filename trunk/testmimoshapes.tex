@@ -14,7 +14,7 @@
 \usetikzlibrary{positioning}
 
 \begin{tikzpicture}[every node/.append style={scale=1}]
-  \draw[help lines] (0,-3) grid (8,6);
+  \draw[help lines] (-0.5,-6.5) grid (8,6);
 
   % Coordinate system origin
   \path (0,0) coordinate (origin);
@@ -23,21 +23,32 @@
 
 
   % If I draw the node at the origin some bugs could not be seem
-  \path (2,1.5) coordinate (mimo2);
-  \path (2,-1.5) coordinate (mimo3);
+  \path (2,1.5) coordinate (mimo2pos);
+  \path (2,-1.5) coordinate (mimo3pos);
 
   \tikzset{test mimo node/.style={fill=blue!30,draw,mimotwo,antenna offset=0.3cm,thick,minimum width=1.5cm,minimum height=2cm}}
 
-
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxx Draw the nodes xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % Nodes with two antennas
-  \draw (mimo2) node[test mimo node] (mynode) {\pgftypesetversion};
+  \draw (mimo2pos) node[test mimo node] (mynode) {\pgftypesetversion};
   \node[test mimo node,right=3cm of mynode,left antennas] (mynode2) {\pgftypesetversion};
 
   % Nodes with tree antennas
-  \draw (mimo3) node[test mimo node,mimothree] (mynode3) {\pgftypesetversion};
+  \draw (mimo3pos) node[test mimo node,mimothree] (mynode3) {\pgftypesetversion};
   \node[test mimo node,right=3cm of mynode3,mimothree,left antennas] (mynode4) {\pgftypesetversion};
 
-  % Test all anchors in the Shape
+  % Nodes with many antennas
+  \draw (2,-5)  node[draw,test mimo node,mimoind] (mynode5) {\pgftypesetversion};
+  \draw node[right=3cm of mynode5,draw,test mimo node,mimoind,left antennas] (mynode6) {\pgftypesetversion};
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxx Test all anchors in the mimotwo Shape xxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \foreach \ancora in {
     north,
     east,
@@ -62,9 +73,13 @@
     \draw[fill=green] (mynode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
     \draw[fill=green] (mynode2.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
-  % Test all anchors in the Shape
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxx Test all anchors in the mimothree Shape xxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \foreach \ancora in {
     north,
     east,
@@ -92,28 +107,74 @@
   {
     \draw[fill=green] (mynode3.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
     \draw[fill=green] (mynode4.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 
-  % Test the angle anchor
+
+
+
+
+
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxx Test all anchors in the mimoind Shape xxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \foreach \ancora in {
+    north,
+    east,
+    south,
+    west,
+    north east,
+    north west,
+    south east,
+    south west,
+    text,
+    % base,
+    first antenna base start,
+    second antenna base start,
+    third antenna base start,
+    first antenna base end,
+    second antenna base end,
+    third antenna base end,
+    first antenna,
+    second antenna,
+    third antenna,
+    % A,
+    % B,
+    % C,
+    center} % text is the same as the center anchor
+  {
+    \draw[fill=green] (mynode5.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mynode6.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
+
+
+
+
+
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxx Test the angle anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \foreach \angulo in {0,15,...,360} 
   {
     \draw[fill=blue] (mynode.\angulo) circle (1pt);
     \draw (mynode.center) -- ++(\angulo:1.5cm);
   }
-
-  % Bounding Box
-  \foreach \ancora in {north,east,west,south,north east,north west,south east,south west} 
-  {
-    \draw[overlay,fill=red!50!black] (current bounding box.\ancora) circle (1pt) node[blue,rotate=45] {\tiny{\ancora}};
-  }
-
-  \draw[help lines] (current bounding box.south west) rectangle (current bounding box.north east);
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
-
-  % xxxxxxxxxxxxxxx boxtwo and boxthree xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxx Test all anchors in the boxtwo and boxthree shapes xxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \path (2,4.5) coordinate (mimobox);
 
   \draw (mimobox) node[test mimo node,boxtwo,circle radius=3mm] (mimobox2) {\pgftypesetversion};
@@ -139,14 +200,25 @@
     \draw[fill=green] (mimobox3.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
   }
   \draw[fill=green] (mimobox3.C) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{C}};
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxx Bounding Box of this whole tikzpicture xxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \draw[help lines] (current bounding box.south west) rectangle (current bounding box.north east);
   
-  % xxxxx FIM xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \foreach \ancora in {north,east,west,south,north east,north west,south east,south west} 
+  {
+    \draw[overlay,fill=red!50!black] (current bounding box.\ancora) circle (1pt) node[blue,rotate=45] {\tiny{\ancora}};
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  
 
-  \draw (2,-5)  node[draw,test mimo node,mimoind] {\pgftypesetversion};
-
+  % xxxxx END xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  
 \end{tikzpicture}
-
 \end{document}
 
 % Used by Emacs

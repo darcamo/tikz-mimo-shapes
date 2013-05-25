@@ -350,47 +350,12 @@
 %% xxxxxxxxxxxxxxx Mimo Shape with three antennas xxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{mimothree}{
-  \savedmacro\antennaoffset{
-    \ifleftantennas
-      \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
-    \else
-      \def\antennaoffset{\pgfkeysvalueof{/pgf/antenna offset}}
-    \fi
-  }
 
-  \savedmacro\antennabaseheight{
-    \def\antennabaseheight{\pgfkeysvalueof{/pgf/antenna base height}}
-  }
+  % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % First we Inherit savedanchors (and savedmacro's) from mimotwo
+  \inheritsavedanchors[from=mimotwo]  
 
-  \savedmacro\shapewidth{
-    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
-  }
-
-  \savedmacro\shapeheight{
-    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
-  }
-
-
-  % -----> Inherit saved anchor from mimotwo (\northeast and \southwest)
-  \inheritsavedanchors[from=mimotwo]
-
-  % -----> Inherit anchor border from mimotwo
-  \inheritanchorborder[from=mimotwo]
-
-  % -----> Inherit normal anchors from mimotwo
-  \inheritanchor[from=mimotwo]{center}
-  \inheritanchor[from=mimotwo]{north}
-  \inheritanchor[from=mimotwo]{east}
-  \inheritanchor[from=mimotwo]{south}
-  \inheritanchor[from=mimotwo]{west}
-  \inheritanchor[from=mimotwo]{north east}
-  \inheritanchor[from=mimotwo]{north west}
-  \inheritanchor[from=mimotwo]{south west}
-  \inheritanchor[from=mimotwo]{south east}
-  \inheritanchor[from=mimotwo]{text}
-
-
-  % -----> Define more savedanchors for the start of the antennas
+  % We redefine savedanchors "anchorA" and "anchorB" and define "anchorC"
   \savedanchor{\anchorA}{
     \pgf@y=.5\ht\pgfnodeparttextbox
     \setlength{\pgf@ya}{\pgfshapeminheight}
@@ -440,48 +405,50 @@
     % x position
     \antennaStartXCoordinate
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+
+  % xxxxxxxxxx Inherit anchor border from mimotwo xxxxxxxxxxxxxxxxxxxxxxxxx
+  \inheritanchorborder[from=mimotwo]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+  % xxxxxxxxxx Inherit normal anchors from mimotwo xxxxxxxxxxxxxxxxxxxxxxxx
+  \inheritanchor[from=mimotwo]{center}
+  \inheritanchor[from=mimotwo]{north}
+  \inheritanchor[from=mimotwo]{east}
+  \inheritanchor[from=mimotwo]{south}
+  \inheritanchor[from=mimotwo]{west}
+  \inheritanchor[from=mimotwo]{north east}
+  \inheritanchor[from=mimotwo]{north west}
+  \inheritanchor[from=mimotwo]{south west}
+  \inheritanchor[from=mimotwo]{south east}
+  \inheritanchor[from=mimotwo]{text}
+  \inheritanchor[from=mimotwo]{A}
+  \inheritanchor[from=mimotwo]{B}
+  \inheritanchor[from=mimotwo]{first antenna base start}
+  \inheritanchor[from=mimotwo]{second antenna base start}
+  \inheritanchor[from=mimotwo]{first antenna base end}
+  \inheritanchor[from=mimotwo]{second antenna base end}
+  \inheritanchor[from=mimotwo]{first antenna}
+  \inheritanchor[from=mimotwo]{second antenna}
 
   % -----> Define the normal anchors
-  \anchor{A}{\anchorA}
-  \anchor{B}{\anchorB}
   \anchor{C}{\anchorC}
-
-  \anchor{first antenna base start}{\pgf@anchor@mimothree@A}
-  \anchor{second antenna base start}{\pgf@anchor@mimothree@B}
-  \anchor{third antenna base start}{\pgf@anchor@mimothree@C}
-
-  \anchor{first antenna base end}{
-    \csname pgf@anchor@mimothree@first antenna base start\endcsname
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.2cm%
-  }
-  \anchor{second antenna base end}{
-    \csname pgf@anchor@mimothree@second antenna base start\endcsname
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.2cm%
+  \anchor{third antenna base start}{
+    \pgf@process{\anchorC}
   }
   \anchor{third antenna base end}{
-    \csname pgf@anchor@mimothree@third antenna base start\endcsname
+    \pgf@process{\anchorC}
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
   }
-  \anchor{first antenna}{
-    \csname pgf@anchor@mimothree@first antenna base start\endcsname
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.4cm%
-  }
-  \anchor{second antenna}{
-    \csname pgf@anchor@mimothree@second antenna base start\endcsname
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.4cm%
-  }
   \anchor{third antenna}{
-    \csname pgf@anchor@mimothree@third antenna base start\endcsname
+    %\csname pgf@anchor@mimothree@third antenna base start\endcsname
+    \pgf@process{\anchorC}
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.4cm%
   }
-
 
   % -----> Draw the rectangle box and the antennas
   \backgroundpath{
@@ -523,141 +490,38 @@
 
 
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-%% xxxxxxxxxxxxxxx Mimo Shape with three antennas xxxxxxxxxxxxxxxxxxxxxxxxx
+%% xxxxxxxxxxxxxxx Mimo Shape with "many" antennas xxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{mimoind}{
-  \savedmacro\antennaoffset{
-    \ifleftantennas
-      \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
-    \else
-      \def\antennaoffset{\pgfkeysvalueof{/pgf/antenna offset}}
-    \fi
-  }
+  % -----> Inherit saved anchor from mimothree
+  \inheritsavedanchors[from=mimothree]
 
-  \savedmacro\antennabaseheight{
-    \def\antennabaseheight{\pgfkeysvalueof{/pgf/antenna base height}}
-  }
+  % -----> Inherit anchor border from mimothree
+  \inheritanchorborder[from=mimothree]
 
-  \savedmacro\shapewidth{
-    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
-  }
-
-  \savedmacro\shapeheight{
-    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
-  }
-
-
-  % -----> Inherit saved anchor from mimotwo (\northeast and \southwest)
-  \inheritsavedanchors[from=mimotwo]
-
-  % -----> Inherit anchor border from mimotwo
-  \inheritanchorborder[from=mimotwo]
-
-  % -----> Inherit normal anchors from mimotwo
-  \inheritanchor[from=mimotwo]{center}
-  \inheritanchor[from=mimotwo]{north}
-  \inheritanchor[from=mimotwo]{east}
-  \inheritanchor[from=mimotwo]{south}
-  \inheritanchor[from=mimotwo]{west}
-  \inheritanchor[from=mimotwo]{north east}
-  \inheritanchor[from=mimotwo]{north west}
-  \inheritanchor[from=mimotwo]{south west}
-  \inheritanchor[from=mimotwo]{south east}
-  \inheritanchor[from=mimotwo]{text}
-
-
-  % -----> Define more savedanchors for the start of the antennas
-  \savedanchor{\anchorA}{
-    \pgf@y=.5\ht\pgfnodeparttextbox
-    \setlength{\pgf@ya}{\pgfshapeminheight}
-    \ifdim\pgf@y<.5\pgf@ya
-    \pgf@y=.5\pgf@ya
-    \fi
-    \pgf@y=0.5\pgf@y
-    %
-    % x position
-    \antennaStartXCoordinate
-  }
-
-  \savedanchor{\anchorC}{
-    % y position for the first antenna
-    \pgf@y=-.5\ht\pgfnodeparttextbox
-    \setlength{\pgf@ya}{-\pgfshapeminheight}
-    \ifdim\pgf@y>.5\pgf@ya
-    \pgf@y=.5\pgf@ya
-    \fi
-    \pgf@y=0.9\pgf@y
-    %
-    % x position
-    \antennaStartXCoordinate
-  }
-
-  % B is in the middle of A and C
-  \savedanchor{\anchorB}{
-    % y position
-    % First we get y position of anchor A
-    \pgf@y=.5\ht\pgfnodeparttextbox
-    \setlength{\pgf@ya}{\pgfshapeminheight}
-    \ifdim\pgf@y<.5\pgf@ya
-    \pgf@y=.5\pgf@ya
-    \fi
-    \pgf@ya=0.5\pgf@y
-    % Then we get y position of anchor C
-    \pgf@y=-.5\ht\pgfnodeparttextbox
-    \setlength{\pgf@yc}{-\pgfshapeminheight}
-    \ifdim\pgf@y>.5\pgf@yc
-    \pgf@y=.5\pgf@yc
-    \fi
-    \pgf@yc=0.9\pgf@y
-    % y position of anchor B is in the middle of anchor A and C
-    \pgf@y=0.5\pgf@yc
-    \advance\pgf@y by 0.5\pgf@ya
-    %
-    % x position
-    \antennaStartXCoordinate
-  }
-
-
-  % -----> Define the normal anchors
-  \anchor{A}{\anchorA}
-  \anchor{B}{\anchorB}
-  \anchor{C}{\anchorC}
-
-  \anchor{first antenna base start}{\pgf@anchor@mimoind@A}
-  \anchor{second antenna base start}{\pgf@anchor@mimoind@B}
-  \anchor{third antenna base start}{\pgf@anchor@mimoind@C}
-
-  \anchor{first antenna base end}{
-    \csname pgf@anchor@mimoind@first antenna base start\endcsname
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.2cm%
-  }
-  \anchor{second antenna base end}{
-    \csname pgf@anchor@mimoind@second antenna base start\endcsname
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.2cm%
-  }
-  \anchor{third antenna base end}{
-    \csname pgf@anchor@mimoind@third antenna base start\endcsname
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.2cm%
-  }
-  \anchor{first antenna}{
-    \csname pgf@anchor@mimoind@first antenna base start\endcsname
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.4cm%
-  }
-  \anchor{second antenna}{
-    \csname pgf@anchor@mimoind@second antenna base start\endcsname
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.4cm%
-  }
-  \anchor{third antenna}{
-    \csname pgf@anchor@mimoind@third antenna base start\endcsname
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.4cm%
-  }
-
+  % -----> Inherit normal anchors from mimothree
+  \inheritanchor[from=mimothree]{center}
+  \inheritanchor[from=mimothree]{north}
+  \inheritanchor[from=mimothree]{east}
+  \inheritanchor[from=mimothree]{south}
+  \inheritanchor[from=mimothree]{west}
+  \inheritanchor[from=mimothree]{north east}
+  \inheritanchor[from=mimothree]{north west}
+  \inheritanchor[from=mimothree]{south west}
+  \inheritanchor[from=mimothree]{south east}
+  \inheritanchor[from=mimothree]{text}
+  \inheritanchor[from=mimothree]{A}
+  \inheritanchor[from=mimothree]{B}
+  \inheritanchor[from=mimothree]{C}
+  \inheritanchor[from=mimothree]{first antenna base start}
+  \inheritanchor[from=mimothree]{second antenna base start}
+  \inheritanchor[from=mimothree]{third antenna base start}
+  \inheritanchor[from=mimothree]{first antenna base end}
+  \inheritanchor[from=mimothree]{second antenna base end}
+  \inheritanchor[from=mimothree]{third antenna base end}
+  \inheritanchor[from=mimothree]{first antenna}
+  \inheritanchor[from=mimothree]{second antenna}
+  \inheritanchor[from=mimothree]{third antenna}
 
   % -----> Draw the rectangle box and the antennas
   \backgroundpath{
@@ -691,7 +555,9 @@
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
 }
-
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx End of mimoind shape declaration xxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 
@@ -733,7 +599,6 @@
     \pgf@y=-0.5\pgf@y%
   }
 
-
   % -----> Draw the rectangle box and the three circles
   \backgroundpath{
     % Rectangle box
@@ -756,6 +621,9 @@
     }
   }
 }
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx End of boxtwo shape declaration xxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 
@@ -764,22 +632,22 @@
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{boxthree}{
 
-  \inheritsavedanchors[from=mimotwo]
+  \inheritsavedanchors[from=boxtwo]
 
   % -----> Inherit from rectangle
-  \inheritanchorborder[from=mimotwo]
+  \inheritanchorborder[from=boxtwo]
 
   % -----> Define same anchor a normal rectangle has
-  \inheritanchor[from=mimotwo]{center}
-  \inheritanchor[from=mimotwo]{north}
-  \inheritanchor[from=mimotwo]{east}
-  \inheritanchor[from=mimotwo]{south}
-  \inheritanchor[from=mimotwo]{west}
-  \inheritanchor[from=mimotwo]{north east}
-  \inheritanchor[from=mimotwo]{north west}
-  \inheritanchor[from=mimotwo]{south west}
-  \inheritanchor[from=mimotwo]{south east}
-  \inheritanchor[from=mimotwo]{text}
+  \inheritanchor[from=boxtwo]{center}
+  \inheritanchor[from=boxtwo]{north}
+  \inheritanchor[from=boxtwo]{east}
+  \inheritanchor[from=boxtwo]{south}
+  \inheritanchor[from=boxtwo]{west}
+  \inheritanchor[from=boxtwo]{north east}
+  \inheritanchor[from=boxtwo]{north west}
+  \inheritanchor[from=boxtwo]{south west}
+  \inheritanchor[from=boxtwo]{south east}
+  \inheritanchor[from=boxtwo]{text}
 
   % -----> Define anchors for signal ports
 
