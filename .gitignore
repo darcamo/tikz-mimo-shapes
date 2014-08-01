@@ -99,3 +99,6 @@ sympy-plots-for-*.tex/
 
 # xindy
 *.xdy
+
+# Ignore PDF files
+*.pdf
