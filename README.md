@@ -24,3 +24,11 @@ the shapes accept some new options. Particularly the shapes defined in
 `mimoshapes.tex`. These options are `right antennas` or `left antennas`;
 `antenna offset`, `antenna base height`, `antenna side`, etc. See the
 `testmimoshapes.tex` file for examples.
+
+# Old PGF versions
+
+At some point PGF changed the macro "\shape@name" to
+"\pgf@sm@shape@name". This macro was used in the mimoshapes.tex file, which
+was updated to use "\pgf@sm@shape@name". If you have an older version of
+PGF and can't compile the examples here, checkout the version pointed by
+the "OldPGF" tag and try compiling the examples with it.
