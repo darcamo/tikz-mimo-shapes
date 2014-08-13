@@ -286,7 +286,7 @@
 
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % \pgf@anchor@mimotwo@A
-    \csname pgf@anchor@\shape@name @A\endcsname
+    \csname pgf@anchor@\pgf@sm@shape@name @A\endcsname
     % The drawantenna command only needs that the pgf@x and pgf@y variables
     % are correctly set. This is done by calling the anchor A
     \drawantenna
@@ -294,7 +294,7 @@
 
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \csname pgf@anchor@\shape@name @B\endcsname
+    \csname pgf@anchor@\pgf@sm@shape@name @B\endcsname
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }

@@ -461,7 +461,7 @@
     % e o \pgf@y para as coordenadas de uma âncora. Só que se você resolver
     % mudar o nome do shape depois vai ter que mudar todas as linhas que
     % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
-    \csname pgf@anchor@\shape@name @A\endcsname
+    \csname pgf@anchor@\pgf@sm@shape@name @A\endcsname
     %\pgf@anchor@mimothree@A
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -469,14 +469,14 @@
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% \pgf@anchor@mimothree@B
-    \csname pgf@anchor@\shape@name @B\endcsname
+    \csname pgf@anchor@\pgf@sm@shape@name @B\endcsname
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
     %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% \pgf@anchor@mimothree@C
-    \csname pgf@anchor@\shape@name @C\endcsname
+    \csname pgf@anchor@\pgf@sm@shape@name @C\endcsname
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
@@ -534,7 +534,7 @@
     % e o \pgf@y para as coordenadas de uma âncora. Só que se você resolver
     % mudar o nome do shape depois vai ter que mudar todas as linhas que
     % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
-    \csname pgf@anchor@\shape@name @A\endcsname
+    \csname pgf@anchor@\pgf@sm@shape@name @A\endcsname
     %\pgf@anchor@mimoind@A
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -542,7 +542,7 @@
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% \pgf@anchor@mimoind@B
-    \csname pgf@anchor@\shape@name @second antenna base end\endcsname
+    \csname pgf@anchor@\pgf@sm@shape@name @second antenna base end\endcsname
     %\drawantenna
     \drawellipses
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -550,7 +550,7 @@
 
     %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% \pgf@anchor@mimoind@C
-    \csname pgf@anchor@\shape@name @C\endcsname
+    \csname pgf@anchor@\pgf@sm@shape@name @C\endcsname
     \drawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
@@ -611,9 +611,9 @@
     
     % The two circles
     {
-      \csname pgf@anchor@\shape@name @A\endcsname
+      \csname pgf@anchor@\pgf@sm@shape@name @A\endcsname
       \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
-      \csname pgf@anchor@\shape@name @B\endcsname
+      \csname pgf@anchor@\pgf@sm@shape@name @B\endcsname
       \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
       \pgfsetfillcolor{\pgfkeysvalueof{/pgf/circle fill color}}
       \pgfsetstrokecolor{\pgfkeysvalueof{/pgf/circle stroke color}}
@@ -683,11 +683,11 @@
     
     % The three circles
     {
-      \csname pgf@anchor@\shape@name @A\endcsname
+      \csname pgf@anchor@\pgf@sm@shape@name @A\endcsname
       \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
-      \csname pgf@anchor@\shape@name @B\endcsname
+      \csname pgf@anchor@\pgf@sm@shape@name @B\endcsname
       \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
-      \csname pgf@anchor@\shape@name @C\endcsname
+      \csname pgf@anchor@\pgf@sm@shape@name @C\endcsname
       \pgfcircle{\pgfpoint{\pgf@x}\pgf@y{}}{\pgfkeysvalueof{/pgf/circle radius}}
       \pgfsetfillcolor{\pgfkeysvalueof{/pgf/circle fill color}}
       \pgfsetstrokecolor{\pgfkeysvalueof{/pgf/circle stroke color}}
