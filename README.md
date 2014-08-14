@@ -32,3 +32,10 @@ At some point PGF changed the macro "\shape@name" to
 was updated to use "\pgf@sm@shape@name". If you have an older version of
 PGF and can't compile the examples here, checkout the version pointed by
 the "OldPGF" tag and try compiling the examples with it.
+
+# Screenshots
+
+Below you can find the expected results after compiling the
+`testmimoshapes.tex` and `testbasestation.tex` files.
+
+![testmimoshapes.png](screenshots/testmimoshapes.png) ![testmimoshapes.png](screenshots/testbasestation.png)
