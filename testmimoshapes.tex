@@ -16,7 +16,7 @@
 \usetikzlibrary{positioning}
 
 \begin{tikzpicture}[every node/.append style={scale=1}]
-  \draw[help lines] (-0.5,-6.5) grid (8,6);
+  \draw[help lines] (-0.5,-7.5) grid (8,7.5);
 
   % Coordinate system origin
   \path (0,0) coordinate (origin);
@@ -25,25 +25,32 @@
 
 
   % If I draw the node at the origin some bugs could not be seem
-  \path (2,1.5) coordinate (mimo2pos);
-  \path (2,-1.5) coordinate (mimo3pos);
+  \path (1.5,6) coordinate (mimobox2pos);
+  \path (1.5,3) coordinate (mimo1pos);
+  \path (1.5,0.0) coordinate (mimo2pos);
+  \path (1.5,-3) coordinate (mimo3pos);
+  \path (1.5,-6.0) coordinate (mimoindpos);
 
   \tikzset{test mimo node/.style={fill=blue!30,draw,mimotwo,antenna offset=0.3cm,thick,minimum width=1.5cm,minimum height=2cm}}
 
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxx Draw the nodes xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% Nodes with one antenna
+  \draw (mimo1pos) node[test mimo node,mimoone] (mimo1txnode) {\pgftypesetversion};
+  \node[test mimo node,mimoone,right=3cm of mimo1txnode,left antennas] (mimo1rxnode) {\pgftypesetversion};
+
   % Nodes with two antennas
-  \draw (mimo2pos) node[test mimo node] (mynode) {\pgftypesetversion};
-  \node[test mimo node,right=3cm of mynode,left antennas] (mynode2) {\pgftypesetversion};
+  \draw (mimo2pos) node[test mimo node] (mimo2txnode) {\pgftypesetversion};
+  \node[test mimo node,right=3cm of mimo2txnode,left antennas] (mimo2rxnode) {\pgftypesetversion};
 
   % Nodes with tree antennas
-  \draw (mimo3pos) node[test mimo node,mimothree] (mynode3) {\pgftypesetversion};
-  \node[test mimo node,right=3cm of mynode3,mimothree,left antennas] (mynode4) {\pgftypesetversion};
+  \draw (mimo3pos) node[test mimo node,mimothree] (mimo3txnode) {\pgftypesetversion};
+  \node[test mimo node,right=3cm of mimo3txnode,mimothree,left antennas] (mimo3rxnode) {\pgftypesetversion};
 
   % Nodes with many antennas
-  \draw (2,-5)  node[draw,test mimo node,mimoind] (mynode5) {\pgftypesetversion};
-  \draw node[right=3cm of mynode5,draw,test mimo node,mimoind,left antennas] (mynode6) {\pgftypesetversion};
+  \draw (mimoindpos)  node[draw,test mimo node,mimoind] (mimoindtxnode) {\pgftypesetversion};
+  \draw node[right=3cm of mimoindtxnode,draw,test mimo node,mimoind,left antennas] (mimoindrxnode) {\pgftypesetversion};
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -72,8 +79,8 @@
     % B,
     center} % text is the same as the center anchor
   {
-    \draw[fill=green] (mynode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
-    \draw[fill=green] (mynode2.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mimo2txnode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mimo2rxnode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
   }
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -107,8 +114,8 @@
     % C,
     center} % text is the same as the center anchor
   {
-    \draw[fill=green] (mynode3.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
-    \draw[fill=green] (mynode4.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mimo3txnode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mimo3rxnode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
 
   }
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -149,8 +156,8 @@
     % C,
     center} % text is the same as the center anchor
   {
-    \draw[fill=green] (mynode5.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
-    \draw[fill=green] (mynode6.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mimoindtxnode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mimoindrxnode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
   }
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -167,8 +174,8 @@
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \foreach \angulo in {0,15,...,360} 
   {
-    \draw[fill=blue] (mynode.\angulo) circle (1pt);
-    \draw (mynode.center) -- ++(\angulo:1.5cm);
+    \draw[fill=blue] (mimo2txnode.\angulo) circle (1pt);
+    \draw (mimo2txnode.center) -- ++(\angulo:1.5cm);
   }
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -177,9 +184,7 @@
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxx Test all anchors in the boxtwo and boxthree shapes xxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  \path (2,4.5) coordinate (mimobox);
-
-  \draw (mimobox) node[test mimo node,boxtwo,circle radius=3mm] (mimobox2) {\pgftypesetversion};
+  \draw (mimobox2pos) node[test mimo node,boxtwo,circle radius=3mm] (mimobox2) {\pgftypesetversion};
   \node[test mimo node,right=3cm of mimobox2,boxthree,circle radius=1.5mm] (mimobox3) {\pgftypesetversion};
 
     % Test all anchors in the Shape

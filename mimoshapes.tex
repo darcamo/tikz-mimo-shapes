@@ -121,6 +121,231 @@
 
 
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx mimoone shape declaration xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+% xxxxxxxxxx First we define some savedmacros xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+\pgfdeclareshape{mimoone}{
+  \savedmacro\antennaoffset{
+    \ifleftantennas
+      \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
+    \else
+      \def\antennaoffset{\pgfkeysvalueof{/pgf/antenna offset}}
+    \fi
+  }
+
+  \savedmacro\antennabaseheight{
+    \def\antennabaseheight{\pgfkeysvalueof{/pgf/antenna base height}}
+  }
+
+  \savedmacro\shapewidth{
+    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
+  }
+
+  \savedmacro\shapeheight{
+    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Now we define the savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \savedanchor\northeast{%
+    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
+    %
+    % -----> Take the inner sep into account
+    \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}
+    \advance\pgf@x by \pgf@xc%
+    \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}
+    \advance\pgf@y by \pgf@yc%
+    % -----
+    % Test if the minimum width and height are respected. If not, set it as
+    % the minimum width/height.
+    \setlength{\pgf@xa}{\shapewidth}
+    \ifdim\pgf@x<.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{\shapeheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    %
+    % -----> Take the outer sep into account
+    % Now that we have the values of x and y we could stop here. However,
+    % in order to take into account the "outer sep" we need to add it to
+    % the anchor position(the idea is that the anchor will be outside the
+    % actual node (by the outer sep ammount). The default value of the
+    % outer sep is half the length of a line. Note that we are including
+    % the outer sep value in the anchor definition, but it should not be
+    % taken into account when drawing the background. Therefore, we need to
+    % remove this when drawing the rectangle box.
+    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
+    \advance\pgf@x by\pgf@xa%
+    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
+    \advance\pgf@y by\pgf@ya%
+  }
+
+  \savedanchor\southwest{%
+    \pgf@y=-.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
+    \pgf@x=-.5\wd\pgfnodeparttextbox % width of the box
+    %
+    % -----> Take the inner sep into account
+    \pgfmathsetlength\pgf@xc{-\pgfkeysvalueof{/pgf/inner xsep}}
+    \advance\pgf@x by \pgf@xc%
+    \pgfmathsetlength\pgf@yc{-\pgfkeysvalueof{/pgf/inner ysep}}
+    \advance\pgf@y by \pgf@yc%
+    % 
+    % Test if the minimum width and height are respected. If not, set it as
+    % the minimum width/height.
+    \setlength{\pgf@xa}{-\shapewidth}
+    \ifdim\pgf@x>.5\pgf@xa
+    \pgf@x=.5\pgf@xa
+    \fi
+    \setlength{\pgf@ya}{-\shapeheight}
+    \ifdim\pgf@y>.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    %
+    % -----> Take the outer sep into account (see comment in the northeast savedanchor)
+    \pgfmathsetlength\pgf@xa{-\pgfkeysvalueof{/pgf/outer xsep}}%
+    \advance\pgf@x by\pgf@xa%
+    \pgfmathsetlength\pgf@ya{-\pgfkeysvalueof{/pgf/outer ysep}}%
+    \advance\pgf@y by\pgf@ya%
+  }
+
+  % This anchor position will depend if the "left antennas" option was
+  % passed or not.
+  \savedanchor{\anchorA}{
+    % -----> y position for the first antenna
+    \pgf@y=.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{\pgfshapeminheight}
+    \ifdim\pgf@y<.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@y=0.4\pgf@y
+    %
+    % -----> x position
+    \antennaStartXCoordinate
+  }
+
+  % This anchor position will depend if the "left antennas" option was
+  % passed or not
+  \savedanchor{\anchorB}{
+    % -----> y position for the first antenna
+    \pgf@y=-.5\ht\pgfnodeparttextbox
+    \setlength{\pgf@ya}{-\pgfshapeminheight}
+    \ifdim\pgf@y>.5\pgf@ya
+    \pgf@y=.5\pgf@ya
+    \fi
+    \pgf@y=0.6\pgf@y
+    %
+    % -----> x position
+    \antennaStartXCoordinate
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Inherit anchor border from rectangle xxxxxxxxxxxxxxxxxxxxxxx
+  \inheritanchorborder[from=rectangle]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  
+  
+  % xxxxxxxxxx Now we define the regular anchors xxxxxxxxxxxxxxxxxxxxxxxxxx
+  \anchor{A}{
+    \pgf@process{\anchorA}
+  }
+  \anchor{B}{
+    \pgf@process{\anchorB}
+  }
+
+  % We can inherit the "usual" from rectangle. They depend on the
+  % "\southwest" and "\northeast" savedanchors but this will use our
+  % version instead of the rectangle's version.
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{north west}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{south east}
+
+  \anchor{text}
+  {
+    \pgf@process{\pgfpointorigin}
+    \advance\pgf@x by -.5\wd\pgfnodeparttextbox%
+    \advance\pgf@y by -.5\ht\pgfnodeparttextbox%
+    \advance\pgf@y by +.5\dp\pgfnodeparttextbox%
+  }
+  
+  % -----> Define some more useful anchors
+  \anchor{first antenna base start}{
+    \pgf@process{\anchorA}
+  }
+  
+  \anchor{second antenna base start}{
+    \pgf@process{\anchorB}
+  }
+
+  \anchor{first antenna base end}{
+    \pgf@process{\anchorA}
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+  \anchor{second antenna base end}{
+    \pgf@process{\anchorB}
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.2cm%
+  }
+
+  \anchor{first antenna}{
+    %\csname pgf@anchor@mimoone@first antenna base start\endcsname
+    \pgf@process{\anchorA}
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+  \anchor{second antenna}{
+    %\csname pgf@anchor@mimoone@second antenna base start\endcsname
+    \pgf@process{\anchorB}
+    \advance\pgf@x by \antennaoffset%
+    \advance\pgf@y by 0.4cm%
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+  % xxxxxxxxxx Draw the background xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \backgroundpath{
+    % Rectangle box
+    % \pgfpathrectanglecorners{\southwest}{\northeast}
+    \pgfpathrectanglecorners
+    { % First corner of the rectangle
+      \pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}
+    }
+    { % Second corner of the rectangle
+      \pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+    }
+
+    %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \pgf@process{\anchorA}
+    % The drawantenna command only needs that the pgf@x and pgf@y variables
+    % are correctly set. This is done by calling the anchor A
+    \mimoshapesdrawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+    %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \anchorB
+    \mimoshapesdrawantenna
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+}
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx End of mimoone shape declaration xxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxx mimotwo shape declaration xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
