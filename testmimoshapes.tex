@@ -54,7 +54,35 @@
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  
+
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxx Test all anchors in the mimoone Shape xxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \foreach \ancora in {
+    north,
+    east,
+    south,
+    west,
+    north east,
+    north west,
+    south east,
+    south west,
+    text,
+    % base,
+    first antenna base start,
+    first antenna base end,
+    first antenna,
+    % A,
+    % B,
+    center} % text is the same as the center anchor
+  {
+    \draw[fill=green] (mimo1txnode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+    \draw[fill=green] (mimo1rxnode.\ancora) circle (1pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  
+
+
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxx Test all anchors in the mimotwo Shape xxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
