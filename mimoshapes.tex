@@ -312,92 +312,16 @@
 
 % xxxxxxxxxx First we define some savedmacros xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{mimotwo}{
-  \savedmacro\antennaoffset{
-    \ifleftantennas
-      \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
-    \else
-      \def\antennaoffset{\pgfkeysvalueof{/pgf/antenna offset}}
-    \fi
-  }
 
-  \savedmacro\antennabaseheight{
-    \def\antennabaseheight{\pgfkeysvalueof{/pgf/antenna base height}}
-  }
-
-  \savedmacro\shapewidth{
-    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
-  }
-
-  \savedmacro\shapeheight{
-    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
-  }
+  % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % First we Inherit savedanchors (and savedmacro's) from mimoone
+  \inheritsavedanchors[from=mimoone]  
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % xxxxxxxxxx Now we define the savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  \savedanchor\northeast{%
-    \pgf@y=.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
-    \pgf@x=.5\wd\pgfnodeparttextbox % width of the box
-    %
-    % -----> Take the inner sep into account
-    \pgfmathsetlength\pgf@xc{\pgfkeysvalueof{/pgf/inner xsep}}
-    \advance\pgf@x by \pgf@xc%
-    \pgfmathsetlength\pgf@yc{\pgfkeysvalueof{/pgf/inner ysep}}
-    \advance\pgf@y by \pgf@yc%
-    % -----
-    % Test if the minimum width and height are respected. If not, set it as
-    % the minimum width/height.
-    \setlength{\pgf@xa}{\shapewidth}
-    \ifdim\pgf@x<.5\pgf@xa
-    \pgf@x=.5\pgf@xa
-    \fi
-    \setlength{\pgf@ya}{\shapeheight}
-    \ifdim\pgf@y<.5\pgf@ya
-    \pgf@y=.5\pgf@ya
-    \fi
-    %
-    % -----> Take the outer sep into account
-    % Now that we have the values of x and y we could stop here. However,
-    % in order to take into account the "outer sep" we need to add it to
-    % the anchor position(the idea is that the anchor will be outside the
-    % actual node (by the outer sep ammount). The default value of the
-    % outer sep is half the length of a line. Note that we are including
-    % the outer sep value in the anchor definition, but it should not be
-    % taken into account when drawing the background. Therefore, we need to
-    % remove this when drawing the rectangle box.
-    \pgfmathsetlength\pgf@xa{\pgfkeysvalueof{/pgf/outer xsep}}%
-    \advance\pgf@x by\pgf@xa%
-    \pgfmathsetlength\pgf@ya{\pgfkeysvalueof{/pgf/outer ysep}}%
-    \advance\pgf@y by\pgf@ya%
-  }
-
-  \savedanchor\southwest{%
-    \pgf@y=-.5\ht\pgfnodeparttextbox % height of the box, ignoring the depth
-    \pgf@x=-.5\wd\pgfnodeparttextbox % width of the box
-    %
-    % -----> Take the inner sep into account
-    \pgfmathsetlength\pgf@xc{-\pgfkeysvalueof{/pgf/inner xsep}}
-    \advance\pgf@x by \pgf@xc%
-    \pgfmathsetlength\pgf@yc{-\pgfkeysvalueof{/pgf/inner ysep}}
-    \advance\pgf@y by \pgf@yc%
-    % 
-    % Test if the minimum width and height are respected. If not, set it as
-    % the minimum width/height.
-    \setlength{\pgf@xa}{-\shapewidth}
-    \ifdim\pgf@x>.5\pgf@xa
-    \pgf@x=.5\pgf@xa
-    \fi
-    \setlength{\pgf@ya}{-\shapeheight}
-    \ifdim\pgf@y>.5\pgf@ya
-    \pgf@y=.5\pgf@ya
-    \fi
-    %
-    % -----> Take the outer sep into account (see comment in the northeast savedanchor)
-    \pgfmathsetlength\pgf@xa{-\pgfkeysvalueof{/pgf/outer xsep}}%
-    \advance\pgf@x by\pgf@xa%
-    \pgfmathsetlength\pgf@ya{-\pgfkeysvalueof{/pgf/outer ysep}}%
-    \advance\pgf@y by\pgf@ya%
-  }
-
+  % xxxxxxxxxx Now we define some savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % First we redefine the "anchorA", since it will be different from the
+  % one we inherited from the mimoone shape.
+  %
   % This anchor position will depend if the "left antennas" option was
   % passed or not.
   \savedanchor{\anchorA}{
@@ -413,6 +337,7 @@
     \antennaStartXCoordinate
   }
 
+  % Now we define a new anchorB for the second antenna.
   % This anchor position will depend if the "left antennas" option was
   % passed or not
   \savedanchor{\anchorB}{
@@ -430,65 +355,43 @@
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
   % xxxxxxxxxx Inherit anchor border from rectangle xxxxxxxxxxxxxxxxxxxxxxx
-  \inheritanchorborder[from=rectangle]
+  \inheritanchorborder[from=mimoone]
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   
+  % xxxxxxxxxx Inherit normal anchors from mimotwo xxxxxxxxxxxxxxxxxxxxxxxx
+  % We can inherit the "usual" from rectangle. They depend on the
+  % "\southwest" and "\northeast" savedanchors but this will use our
+  % version instead of the rectangle's version.
+  \inheritanchor[from=mimoone]{center}
+  \inheritanchor[from=mimoone]{north}
+  \inheritanchor[from=mimoone]{east}
+  \inheritanchor[from=mimoone]{south}
+  \inheritanchor[from=mimoone]{west}
+  \inheritanchor[from=mimoone]{north east}
+  \inheritanchor[from=mimoone]{north west}
+  \inheritanchor[from=mimoone]{south west}
+  \inheritanchor[from=mimoone]{south east}
+  \inheritanchor[from=mimoone]{text}
+  \inheritanchor[from=mimoone]{A}
+  \inheritanchor[from=mimoone]{first antenna base start}
+  \inheritanchor[from=mimoone]{first antenna base end}
+  \inheritanchor[from=mimoone]{first antenna}
   
   % xxxxxxxxxx Now we define the regular anchors xxxxxxxxxxxxxxxxxxxxxxxxxx
-  \anchor{A}{
-    \pgf@process{\anchorA}
-  }
   \anchor{B}{
     \pgf@process{\anchorB}
   }
 
-  % We can inherit the "usual" from rectangle. They depend on the
-  % "\southwest" and "\northeast" savedanchors but this will use our
-  % version instead of the rectangle's version.
-  \inheritanchor[from=rectangle]{center}
-  \inheritanchor[from=rectangle]{north}
-  \inheritanchor[from=rectangle]{east}
-  \inheritanchor[from=rectangle]{south}
-  \inheritanchor[from=rectangle]{west}
-  \inheritanchor[from=rectangle]{north east}
-  \inheritanchor[from=rectangle]{north west}
-  \inheritanchor[from=rectangle]{south west}
-  \inheritanchor[from=rectangle]{south east}
-
-  \anchor{text}
-  {
-    \pgf@process{\pgfpointorigin}
-    \advance\pgf@x by -.5\wd\pgfnodeparttextbox%
-    \advance\pgf@y by -.5\ht\pgfnodeparttextbox%
-    \advance\pgf@y by +.5\dp\pgfnodeparttextbox%
-  }
-  
-  % -----> Define some more useful anchors
-  \anchor{first antenna base start}{
-    \pgf@process{\anchorA}
-  }
-  
   \anchor{second antenna base start}{
     \pgf@process{\anchorB}
   }
 
-  \anchor{first antenna base end}{
-    \pgf@process{\anchorA}
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.2cm%
-  }
   \anchor{second antenna base end}{
     \pgf@process{\anchorB}
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
   }
 
-  \anchor{first antenna}{
-    %\csname pgf@anchor@mimotwo@first antenna base start\endcsname
-    \pgf@process{\anchorA}
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.4cm%
-  }
   \anchor{second antenna}{
     %\csname pgf@anchor@mimotwo@second antenna base start\endcsname
     \pgf@process{\anchorB}
@@ -539,7 +442,7 @@
 
   % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % First we Inherit savedanchors (and savedmacro's) from mimotwo
-  \inheritsavedanchors[from=mimotwo]  
+  \inheritsavedanchors[from=mimotwo]
 
   % We redefine savedanchors "anchorA" and "anchorB" and define "anchorC"
   \savedanchor{\anchorA}{
@@ -621,6 +524,7 @@
 
   % -----> Define the normal anchors
   \anchor{C}{\anchorC}
+
   \anchor{third antenna base start}{
     \pgf@process{\anchorC}
   }
