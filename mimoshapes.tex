@@ -31,7 +31,7 @@
 % Macro with the common code to draw an antenna. Before calling this macro
 % (inside the backgroundpath or similar)you need to set the values of
 % \pgf@x and \pgf@y to point to the start of the antenna. 
-\def\drawantenna{
+\def\mimoshapesdrawantenna{
   % Store the current positions in \pgf@xa and \pgf@ya
   \pgf@xa=\pgf@x 
   \pgf@ya=\pgf@y
@@ -326,15 +326,15 @@
 
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \pgf@process{\anchorA}
-    % The drawantenna command only needs that the pgf@x and pgf@y variables
+    % The mimoshapesdrawantenna command only needs that the pgf@x and pgf@y variables
     % are correctly set. This is done by calling the anchor A
-    \drawantenna
+    \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \anchorB
-    \drawantenna
+    \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -463,21 +463,21 @@
     % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
     \csname pgf@anchor@\pgf@sm@shape@name @A\endcsname
     %\pgf@anchor@mimothree@A
-    \drawantenna
+    \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% \pgf@anchor@mimothree@B
     \csname pgf@anchor@\pgf@sm@shape@name @B\endcsname
-    \drawantenna
+    \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
     %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% \pgf@anchor@mimothree@C
     \csname pgf@anchor@\pgf@sm@shape@name @C\endcsname
-    \drawantenna
+    \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
 }
@@ -536,14 +536,14 @@
     % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
     \csname pgf@anchor@\pgf@sm@shape@name @A\endcsname
     %\pgf@anchor@mimoind@A
-    \drawantenna
+    \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% \pgf@anchor@mimoind@B
     \csname pgf@anchor@\pgf@sm@shape@name @second antenna base end\endcsname
-    %\drawantenna
+    %\mimoshapesdrawantenna
     \drawellipses
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
@@ -551,7 +551,7 @@
     %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% \pgf@anchor@mimoind@C
     \csname pgf@anchor@\pgf@sm@shape@name @C\endcsname
-    \drawantenna
+    \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
 }
