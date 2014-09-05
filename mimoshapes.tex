@@ -221,22 +221,7 @@
     \ifdim\pgf@y<.5\pgf@ya
     \pgf@y=.5\pgf@ya
     \fi
-    \pgf@y=0.4\pgf@y
-    %
-    % -----> x position
-    \antennaStartXCoordinate
-  }
-
-  % This anchor position will depend if the "left antennas" option was
-  % passed or not
-  \savedanchor{\anchorB}{
-    % -----> y position for the first antenna
-    \pgf@y=-.5\ht\pgfnodeparttextbox
-    \setlength{\pgf@ya}{-\pgfshapeminheight}
-    \ifdim\pgf@y>.5\pgf@ya
-    \pgf@y=.5\pgf@ya
-    \fi
-    \pgf@y=0.6\pgf@y
+    \pgf@y=0.\pgf@y
     %
     % -----> x position
     \antennaStartXCoordinate
@@ -251,9 +236,6 @@
   % xxxxxxxxxx Now we define the regular anchors xxxxxxxxxxxxxxxxxxxxxxxxxx
   \anchor{A}{
     \pgf@process{\anchorA}
-  }
-  \anchor{B}{
-    \pgf@process{\anchorB}
   }
 
   % We can inherit the "usual" from rectangle. They depend on the
@@ -281,18 +263,9 @@
   \anchor{first antenna base start}{
     \pgf@process{\anchorA}
   }
-  
-  \anchor{second antenna base start}{
-    \pgf@process{\anchorB}
-  }
 
   \anchor{first antenna base end}{
     \pgf@process{\anchorA}
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.2cm%
-  }
-  \anchor{second antenna base end}{
-    \pgf@process{\anchorB}
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.2cm%
   }
@@ -300,12 +273,6 @@
   \anchor{first antenna}{
     %\csname pgf@anchor@mimoone@first antenna base start\endcsname
     \pgf@process{\anchorA}
-    \advance\pgf@x by \antennaoffset%
-    \advance\pgf@y by 0.4cm%
-  }
-  \anchor{second antenna}{
-    %\csname pgf@anchor@mimoone@second antenna base start\endcsname
-    \pgf@process{\anchorB}
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.4cm%
   }
@@ -328,12 +295,6 @@
     \pgf@process{\anchorA}
     % The drawantenna command only needs that the pgf@x and pgf@y variables
     % are correctly set. This is done by calling the anchor A
-    \mimoshapesdrawantenna
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-    %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \anchorB
     \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
