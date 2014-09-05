@@ -14,7 +14,7 @@
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{UserTerminal}{
   
-  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxx First we define some savedmacros xxxxxxxxxxxxxxxxxxxxxxxxxxx
   % Macros and savedanchors common to UserTerminal and BaseStation Shapes
   \savedanchor{\center}{
     \pgf@x=0pt
@@ -82,7 +82,27 @@
 
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % xxxxxxxxxx Regular Anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxx Inherit anchor border from rectangle xxxxxxxxxxxxxxxxxxxxxxx
+  \inheritanchorborder[from=rectangle]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Inherit normal anchors from rectangle xxxxxxxxxxxxxxxxxxxxxx
+  % We define the savedanchors "northeast" and "southwest". With these two
+  % defined we can inherit code for the regular anchors from the
+  % rectangle shape (even thought the northeast and southwest saved anchors
+  % in the rectangle shape are different from ours).
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{north west}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{south east}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Now we define more regular anchors xxxxxxxxxxxxxxxxxxxxxxxxx
   \anchor{text}
   {
     % This will get the center of the screen
@@ -99,25 +119,9 @@
   \anchor{screen}{
     \pgfpointlineattime{0.5}{\screensouthwest}{\screennortheast}
   }
-
-  % We define the savedanchors "northeast" and "southwest". With these two
-  % defined we can inherit code for the regular anchors from the
-  % rectangle shape (even thought the northeast and southwest saved anchors
-  % in the rectangle shape are different from ours).
-  \inheritanchor[from=rectangle]{center}
-  \inheritanchor[from=rectangle]{north}
-  \inheritanchor[from=rectangle]{east}
-  \inheritanchor[from=rectangle]{south}
-  \inheritanchor[from=rectangle]{west}
-  \inheritanchor[from=rectangle]{north east}
-  \inheritanchor[from=rectangle]{north west}
-  \inheritanchor[from=rectangle]{south west}
-  \inheritanchor[from=rectangle]{south east}
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % We can even inherit the "angle" anchors.
-  \inheritanchorborder[from=rectangle]%
-
+  % xxxxxxxxxx Draw the background xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \backgroundpath{
     % Scope for Terminal Body
     \begin{pgfscope}
@@ -149,6 +153,7 @@
       \pgfusepath{stroke,fill}
     \end{pgfscope}
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 }
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxx END xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -159,9 +164,12 @@
 % xxxxxxxxxxxxxxx BaseStationSimple xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{BaseStationSimple}{
+
+  % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % Inherit all savedanchors from UserTerminal. We only need northeast and
   % southwest, but we can't choose which ones to inherit.
   \inheritsavedanchors[from=UserTerminal]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
   % xxxxx Define savedanchors specific to the BaseStation shape xxxxxxxxxxx
   \savedanchor{\BaseAsouthwest}{
@@ -240,12 +248,17 @@
     \pgf@x=0.5\pgf@xa
     \pgf@y=0.5\pgf@ya
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Inherit anchor border from UserTerminal xxxxxxxxxxxxxxxxxxxx
+  \inheritanchorborder[from=UserTerminal]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   
-  % xxxxxxxxxx Regular Anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxx Inherit normal anchors from UserTerminal xxxxxxxxxxxxxxxxxxx
   % We define the savedanchors "northeast" and "southwest". With these two
   % defined we can inherit code for the regular anchors from the
   % UserTerminal shape (even thought the northeast and southwest saved anchors
-  % in the UserTerminal shape are different from ours)..
+  % in the UserTerminal shape are different from ours).
   \inheritanchor[from=UserTerminal]{center}
   \inheritanchor[from=UserTerminal]{north}
   \inheritanchor[from=UserTerminal]{east}
@@ -258,9 +271,7 @@
   \inheritanchor[from=rectangle]{text}
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % We can even inherit the "angle" anchors.
-  \inheritanchorborder[from=UserTerminal]%
-  
+  % xxxxxxxxxx Draw the "behind background" xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % The base of the antenna will be in the behindbackgroundpath while the
   % antennas will be in the backgroundpath.
   \behindbackgroundpath{
@@ -274,9 +285,13 @@
       \pgfusepath{stroke,fill}
     \end{pgfscope}
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+  % xxxxxxxxxx Draw the background xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % The base of the antenna will be in the behindbackgroundpath while the
-  % antennas will be in the backgroundpath.
+  % antennas will be in the backgroundpath. The main reason for this
+  % separation is that this code here will be inherited in the
+  % "BaseStation" shape that we will define later.
   \backgroundpath{
     % Scope for the antenna connector
     \begin{pgfscope}
@@ -308,6 +323,7 @@
       \pgfusepath{stroke,fill}
     \end{pgfscope}
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 }
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxx END xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -318,9 +334,11 @@
 % xxxxxxxxxxxxxxx BaseStation Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{BaseStation}{
+  
+  % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % Inherit all savedanchors from BaseStationSimple.
   \inheritsavedanchors[from=BaseStationSimple]
-
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
   % xxxxx Define savedanchors specific to the BaseStation shape xxxxxxxxxxx
   \savedanchor{\BaseAsouthwest}{
@@ -364,8 +382,13 @@
     \pgf@y=0.30\pgf@ya
     \pgf@x=0.1\pgf@xa
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Inherit anchor border from BaseStationSimple xxxxxxxxxxxxxxx
+  \inheritanchorborder[from=BaseStationSimple]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     
-  % xxxxxxxxxx Regular Anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxx Inherit normal anchors from BaseStationSimple xxxxxxxxxxxxxx
   % We define the savedanchors "northeast" and "southwest". With these two
   % defined we can inherit code for the regular anchors from the
   % BaseStationSimple shape (even thought the northeast and southwest saved anchors
@@ -381,10 +404,8 @@
   \inheritanchor[from=BaseStationSimple]{south east}
   \inheritanchor[from=rectangle]{text}
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-  % We can even inherit the "angle" anchors.
-  \inheritanchorborder[from=BaseStationSimple]%
   
+  % xxxxxxxxxx Draw the "behind background" xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \behindbackgroundpath{
     % Scope for the Base
     \begin{pgfscope}
@@ -406,8 +427,11 @@
       \pgfusepath{stroke,fill}
     \end{pgfscope}
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   
+  % xxxxxxxx Inherit the background path from BaseStationSimple xxxxxxxxxxx
   \inheritbackgroundpath[from=BaseStationSimple]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 }
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxx END xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
