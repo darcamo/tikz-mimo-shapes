@@ -19,9 +19,6 @@
 % For the last two shapes you can change the appearance with the "circle
 % fill color", "circle stroke color" and "circle radius" options.
 
-%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-%% xxxxxxxxxxxxxxx Mimo Shape with two antennas xxxxxxxxxxxxxxxxxxxxxxxxxxx
-%% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \makeatletter
 
 \newif\ifleftantennas
@@ -44,10 +41,13 @@
 }
 
 
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxx Macro definitions xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 % Macro with the common code to draw an antenna. Before calling this macro
-% (inside the backgroundpath or similar)you need to set the values of
-% \pgf@x and \pgf@y to point to the start of the antenna. 
+% (inside the backgroundpath or similar) you need to set the values of
+% \pgf@x and \pgf@y to point to the start of the antenna.
 \def\mimoshapesdrawantenna{
   % Store the current positions in \pgf@xa and \pgf@ya
   \pgf@xa=\pgf@x 
@@ -88,8 +88,8 @@
 
 
 % Macro with the common code to draw the ellipses. Before calling this
-% macro (inside the backgroundpath or similar)you need to set the values of
-% \pgf@x and \pgf@y to point to the center of the ellipses.
+% macro (inside the backgroundpath or similar) you need to set the values
+% of \pgf@x and \pgf@y to point to the center of the ellipses.
 \def\drawellipses{
   % Store the current positions in \pgf@xa and \pgf@ya
   \pgf@xa=\pgf@x 
@@ -140,9 +140,9 @@
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxx mimoone shape declaration xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-% xxxxxxxxxx First we define some savedmacros xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{mimoone}{
+
+  % xxxxxxxxxx First we define some savedmacros xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \savedmacro\antennaoffset{
     \ifleftantennas
       \def\antennaoffset{-\pgfkeysvalueof{/pgf/antenna offset}}
@@ -249,12 +249,7 @@
   \inheritanchorborder[from=rectangle]
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   
-  
-  % xxxxxxxxxx Now we define the regular anchors xxxxxxxxxxxxxxxxxxxxxxxxxx
-  \anchor{A}{
-    \pgf@process{\anchorA}
-  }
-
+  % xxxxxxxxxx Inherit normal anchors from rectangle xxxxxxxxxxxxxxxxxxxxxx
   % We can inherit the "usual" from rectangle. They depend on the
   % "\southwest" and "\northeast" savedanchors but this will use our
   % version instead of the rectangle's version.
@@ -267,6 +262,12 @@
   \inheritanchor[from=rectangle]{north west}
   \inheritanchor[from=rectangle]{south west}
   \inheritanchor[from=rectangle]{south east}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Now we define more regular anchors xxxxxxxxxxxxxxxxxxxxxxxxx
+  \anchor{A}{
+    \pgf@process{\anchorA}
+  }
 
   \anchor{text}
   {
@@ -310,8 +311,8 @@
 
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \pgf@process{\anchorA}
-    % The drawantenna command only needs that the pgf@x and pgf@y variables
-    % are correctly set. This is done by calling the anchor A
+    % The mimoshapesdrawantenna command only needs that the pgf@x and pgf@y
+    % variables are correctly set. This is done by calling the anchor A
     \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
@@ -326,8 +327,6 @@
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxx mimotwo shape declaration xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-% xxxxxxxxxx First we define some savedmacros xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{mimotwo}{
 
   % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -371,14 +370,11 @@
   }
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % xxxxxxxxxx Inherit anchor border from rectangle xxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxx Inherit anchor border from mimoone xxxxxxxxxxxxxxxxxxxxxxxxx
   \inheritanchorborder[from=mimoone]
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   
-  % xxxxxxxxxx Inherit normal anchors from mimotwo xxxxxxxxxxxxxxxxxxxxxxxx
-  % We can inherit the "usual" from rectangle. They depend on the
-  % "\southwest" and "\northeast" savedanchors but this will use our
-  % version instead of the rectangle's version.
+  % xxxxxxxxxx Inherit normal anchors from mimoone xxxxxxxxxxxxxxxxxxxxxxxx
   \inheritanchor[from=mimoone]{center}
   \inheritanchor[from=mimoone]{north}
   \inheritanchor[from=mimoone]{east}
@@ -393,8 +389,9 @@
   \inheritanchor[from=mimoone]{first antenna base start}
   \inheritanchor[from=mimoone]{first antenna base end}
   \inheritanchor[from=mimoone]{first antenna}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   
-  % xxxxxxxxxx Now we define the regular anchors xxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxx Now we define more regular anchors xxxxxxxxxxxxxxxxxxxxxxxxx
   \anchor{B}{
     \pgf@process{\anchorB}
   }
@@ -417,7 +414,6 @@
   }
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-
   % xxxxxxxxxx Draw the background xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \backgroundpath{
     % Rectangle box
@@ -432,14 +428,13 @@
 
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \pgf@process{\anchorA}
-    % The mimoshapesdrawantenna command only needs that the pgf@x and pgf@y variables
-    % are correctly set. This is done by calling the anchor A
+    % The mimoshapesdrawantenna command only needs that the pgf@x and pgf@y
+    % variables are correctly set. This is done by calling the anchor A
     \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \anchorB
+    \pgf@process{\anchorB}
     \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
@@ -451,7 +446,6 @@
 
 
 
-
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxx Mimo Shape with three antennas xxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -460,8 +454,14 @@
   % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % First we Inherit savedanchors (and savedmacro's) from mimotwo
   \inheritsavedanchors[from=mimotwo]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % We redefine savedanchors "anchorA" and "anchorB" and define "anchorC"
+  % xxxxxxxxxx Now we define some savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % First we redefine "anchorA" and "anchorB", since they will be different
+  % from the one we inherited from the mimotwo shape.
+  %
+  % This anchor position will depend if the "left antennas" option was
+  % passed or not.
   \savedanchor{\anchorA}{
     \pgf@y=.5\ht\pgfnodeparttextbox
     \setlength{\pgf@ya}{\pgfshapeminheight}
@@ -470,7 +470,7 @@
     \fi
     \pgf@y=0.5\pgf@y
     %
-    % x position
+    % -----> x position
     \antennaStartXCoordinate
   }
 
@@ -483,7 +483,7 @@
     \fi
     \pgf@y=0.9\pgf@y
     %
-    % x position
+    % -----> x position
     \antennaStartXCoordinate
   }
 
@@ -513,11 +513,9 @@
   }
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-
   % xxxxxxxxxx Inherit anchor border from mimotwo xxxxxxxxxxxxxxxxxxxxxxxxx
   \inheritanchorborder[from=mimotwo]
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
 
   % xxxxxxxxxx Inherit normal anchors from mimotwo xxxxxxxxxxxxxxxxxxxxxxxx
   \inheritanchor[from=mimotwo]{center}
@@ -538,8 +536,9 @@
   \inheritanchor[from=mimotwo]{second antenna base end}
   \inheritanchor[from=mimotwo]{first antenna}
   \inheritanchor[from=mimotwo]{second antenna}
-
-  % -----> Define the normal anchors
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  
+  % xxxxxxxxxx Now we define more regular anchors xxxxxxxxxxxxxxxxxxxxxxxxx
   \anchor{C}{\anchorC}
 
   \anchor{third antenna base start}{
@@ -556,34 +555,33 @@
     \advance\pgf@x by \antennaoffset%
     \advance\pgf@y by 0.4cm%
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % -----> Draw the rectangle box and the antennas
+  % xxxxxxxxxx Draw the background xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \backgroundpath{
     % Rectangle box
     \pgfpathrectanglecorners
-    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
-    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
+    { % First corner of the rectangle
+      \pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}
+    }
+    { % Second corner of the rectangle
+      \pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+    }
+
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % Você pode usar \pgf@anchor@SHAPE_NAME@ANCHOR_NAME para mudar o \pgf@x
-    % e o \pgf@y para as coordenadas de uma âncora. Só que se você resolver
-    % mudar o nome do shape depois vai ter que mudar todas as linhas que
-    % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
-    \csname pgf@anchor@\pgf@sm@shape@name @A\endcsname
-    %\pgf@anchor@mimothree@A
+    \pgf@process{\anchorA}
+    % The mimoshapesdrawantenna command only needs that the pgf@x and pgf@y
+    % variables are correctly set. This is done by calling the anchor A
     \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% \pgf@anchor@mimothree@B
-    \csname pgf@anchor@\pgf@sm@shape@name @B\endcsname
+    \pgf@process{\anchorB}
     \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
 
-    %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% \pgf@anchor@mimothree@C
-    \csname pgf@anchor@\pgf@sm@shape@name @C\endcsname
+    %%%%% Draw the third %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \pgf@process{\anchorC}
     \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
@@ -594,19 +592,24 @@
 
 
 
-
-
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxx Mimo Shape with "many" antennas xxxxxxxxxxxxxxxxxxxxxxxx
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{mimoind}{
-  % -----> Inherit saved anchor from mimothree
+
+  % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % First we Inherit savedanchors (and savedmacro's) from mimothree
   \inheritsavedanchors[from=mimothree]
 
-  % -----> Inherit anchor border from mimothree
-  \inheritanchorborder[from=mimothree]
+  % There is no need to define more savedanchors, since mimothree already
+  % provide us with all we need.
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % -----> Inherit normal anchors from mimothree
+  % xxxxxxxxxx Inherit anchor border from mimotwo xxxxxxxxxxxxxxxxxxxxxxxxx
+  \inheritanchorborder[from=mimothree]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Inherit normal anchors from mimothree xxxxxxxxxxxxxxxxxxxxxx
   \inheritanchor[from=mimothree]{center}
   \inheritanchor[from=mimothree]{north}
   \inheritanchor[from=mimothree]{east}
@@ -629,13 +632,19 @@
   \inheritanchor[from=mimothree]{first antenna}
   \inheritanchor[from=mimothree]{second antenna}
   \inheritanchor[from=mimothree]{third antenna}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % -----> Draw the rectangle box and the antennas
+  % xxxxxxxxxx Draw the background xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \backgroundpath{
     % Rectangle box
     \pgfpathrectanglecorners
-    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
-    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
+    { % First corner of the rectangle
+      \pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}
+    }
+    { % Second corner of the rectangle
+      \pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+    }
+
     %%%%%%% Draw the first antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Você pode usar \pgf@anchor@SHAPE_NAME@ANCHOR_NAME para mudar o \pgf@x
     % e o \pgf@y para as coordenadas de uma âncora. Só que se você resolver
@@ -646,7 +655,6 @@
     \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% \pgf@anchor@mimoind@B
     \csname pgf@anchor@\pgf@sm@shape@name @second antenna base end\endcsname
@@ -654,7 +662,6 @@
     \drawellipses
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-
     %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% \pgf@anchor@mimoind@C
     \csname pgf@anchor@\pgf@sm@shape@name @C\endcsname
@@ -673,12 +680,19 @@
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{boxtwo}{
 
-  \inheritsavedanchors[from=mimotwo]
+  % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % First we Inherit savedanchors (and savedmacro's) from mimoone
+  \inheritsavedanchors[from=mimoone]
 
-  % -----> Inherit from rectangle
-  \inheritanchorborder[from=mimotwo]
+  % There is no need to define more savedanchors, since mimoone already
+  % provide us with all we need.
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % -----> Define same anchor a normal rectangle has
+  % xxxxxxxxxx Inherit anchor border from mimotwo xxxxxxxxxxxxxxxxxxxxxxxxx
+  \inheritanchorborder[from=mimoone]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Inherit normal anchors from mimoone xxxxxxxxxxxxxxxxxxxxxx
   \inheritanchor[from=mimotwo]{center}
   \inheritanchor[from=mimotwo]{north}
   \inheritanchor[from=mimotwo]{east}
@@ -689,9 +703,9 @@
   \inheritanchor[from=mimotwo]{south west}
   \inheritanchor[from=mimotwo]{south east}
   \inheritanchor[from=mimotwo]{text}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % -----> Define anchors for signal ports
-
+  % xxxxxxxxxx Now we define more regular anchors xxxxxxxxxxxxxxxxxxxxxxxxx
   % See section "Internals of How Point Commands Work" of the pgf manual to
   % understand pgf@process
   \anchor{A}{
@@ -705,14 +719,19 @@
     \pgf@x=0pt
     \pgf@y=-0.5\pgf@y%
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % -----> Draw the rectangle box and the three circles
+  % xxxxxxxxxx Draw the background xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \backgroundpath{
     % Rectangle box
     {
       \pgfpathrectanglecorners
-    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
-    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
+      { % First corner of the rectangle
+        \pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}
+      }
+      { % Second corner of the rectangle
+        \pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+      }
       \pgfusepath{stroke,fill}
     }
     
@@ -739,12 +758,19 @@
 %% xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{boxthree}{
 
+  % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % First we Inherit savedanchors (and savedmacro's) from mimoone
   \inheritsavedanchors[from=boxtwo]
 
-  % -----> Inherit from rectangle
-  \inheritanchorborder[from=boxtwo]
+  % There is no need to define more savedanchors, since mimoone already
+  % provide us with all we need.
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % -----> Define same anchor a normal rectangle has
+  % xxxxxxxxxx Inherit anchor border from mimotwo xxxxxxxxxxxxxxxxxxxxxxxxx
+  \inheritanchorborder[from=boxtwo]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Inherit normal anchors from boxtwo xxxxxxxxxxxxxxxxxxxxxxxxx
   \inheritanchor[from=boxtwo]{center}
   \inheritanchor[from=boxtwo]{north}
   \inheritanchor[from=boxtwo]{east}
@@ -755,9 +781,9 @@
   \inheritanchor[from=boxtwo]{south west}
   \inheritanchor[from=boxtwo]{south east}
   \inheritanchor[from=boxtwo]{text}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  % -----> Define anchors for signal ports
-
+  % xxxxxxxxxx Now we define more regular anchors xxxxxxxxxxxxxxxxxxxxxxxxx
   % See section "Internals of How Point Commands Work" of the pgf manual to
   % understand pgf@process
   \anchor{A}{
@@ -776,15 +802,19 @@
     \pgf@x=0pt
     \pgf@y=-0.6\pgf@y%
   }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-
-  % -----> Draw the rectangle box and the three circles
+  % xxxxxxxxxx Draw the background xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \backgroundpath{
     % Rectangle box
     {
       \pgfpathrectanglecorners
-    {\pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
-    {\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}}
+      { % First corner of the rectangle
+        \pgfpointadd{\southwest}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}
+      }
+      { % Second corner of the rectangle
+        \pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{\pgfkeysvalueof{/pgf/outer xsep}}{\pgfkeysvalueof{/pgf/outer ysep}}}}
+      }
       \pgfusepath{stroke,fill}
     }
     
@@ -804,6 +834,9 @@
 }
 
 \makeatother
+
+
+% The Comment below is only important for Emacs
 
 %%% Local Variables: 
 %%% mode: latex
