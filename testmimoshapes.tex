@@ -16,7 +16,7 @@
 \usetikzlibrary{positioning}
 
 \begin{tikzpicture}[every node/.append style={scale=1}]
-  \draw[help lines] (-0.5,-7.5) grid (8,7.5);
+  \draw[help lines] (-0.5,-7.5) grid (10,7.5);
 
   % Coordinate system origin
   \path (0,0) coordinate (origin);
@@ -31,7 +31,19 @@
   \path (1.5,-3) coordinate (mimo3pos);
   \path (1.5,-6.0) coordinate (mimoindpos);
 
-  \tikzset{test mimo node/.style={fill=blue!30,draw,mimotwo,antenna offset=0.3cm,thick,minimum width=1.5cm,minimum height=2cm}}
+  \path (8.5,0.0) coordinate (mimo2biggerpos);
+
+  % xxxxxxxxxx TRY CHANGING THE VALUES HERE TO SEE THE xxxxxxxxxxxxxxxxxxxx
+  \tikzset{test mimo node/.style={fill=blue!30,draw,mimotwo,thick,
+      % Change the numbers and see the effect
+      antenna offset=0.3cm, %0.3
+      minimum width=1.5cm,
+      minimum height=2cm, 
+      antenna base height=0.2cm,
+      antenna side=0.4cm,
+      antenna yshift=0.3cm
+    }}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxx Draw the nodes xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -151,8 +163,12 @@
 
 
 
-
-
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxx mimo2bigger xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % Test the antenna positions when the node has a larger height
+  \draw[fill=red] (mimo2biggerpos) circle (2pt);
+  \draw (mimo2biggerpos) node[test mimo node, mimothree, minimum height=4cm] (mimo2biggertxnode) {\pgftypesetversion};
 
 
 

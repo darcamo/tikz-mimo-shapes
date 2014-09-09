@@ -36,6 +36,7 @@
   circle stroke color/.initial=black,
   circle radius/.initial=2mm,
   antenna offset/.initial=0.3 cm,
+  antenna yshift/.initial=0. cm,
   antenna base height/.initial=0.2 cm,
   antenna side/.initial=0.4cm,
 }
@@ -93,13 +94,14 @@
 \def\drawellipses{
   % Store the current positions in \pgf@xa and \pgf@ya
   \pgf@xa=\pgf@x 
+  \advance\pgf@xa by \antennaoffset
   \pgf@ya=\pgf@y
   
   % See section "Internals of How Point Commands Work" of the pgf manual to
   % understand pgf@process
-  \pgf@process{\pgfpathcircle{\pgfpoint{\pgf@xa}{-1pt}}{1pt}}
-  \pgf@process{\pgfpathcircle{\pgfpoint{\pgf@xa}{2pt}}{1pt}}
-  \pgf@process{\pgfpathcircle{\pgfpoint{\pgf@xa}{5pt}}{1pt}}
+  \pgf@process{\pgfpathcircle{\pgfpoint{\pgf@xa}{\pgf@ya+\antennabaseheight-1pt}}{1pt}}
+  \pgf@process{\pgfpathcircle{\pgfpoint{\pgf@xa}{\pgf@ya+\antennabaseheight+2pt}}{1pt}}
+  \pgf@process{\pgfpathcircle{\pgfpoint{\pgf@xa}{\pgf@ya+\antennabaseheight+5pt}}{1pt}}
 }
 
 
@@ -153,6 +155,10 @@
 
   \savedmacro\antennabaseheight{
     \def\antennabaseheight{\pgfkeysvalueof{/pgf/antenna base height}}
+  }
+
+  \savedmacro\antennayshift{
+    \def\antennayshift{\pgfkeysvalueof{/pgf/antenna yshift}}
   }
 
   \savedmacro\shapewidth{
@@ -239,6 +245,7 @@
     \pgf@y=.5\pgf@ya
     \fi
     \pgf@y=0.\pgf@y
+    \advance\pgf@y by \antennayshift
     %
     % -----> x position
     \antennaStartXCoordinate
@@ -348,6 +355,7 @@
     \pgf@y=.5\pgf@ya
     \fi
     \pgf@y=0.4\pgf@y
+    \advance\pgf@y by \antennayshift
     %
     % -----> x position
     \antennaStartXCoordinate
@@ -364,6 +372,7 @@
     \pgf@y=.5\pgf@ya
     \fi
     \pgf@y=0.6\pgf@y
+    \advance\pgf@y by \antennayshift
     %
     % -----> x position
     \antennaStartXCoordinate
@@ -469,6 +478,7 @@
     \pgf@y=.5\pgf@ya
     \fi
     \pgf@y=0.5\pgf@y
+    \advance\pgf@y by \antennayshift
     %
     % -----> x position
     \antennaStartXCoordinate
@@ -482,6 +492,7 @@
     \pgf@y=.5\pgf@ya
     \fi
     \pgf@y=0.9\pgf@y
+    \advance\pgf@y by \antennayshift
     %
     % -----> x position
     \antennaStartXCoordinate
@@ -508,6 +519,8 @@
     \pgf@y=0.5\pgf@yc
     \advance\pgf@y by 0.5\pgf@ya
     %
+    \advance\pgf@y by \antennayshift
+    % 
     % x position
     \antennaStartXCoordinate
   }
@@ -650,21 +663,19 @@
     % e o \pgf@y para as coordenadas de uma âncora. Só que se você resolver
     % mudar o nome do shape depois vai ter que mudar todas as linhas que
     % contem o SHAPE_NAME. Melhor usar o csname como na linha abaixo.
-    \csname pgf@anchor@\pgf@sm@shape@name @A\endcsname
-    %\pgf@anchor@mimoind@A
+    \pgf@process{\anchorA}
     \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     %%%%% Draw the second antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% \pgf@anchor@mimoind@B
-    \csname pgf@anchor@\pgf@sm@shape@name @second antenna base end\endcsname
+    %\csname pgf@anchor@\pgf@sm@shape@name @second antenna base end\endcsname
+    \pgf@process{\anchorB}
     %\mimoshapesdrawantenna
     \drawellipses
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     %%%%% Draw the third antenna %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% \pgf@anchor@mimoind@C
-    \csname pgf@anchor@\pgf@sm@shape@name @C\endcsname
+    \pgf@process{\anchorC}
     \mimoshapesdrawantenna
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   }
