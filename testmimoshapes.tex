@@ -16,12 +16,12 @@
 \usetikzlibrary{positioning}
 
 \begin{tikzpicture}[every node/.append style={scale=1}]
-  \draw[help lines] (-0.5,-7.5) grid (10,7.5);
+  \draw[help lines] (-0.5,-7.5) grid (12,7.5);
 
   % Coordinate system origin
   \path (0,0) coordinate (origin);
   \draw[fill=red] (origin) circle (1pt);
-  \draw[gray!40!white] (origin) node[rotate=45] {origin};
+  \draw[gray!40!white] (origin) node[rotate=60] {origin};
 
 
   % If I draw the node at the origin some bugs could not be seem
@@ -31,10 +31,10 @@
   \path (1.5,-3) coordinate (mimo3pos);
   \path (1.5,-6.0) coordinate (mimoindpos);
 
-  \path (8.5,0.0) coordinate (mimo2biggerpos);
+  \path (10,0.0) coordinate (mimo2biggerpos);
 
   % xxxxxxxxxx TRY CHANGING THE VALUES HERE TO SEE THE xxxxxxxxxxxxxxxxxxxx
-  \tikzset{test mimo node/.style={fill=blue!30,draw,mimotwo,thick,
+  \tikzset{test mimo node/.style={fill=blue!30,draw,thick,
       % Change the numbers and see the effect
       antenna offset=0.3cm, %0.3
       minimum width=1.5cm,
@@ -48,21 +48,27 @@
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxx Draw the nodes xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \def\txrxsep{4cm}
+
 % Nodes with one antenna
   \draw (mimo1pos) node[test mimo node,mimoone] (mimo1txnode) {\pgftypesetversion};
-  \node[test mimo node,mimoone,right=3cm of mimo1txnode,left antennas] (mimo1rxnode) {\pgftypesetversion};
+  \node[test mimo node,mimoone,right=\txrxsep of mimo1txnode,left antennas] (mimo1rxnode) {\pgftypesetversion};
+  \path (mimo1txnode) -- node[fill=white] {mimoone shape} (mimo1rxnode);
 
   % Nodes with two antennas
-  \draw (mimo2pos) node[test mimo node] (mimo2txnode) {\pgftypesetversion};
-  \node[test mimo node,right=3cm of mimo2txnode,left antennas] (mimo2rxnode) {\pgftypesetversion};
+  \draw (mimo2pos) node[test mimo node,mimotwo] (mimo2txnode) {\pgftypesetversion};
+  \node[test mimo node,mimotwo,right=\txrxsep of mimo2txnode,left antennas] (mimo2rxnode) {\pgftypesetversion};
+  \path (mimo2txnode) -- node[fill=white] {mimotwo shape} (mimo2rxnode);
 
   % Nodes with tree antennas
   \draw (mimo3pos) node[test mimo node,mimothree] (mimo3txnode) {\pgftypesetversion};
-  \node[test mimo node,right=3cm of mimo3txnode,mimothree,left antennas] (mimo3rxnode) {\pgftypesetversion};
+  \node[test mimo node,right=\txrxsep of mimo3txnode,mimothree,left antennas] (mimo3rxnode) {\pgftypesetversion};
+  \path (mimo3txnode) -- node[fill=white] {mimothree shape} (mimo3rxnode);
 
   % Nodes with many antennas
   \draw (mimoindpos)  node[draw,test mimo node,mimoind] (mimoindtxnode) {\pgftypesetversion};
-  \draw node[right=3cm of mimoindtxnode,draw,test mimo node,mimoind,left antennas] (mimoindrxnode) {\pgftypesetversion};
+  \draw node[right=\txrxsep of mimoindtxnode,draw,test mimo node,mimoind,left antennas] (mimoindrxnode) {\pgftypesetversion};
+  \path (mimoindtxnode) -- node[fill=white] {mimoind shape} (mimoindrxnode);
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -229,7 +235,9 @@
   % xxxxx Test all anchors in the boxtwo and boxthree shapes xxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \draw (mimobox2pos) node[test mimo node,boxtwo,circle radius=3mm] (mimobox2) {\pgftypesetversion};
-  \node[test mimo node,right=3cm of mimobox2,boxthree,circle radius=1.5mm] (mimobox3) {\pgftypesetversion};
+  \node[test mimo node,right=\txrxsep of mimobox2,boxthree,circle radius=1.5mm] (mimobox3) {\pgftypesetversion};
+  \node[right, xshift=3mm,fill=white] at (mimobox2.east) {boxtwo shape};
+  \node[right, xshift=3mm,fill=white] at (mimobox3.east) {boxthree shape};
 
     % Test all anchors in the Shape
   \foreach \ancora in {
