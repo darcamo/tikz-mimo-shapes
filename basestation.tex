@@ -5,11 +5,11 @@
 \makeatletter
 
 
-% The keys that the user can provide are all the keys below, except
-% "leftantennas" (use the "right antennas" or "left antennas" keys instead)
+% The keys that the user can provide are all the keys below.
 \pgfkeys{
   /pgf/.cd,
-  button fill color/.initial=white
+  button fill color/.initial=white,
+  screen fill color/.initial=white,
 }
 
 
@@ -129,7 +129,9 @@
   \backgroundpath{
     % Scope for Terminal Body
     \begin{pgfscope}
-      \pgfsetcornersarced{\pgfpoint{0.1\pgfshapeminheight}{0.1\pgfshapeminheight}}
+      \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+      % '\pgfshapeminheight' cannot be used directly; or if you want to use it directly use the '*' for multiplication
+      \pgfsetcornersarced{\pgfpoint{0.03\pgf@ya}{0.03\pgf@ya}}
       \pgfpathrectanglecorners
       {\southwest}
       {\northeast}
@@ -138,8 +140,10 @@
     
     % Scope for the terminal Screen
     \begin{pgfscope}
-      \pgfsetcornersarced{\pgfpoint{0.1\pgfshapeminheight}{0.1\pgfshapeminheight}}
-      \pgfsetfillcolor{white}
+      \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+      \pgfsetcornersarced{\pgfpoint{0.03\pgf@ya}{0.03\pgf@ya}}
+      \pgfsetfillcolor{\pgfkeysvalueof{/pgf/screen fill color}}
+      %\pgfsetfillcolor{white}
       \pgfpathrectanglecorners
       {\screensouthwest}
       {\screennortheast}
@@ -148,7 +152,8 @@
     
     % Scope for the button
     \begin{pgfscope}
-      \pgfsetcornersarced{\pgfpoint{0.03\pgfshapeminheight}{0.03\pgfshapeminheight}}
+      \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+      \pgfsetcornersarced{\pgfpoint{0.009\pgf@ya}{0.009\pgf@ya}}
       \pgfsetfillcolor{\pgfkeysvalueof{/pgf/button fill color}}
       %\pgfsetfillcolor{white}
       \pgfpathrectanglecorners
