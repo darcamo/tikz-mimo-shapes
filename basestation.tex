@@ -386,6 +386,20 @@
   \inheritanchor[from=UserTerminal]{south west}
   \inheritanchor[from=UserTerminal]{south east}
   \inheritanchor[from=rectangle]{text}
+  \anchor{antenna right}{
+    \northeast
+    \pgfmathsetlength\pgf@y{0.8*\pgf@y}
+  }
+  \anchor{antenna left}{
+    \northeast
+    \pgfmathsetlength\pgf@y{0.8*\pgf@y}
+    \pgfmathsetlength\pgf@x{-\pgf@x}
+  }
+  \anchor{antenna center}{
+    \northeast
+    \pgfmathsetlength\pgf@y{0.8*\pgf@y}
+    \pgfmathsetlength\pgf@x{0}
+  }
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
   % xxxxxxxxxx Draw the "behind background" xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -519,6 +533,9 @@
   \inheritanchor[from=BaseStationSimple]{north west}
   \inheritanchor[from=BaseStationSimple]{south west}
   \inheritanchor[from=BaseStationSimple]{south east}
+  \inheritanchor[from=BaseStationSimple]{antenna right}
+  \inheritanchor[from=BaseStationSimple]{antenna left}
+  \inheritanchor[from=BaseStationSimple]{antenna center}
   \inheritanchor[from=rectangle]{text}
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 

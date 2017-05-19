@@ -49,6 +49,9 @@
     north west,
     south east,
     south west,
+    antenna right,
+    antenna left,
+    antenna center,
     % base,
     text,
     center} % text is the same as the center anchor
@@ -103,29 +106,42 @@
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxx Test the Beam shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  \path (2,0.5) coordinate (Beam1Pos);
-  \draw[green!50!black] (Beam1Pos) node[Beam, draw,minimum width=4cm, minimum height=1cm] (beam) {};
+  \tikzset{Beam style/.style={Beam, draw, minimum width=4cm, minimum height=1cm, green!50!black}}
+  % [Beam, draw, minimum width=4cm, minimum height=1cm]
 
-  \foreach \anchor in {start,end,main region}
+  \path (2,0.5) coordinate (Beam1Pos);
+  \draw[] (Beam1Pos) node[Beam style] (beam) {};
+  \draw[dashed,gray] (Beam1Pos) ++(0,-1/2) rectangle ++(4,1);
+
+  % Draw the anchors
+  \foreach \anchor in {
+    % top control point 1,
+    % top control point 2,
+    % bottom control point 1,
+    % bottom control point 2,
+    start,
+    end,
+    main region}
   {
     \draw (beam.\anchor) circle (0.8pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\anchor}};
   }
 
- %  \foreach \ancora in {
- % % text is the same as the screen anchor
- %    start,
- %    % end,
- %    % main region,
- %    % top control point 1,
- %    % top control point 2,
- %    % bottom control point 1,
- %    % bottom control point 2,
- %  }
- %  {
- %    \draw[fill=green] (beam.\ancora) circle (0.8pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
- %  }
 
-  % \draw[fill=red] (Beam1Pos) circle (3pt);
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxx BaseStation, UserTerminal and Beam xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \path (2,-1.5) coordinate (allthreepos);
+  \begin{scope}[every node/.append style={scale=0.4}]
+    \draw (allthreepos) node[BS style,BaseStation] (bs) {};
+
+    \foreach \angle in {-35,-25,...,5}
+    {
+      \draw (bs.antenna center) node[Beam,minimum width=6cm,minimum height=6mm,rotate=\angle,fill=green!60] (beam) {};
+      \draw (beam.main region) node[UserTerminal, UE Style,minimum width=2.5mm,minimum height=4mm] {};
+    }
+
+
+  \end{scope}
 \end{tikzpicture}
 \end{document}
 
