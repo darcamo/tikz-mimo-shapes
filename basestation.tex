@@ -6,6 +6,19 @@
 
 
 % The keys that the user can provide are all the keys below.
+
+% Keys for the Beam shape
+\pgfkeys{
+  /pgf/.cd,
+  % The 4 following options control the proportion of shapewidth/shapeheight for
+  % the control points of the beam -> The must be greater than zero
+  control point 1 x/.initial=0.35,
+  control point 1 y/.initial=1.0,
+  control point 2 x/.initial=0.5,
+  control point 2 y/.initial=0.25,
+}
+
+% Keys for the UserTerminal shape
 \pgfkeys{
   /pgf/.cd,
   button fill color/.initial=white,
@@ -13,11 +26,106 @@
 }
 
 
+% Represents a "beam", which is constructed using two Bézier curves.
+% The two control points can be controlled by passing the
+% "control point 1 x/control point 1 y/control point 2 x/control point 2 y"
+% parameters.
+\pgfdeclareshape{Beam}{
+
+  % xxxxxxxxxx Define some saved macros xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \savedmacro\shapewidth{
+    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
+  }
+
+  \savedmacro\shapeheight{
+    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
+  }
+
+  \savedmacro\firstpointxprop{
+    \def\firstpointxprop{\pgfkeysvalueof{/pgf/control point 1 x}}
+  }
+  \savedmacro\firstpointyprop{
+    \def\firstpointyprop{\pgfkeysvalueof{/pgf/control point 1 y}}
+  }
+  \savedmacro\secondpointxprop{
+    \def\secondpointxprop{\pgfkeysvalueof{/pgf/control point 2 x}}
+  }
+  \savedmacro\secondpointyprop{
+    \def\secondpointyprop{\pgfkeysvalueof{/pgf/control point 2 y}}
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  \savedanchor\startpoint{%
+    \pgfmathsetlength\pgf@x{-0.5*\shapewidth}
+    \pgfmathsetlength\pgf@y{0}
+  }
+
+  \savedanchor\endpoint{%
+    \pgfmathsetlength\pgf@x{0.5*\shapewidth}
+    \pgfmathsetlength\pgf@y{0}
+  }
+
+  % \savedanchor\centerpoint{%
+  %   \pgf@x=0%
+  %   \pgf@y=0%
+  % }
+
+  % Control point anchors
+  \savedanchor\firstcontrolpointtop{%
+    \pgfmathsetlength\pgf@x{\firstpointxprop*\shapewidth}
+    \pgfmathsetlength\pgf@y{\firstpointyprop*\shapeheight}
+  }
+
+  \savedanchor\secondcontrolpointtop{%
+    \pgfmathsetlength\pgf@x{\secondpointxprop*\shapewidth}
+    \pgfmathsetlength\pgf@y{\secondpointyprop*\shapeheight}
+  }
+
+  \savedanchor\firstcontrolpointbottom{%
+    \pgfmathsetlength\pgf@x{\firstpointxprop*\shapewidth}
+    \pgfmathsetlength\pgf@y{-\firstpointyprop*\shapeheight}
+  }
+
+  \savedanchor\secondcontrolpointbottom{%
+    \pgfmathsetlength\pgf@x{\secondpointxprop*\shapewidth}
+    \pgfmathsetlength\pgf@y{-\secondpointyprop*\shapeheight}
+  }
+
+  % xxxxxxxxxx Define regular anchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \anchor{center}{\startpoint}
+  \anchor{start}{\startpoint}
+  \anchor{end}{\endpoint}
+  \anchor{main region}{
+    \endpoint
+    \pgfmathsetlength\pgf@x{\pgf@x-0.25*\shapewidth}
+  }
+  \anchor{top control point 1}{\firstcontrolpointtop}
+  \anchor{top control point 2}{\secondcontrolpointtop}
+  \anchor{bottom control point 1}{\firstcontrolpointbottom}
+  \anchor{bottom control point 2}{\secondcontrolpointbottom}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  \inheritanchorborder[from=rectangle]
+
+  % xxxxxxxxxx Draw the background path xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \backgroundpath{
+    \begin{pgfscope}
+      \pgfmoveto{\startpoint}
+      \pgfcurveto{\firstcontrolpointtop}{\secondcontrolpointtop}{\endpoint}
+      \pgfcurveto{\secondcontrolpointbottom}{\firstcontrolpointbottom}{\startpoint}
+      \pgfpathclose
+      \pgfusepath{stroke,fill}
+    \end{pgfscope}
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+}
+
+
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxx UserTerminal Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{UserTerminal}{
-  
+
   % xxxxxxxxxx First we define some savedmacros xxxxxxxxxxxxxxxxxxxxxxxxxxx
   % Macros and savedanchors common to UserTerminal and BaseStation Shapes
   \savedanchor{\center}{
@@ -137,7 +245,7 @@
       {\northeast}
       \pgfusepath{stroke,fill}
     \end{pgfscope}
-    
+
     % Scope for the terminal Screen
     \begin{pgfscope}
       \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
@@ -149,7 +257,7 @@
       {\screennortheast}
       \pgfusepath{stroke,fill}
     \end{pgfscope}
-    
+
     % Scope for the button
     \begin{pgfscope}
       \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
@@ -194,7 +302,7 @@
     \pgf@y=0.30\pgf@ya
     \pgf@x=0.12\pgf@xa
   }
-  
+
   % Maybe I don't need this savedanchor
   \savedanchor{\MiddleAntennasouth}{
     \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
@@ -262,7 +370,7 @@
   % xxxxxxxxxx Inherit anchor border from UserTerminal xxxxxxxxxxxxxxxxxxxx
   \inheritanchorborder[from=UserTerminal]
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  
+
   % xxxxxxxxxx Inherit normal anchors from UserTerminal xxxxxxxxxxxxxxxxxxx
   % We define the savedanchors "northeast" and "southwest". With these two
   % defined we can inherit code for the regular anchors from the
@@ -318,12 +426,12 @@
       \pgfpathrectanglecorners
       {\MiddleAntennasouthwest}
       {\MiddleAntennanortheast}
-      
+
       % Draw the Left antenna
       \pgfpathrectanglecorners
       {\LeftAntennasouthwest}
       {\LeftAntennanortheast}
-      
+
       % Draw the Right antenna
       \pgfpathrectanglecorners
       {\RightAntennasouthwest}
@@ -343,7 +451,7 @@
 % xxxxxxxxxxxxxxx BaseStation Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 \pgfdeclareshape{BaseStation}{
-  
+
   % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % Inherit all savedanchors from BaseStationSimple.
   \inheritsavedanchors[from=BaseStationSimple]
@@ -384,7 +492,7 @@
     \pgf@y=0.15\pgf@ya
     \pgf@x=-0.1\pgf@xa
   }
-  
+
   \savedanchor{\BaseCnortheast}{
     \pgfmathsetlength\pgf@xa{\pgfshapeminwidth}
     \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
@@ -396,7 +504,7 @@
   % xxxxxxxxxx Inherit anchor border from BaseStationSimple xxxxxxxxxxxxxxx
   \inheritanchorborder[from=BaseStationSimple]
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    
+
   % xxxxxxxxxx Inherit normal anchors from BaseStationSimple xxxxxxxxxxxxxx
   % We define the savedanchors "northeast" and "southwest". With these two
   % defined we can inherit code for the regular anchors from the
@@ -413,7 +521,7 @@
   \inheritanchor[from=BaseStationSimple]{south east}
   \inheritanchor[from=rectangle]{text}
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  
+
   % xxxxxxxxxx Draw the "behind background" xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \behindbackgroundpath{
     % Scope for the Base
@@ -437,7 +545,7 @@
     \end{pgfscope}
   }
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  
+
   % xxxxxxxx Inherit the background path from BaseStationSimple xxxxxxxxxxx
   \inheritbackgroundpath[from=BaseStationSimple]
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -448,8 +556,8 @@
 
 \makeatother
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "testbasestation.tex"
 %%% TeX-PDF-mode: t
-%%% End: 
+%%% End:

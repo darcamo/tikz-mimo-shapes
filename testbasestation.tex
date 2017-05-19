@@ -1,4 +1,4 @@
-\documentclass[a4]{report}
+\documentclass[a4]{standalone}
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc} % Use this if the file is encoded with utf-8
@@ -13,7 +13,7 @@
 \thispagestyle{empty}
 \begin{tikzpicture}[every node/.append style={scale=1}]
   \draw[help lines] (0,-3) grid (8,6);
-  
+
   % Coordinate system origin
   \path (0,0) coordinate (origin);
   \draw[fill=red] (origin) circle (1pt);
@@ -23,17 +23,17 @@
   % xxxxxxxxxxxxxxx Test the BaseStation Shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   \tikzset{BS style/.style={
-      draw, 
-      minimum width=1cm, 
+      draw,
+      minimum width=1cm,
       minimum height=4cm,
-      fill=gray, 
+      fill=gray,
       inner sep=0,
       outer sep=0,
     }}
 
-  \path (2,1.5) coordinate (BS1Pos);
-  \path (4,1.5) coordinate (BS2Pos);
-  
+  \path (2,3.5) coordinate (BS1Pos);
+  \path (4,3.5) coordinate (BS2Pos);
+
   \draw (BS1Pos) node[BS style,dashed,gray,fill=none] {};
   \draw (BS2Pos) node[BS style,dashed,gray,fill=none] {};
 
@@ -71,10 +71,10 @@
   \tikzset{UE Style/.style={
       draw,
       fill=gray,
-      minimum width=1.2cm, 
+      minimum width=1.2cm,
       minimum height=2cm}}
 
-  \path (6,1.5) coordinate (UE1Pos);
+  \path (6,3.5) coordinate (UE1Pos);
 
   \draw (UE1Pos) node[UserTerminal,UE Style, button fill color=gray!40] (myterminal) {UE};
 
@@ -98,11 +98,39 @@
 
   \draw[fill=yellow] (myterminal.60) node[circle,draw,scale=0.2,fill=yellow] {60};
   \draw[fill=yellow] (myterminal.250) node[circle,draw,scale=0.2,fill=yellow] {250};
+
+
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxx Test the Beam shape xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \path (2,0.5) coordinate (Beam1Pos);
+  \draw[green!50!black] (Beam1Pos) node[Beam, draw,minimum width=4cm, minimum height=1cm] (beam) {};
+
+  \foreach \anchor in {start,end,main region}
+  {
+    \draw (beam.\anchor) circle (0.8pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\anchor}};
+  }
+
+ %  \foreach \ancora in {
+ % % text is the same as the screen anchor
+ %    start,
+ %    % end,
+ %    % main region,
+ %    % top control point 1,
+ %    % top control point 2,
+ %    % bottom control point 1,
+ %    % bottom control point 2,
+ %  }
+ %  {
+ %    \draw[fill=green] (beam.\ancora) circle (0.8pt) node[scale=0.8,red!50!black,rotate=45] {\tiny{\ancora}};
+ %  }
+
+  % \draw[fill=red] (Beam1Pos) circle (3pt);
 \end{tikzpicture}
 \end{document}
 
 % Used by Emacs
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: latex
 %%% TeX-PDF-mode: t
 %%% TeX-master: t
