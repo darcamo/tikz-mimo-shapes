@@ -36,6 +36,6 @@ the "OldPGF" tag and try compiling the examples with it.
 # Screenshots
 
 Below you can find the expected results after compiling the
-`testmimoshapes.tex` and `testbasestation.tex` files.
+`testmimoshapes.tex`, `testbasestation.tex` and `test_irs.tex` files.
 
-![testmimoshapes.png](screenshots/testmimoshapes.png) ![testmimoshapes.png](screenshots/testbasestation.png)
+![testmimoshapes.png](screenshots/testmimoshapes.png) ![testmimoshapes.png](screenshots/testbasestation.png) ![irs.png](screenshots/irs.png)

@@ -1,0 +1,32 @@
+
+\documentclass[a4]{standalone}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc} % Use this if the file is encoded with utf-8
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{tikz} % Create graphics in Latex
+
+
+\input{irs.tex}
+
+\begin{document}
+\thispagestyle{empty}
+\usetikzlibrary{positioning}
+\begin{tikzpicture}
+  \draw[help lines] (-2,-2) grid (2,2);
+
+  \node[IRS, element fill color=green!30, fill=red!30, minimum size=2.5cm] at (0,0) (irs) {};
+
+  % All rectangle anchors are supported as well as "border anchors" (an angle intersecting the border)
+  \draw[fill=green] (irs.north) circle (0.8pt) node[scale=0.8,red!50!black,rotate=45,yshift=2mm, xshift=1mm] {\tiny{north}};
+  \draw[fill=green] (irs.58) circle (0.8pt) node[scale=0.8,red!50!black,rotate=45, yshift=2mm, xshift=1mm] {\tiny{58°}};
+  
+\end{tikzpicture}
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

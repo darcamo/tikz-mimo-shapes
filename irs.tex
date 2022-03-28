@@ -1,0 +1,392 @@
+
+% chktex-file 1
+% chktex-file 27
+
+\makeatletter
+
+% The keys that the user can provide are all the keys below.
+
+\pgfkeys{
+  /pgf/.cd,
+  element fill color/.initial=white,
+}
+
+
+\pgfdeclareshape{IRS}{
+
+  % xxxxxxxxxx Define some saved macros xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \savedmacro\shapewidth{
+    \def\shapewidth{\pgfkeysvalueof{/pgf/minimum width}}
+  }
+
+  \savedmacro\shapeheight{
+    \def\shapeheight{\pgfkeysvalueof{/pgf/minimum height}}
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Saved Anchors for each element top left and bottom right xxxxxxxx
+  % 
+  % The IRS elements are named with single capital letters in a
+  % rowwise fashion. That is, element 1-1 is A, element 1-2 is B, and
+  % so on.
+  % 
+  % The width/height of each IRS element is 0.2 of the full IRS
+  % width/height. The spacing between elements is 0.04 of the width/height.
+  
+  % First row
+  \savedanchor\elementAtopleft{%
+    \pgfmathsetlength\pgf@x{-0.46*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.46*\shapeheight}
+  }
+
+  \savedanchor\elementAbottomright{%
+    \pgfmathsetlength\pgf@x{-0.26*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.26*\shapeheight}
+  }
+  
+  \savedanchor\elementBtopleft{%
+    \pgfmathsetlength\pgf@x{-0.22*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.46*\shapeheight}
+  }
+
+  \savedanchor\elementBbottomright{%
+    \pgfmathsetlength\pgf@x{-0.02*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.26*\shapeheight}
+  }
+
+  \savedanchor\elementCtopleft{%
+    \pgfmathsetlength\pgf@x{0.02*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.46*\shapeheight}
+  }
+
+  \savedanchor\elementCbottomright{%
+    \pgfmathsetlength\pgf@x{0.22*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.26*\shapeheight}
+  }
+
+  \savedanchor\elementDtopleft{%
+    \pgfmathsetlength\pgf@x{0.26*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.46*\shapeheight}
+  }
+
+  \savedanchor\elementDbottomright{%
+    \pgfmathsetlength\pgf@x{0.46*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.26*\shapeheight}
+  }
+
+  % Second Row
+  \savedanchor\elementEtopleft{%
+    \pgfmathsetlength\pgf@x{-0.46*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.22*\shapeheight}
+  }
+
+  \savedanchor\elementEbottomright{%
+    \pgfmathsetlength\pgf@x{-0.26*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.02*\shapeheight}
+  }
+  
+  \savedanchor\elementFtopleft{%
+    \pgfmathsetlength\pgf@x{-0.22*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.22*\shapeheight}
+  }
+
+  \savedanchor\elementFbottomright{%
+    \pgfmathsetlength\pgf@x{-0.02*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.02*\shapeheight}
+  }
+
+  \savedanchor\elementGtopleft{%
+    \pgfmathsetlength\pgf@x{0.02*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.22*\shapeheight}
+  }
+
+  \savedanchor\elementGbottomright{%
+    \pgfmathsetlength\pgf@x{0.22*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.02*\shapeheight}
+  }
+
+  \savedanchor\elementHtopleft{%
+    \pgfmathsetlength\pgf@x{0.26*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.22*\shapeheight}
+  }
+
+  \savedanchor\elementHbottomright{%
+    \pgfmathsetlength\pgf@x{0.46*\shapewidth}
+    \pgfmathsetlength\pgf@y{0.02*\shapeheight}
+  }
+
+  % Third Row
+  \savedanchor\elementItopleft{%
+    \pgfmathsetlength\pgf@x{-0.46*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.02*\shapeheight}
+  }
+
+  \savedanchor\elementIbottomright{%
+    \pgfmathsetlength\pgf@x{-0.26*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.22*\shapeheight}
+  }
+  
+  \savedanchor\elementJtopleft{%
+    \pgfmathsetlength\pgf@x{-0.22*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.02*\shapeheight}
+  }
+
+  \savedanchor\elementJbottomright{%
+    \pgfmathsetlength\pgf@x{-0.02*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.22*\shapeheight}
+  }
+
+  \savedanchor\elementKtopleft{%
+    \pgfmathsetlength\pgf@x{0.02*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.02*\shapeheight}
+  }
+
+  \savedanchor\elementKbottomright{%
+    \pgfmathsetlength\pgf@x{0.22*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.22*\shapeheight}
+  }
+
+  \savedanchor\elementLtopleft{%
+    \pgfmathsetlength\pgf@x{0.26*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.02*\shapeheight}
+  }
+
+  \savedanchor\elementLbottomright{%
+    \pgfmathsetlength\pgf@x{0.46*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.22*\shapeheight}
+  }
+
+  % Forth Row
+  \savedanchor\elementMtopleft{%
+    \pgfmathsetlength\pgf@x{-0.46*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.26*\shapeheight}
+  }
+
+  \savedanchor\elementMbottomright{%
+    \pgfmathsetlength\pgf@x{-0.26*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.46*\shapeheight}
+  }
+  
+  \savedanchor\elementNtopleft{%
+    \pgfmathsetlength\pgf@x{-0.22*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.26*\shapeheight}
+  }
+
+  \savedanchor\elementNbottomright{%
+    \pgfmathsetlength\pgf@x{-0.02*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.46*\shapeheight}
+  }
+
+  \savedanchor\elementOtopleft{%
+    \pgfmathsetlength\pgf@x{0.02*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.26*\shapeheight}
+  }
+
+  \savedanchor\elementObottomright{%
+    \pgfmathsetlength\pgf@x{0.22*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.46*\shapeheight}
+  }
+
+  \savedanchor\elementPtopleft{%
+    \pgfmathsetlength\pgf@x{0.26*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.26*\shapeheight}
+  }
+
+  \savedanchor\elementPbottomright{%
+    \pgfmathsetlength\pgf@x{0.46*\shapewidth}
+    \pgfmathsetlength\pgf@y{-0.46*\shapeheight}
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  
+  % xxxxxxxxxx Define savedanchors xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  % Inherit all savedanchors from UserTerminal. We only need northeast and
+  % southwest, but we can't choose which ones to inherit.
+  \inheritsavedanchors[from=rectangle]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxx Define savedanchors specific to the BaseStation shape xxxxxxxxxxx
+  % NONE
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Inherit anchor border from UserTerminal xxxxxxxxxxxxxxxxxxxx
+  \inheritanchorborder[from=rectangle]
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+  % xxxxxxxxxx Inherit normal anchors from UserTerminal xxxxxxxxxxxxxxxxxxx
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{north west}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{south east}
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  
+  % xxxxxxxxxx Draw the background path xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  \backgroundpath{
+
+    \begin{pgfscope}
+      % \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+      % '\pgfshapeminheight' cannot be used directly; or if you want to use it directly use the '*' for multiplication
+      % \pgfsetcornersarced{\pgfpoint{0.03\pgf@ya}{0.03\pgf@ya}}
+      \pgfpathrectanglecorners
+      {\southwest}
+      {\northeast}
+      \pgfusepath{stroke,fill}
+    \end{pgfscope}
+
+    \begin{scope} % Scope for all IRS elements to make the rounded corners
+      \pgfmathsetlength\pgf@ya{\pgfshapeminheight}
+      \pgfsetcornersarced{\pgfpoint{0.03\pgf@ya}{0.03\pgf@ya}}
+      \pgfsetfillcolor{\pgfkeysvalueof{/pgf/element fill color}}
+      
+      % IRS Element 1-1
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementAtopleft}
+        {\elementAbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 1-2
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementBtopleft}
+        {\elementBbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 1-3
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementCtopleft}
+        {\elementCbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 1-4
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementDtopleft}
+        {\elementDbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 2-1
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementEtopleft}
+        {\elementEbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+      
+      % IRS Element 2-2
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementFtopleft}
+        {\elementFbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 2-3
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementGtopleft}
+        {\elementGbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 2-4
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementHtopleft}
+        {\elementHbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 3-1
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementItopleft}
+        {\elementIbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 3-2
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementJtopleft}
+        {\elementJbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 3-3
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementKtopleft}
+        {\elementKbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 3-4
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementLtopleft}
+        {\elementLbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 4-1
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementMtopleft}
+        {\elementMbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 4-2
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementNtopleft}
+        {\elementNbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 4-3
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementOtopleft}
+        {\elementObottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+
+      % IRS Element 4-4
+      \begin{scope}
+        \pgfpathrectanglecorners
+        {\elementPtopleft}
+        {\elementPbottomright}
+        \pgfusepath{stroke,fill}
+      \end{scope}
+    \end{scope}
+    
+    % \begin{pgfscope}
+    %   \pgfmoveto{\startpoint}
+    %   \pgfcurveto{\firstcontrolpointtop}{\secondcontrolpointtop}{\endpoint}
+    %   \pgfcurveto{\secondcontrolpointbottom}{\firstcontrolpointbottom}{\startpoint}
+    %   \pgfpathclose
+    %   \pgfusepath{stroke,fill}
+    % \end{pgfscope}
+  }
+  % xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+}
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "test_irs.tex"
+%%% End:
